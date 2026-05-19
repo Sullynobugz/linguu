@@ -31,6 +31,7 @@ const translationLabel: Partial<Record<Language, string>> = {
 };
 
 const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
+  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall' },
   ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
   uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
   es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },

@@ -5,7 +5,7 @@ import { topics } from '../data/content';
 import { getEncouragingMessage } from '../api/claude';
 import { t, getT, langNames } from '../i18n';
 import { useSpeak } from '../hooks/useSpeech';
-import type { Language } from '../types';
+import type { Language, Level } from '../types';
 
 interface QuizQuestion {
   phraseId: string;
@@ -47,6 +47,7 @@ function buildQuiz(topicId: string, nativeLang: Language, targetLang: Language):
 }
 
 const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
+  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall' },
   ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
   uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
   es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },
@@ -189,8 +190,12 @@ export function QuizScreen() {
             </button>
             <button
               onClick={() => {
-                const nextTopic = topics.find(
-                  tt => !progress.completedTopics.includes(tt.id) && tt.id !== topicId
+                const order: Level[] = ['A1', 'A2', 'B1', 'B2'];
+                const nextTopic = topics.find(tt =>
+                  !progress.completedTopics.includes(tt.id) &&
+                  tt.id !== topicId &&
+                  (tt.alwaysUnlocked || tt.requiredLevel === null ||
+                    order.indexOf(progress.level) >= order.indexOf(tt.requiredLevel))
                 );
                 navigate(nextTopic ? `/lesson/${nextTopic.id}` : '/');
               }}
