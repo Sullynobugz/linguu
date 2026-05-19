@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
 import { explainPhrase } from '../api/claude';
-import { t, getT } from '../i18n';
+import { t, getT, langNames } from '../i18n';
 import { AudioControls } from '../components/AudioControls';
 import { useSpeak } from '../hooks/useSpeech';
 import type { Language } from '../types';
@@ -46,6 +46,16 @@ export function LessonScreen() {
   const { topicId } = useParams<{ topicId: string }>();
   const { progress, addXp, markPhrasesSeen, addApiCost } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
+  const targetLang = (progress.targetLanguage ?? 'de') as Language;
+
+  // Phrase in der Lernsprache + Übersetzung in der Muttersprache
+  const getLearnPhrase = (p: { german: string; translations: Partial<Record<Language, string>> }) =>
+    targetLang === 'de' ? p.german : (getT(p.translations, targetLang) || p.german);
+  const getNativeTranslation = (p: { german: string; translations: Partial<Record<Language, string>> }) =>
+    lang === 'de' ? p.german : getT(p.translations, lang);
+
+  // Label für die Lernsprache, in der Muttersprache des Nutzers
+  const learnLangLabel = langNames[targetLang]?.[lang] ?? targetLang;
 
   const topic = topics.find(tt => tt.id === topicId);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -86,7 +96,7 @@ export function LessonScreen() {
     // Auto-play via OpenAI TTS after short delay
     if (autoPlay) {
       autoPlayTimeoutRef.current = setTimeout(() => {
-        speak(p.german, 0.9, u => addApiCost(u.costEur));
+        speak(getLearnPhrase(p), 0.9, u => addApiCost(u.costEur));
       }, 400);
     }
   };
@@ -120,8 +130,9 @@ export function LessonScreen() {
     setExplanation('');
     try {
       await explainPhrase(
-        phrase.german,
+        getLearnPhrase(phrase),
         lang,
+        targetLang,
         chunk => setExplanation(prev => prev + chunk),
         usage => addApiCost(usage.costEur)
       );
@@ -206,36 +217,44 @@ export function LessonScreen() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-6">
         <div className="w-full max-w-2xl">
 
-          {/* German phrase card — large, central */}
+          {/* Lernphrase — large, central */}
           <div
             className="rounded-3xl p-8 mb-4 text-center animate-fade-in-up"
             style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
           >
             <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.6 }}>
-              {t('inGerman', lang)}
+              {learnLangLabel}
             </p>
 
-            {/* The German phrase — this is the hero element */}
             <h1
               className="mb-3 leading-tight"
               style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: 700 }}
             >
-              {phrase.german}
+              {getLearnPhrase(phrase)}
             </h1>
 
-            {/* Phonetics */}
-            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.6 }}>
-              {phoneticsLabel[lang] ?? phoneticsLabel['en']}
-            </p>
-            <p className="text-base font-mono mb-5" style={{ color: 'rgba(240,237,232,0.45)' }}>
-              [{phrase.phonetics}]
-            </p>
+            {/* Phonetics nur wenn Lernsprache Deutsch ist */}
+            {targetLang === 'de' && (
+              <>
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.6 }}>
+                  {phoneticsLabel[lang] ?? 'Aussprache'}
+                </p>
+                <p className="text-base font-mono mb-5" style={{ color: 'rgba(240,237,232,0.45)' }}>
+                  [{phrase.phonetics}]
+                </p>
+              </>
+            )}
 
             {/* ── AUDIO CONTROLS ── */}
-            <AudioControls germanPhrase={phrase.german} nativeTranslation={getT(phrase.translations, lang)} lang={lang} />
+            <AudioControls
+              germanPhrase={getLearnPhrase(phrase)}
+              nativeTranslation={getNativeTranslation(phrase)}
+              lang={lang}
+              learnLangLabel={learnLangLabel}
+            />
           </div>
 
-          {/* Translation card */}
+          {/* Übersetzung in Muttersprache */}
           <div
             className="rounded-2xl p-5 mb-4 flex items-center gap-4"
             style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}
@@ -243,15 +262,15 @@ export function LessonScreen() {
             <span className="text-2xl">💬</span>
             <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className="flex-1">
               <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.7 }}>
-                {translationLabel[lang] ?? translationLabel['en']}
+                {translationLabel[lang] ?? langNames[lang]?.[lang] ?? 'Übersetzung'}
               </p>
               <p className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
-                {getT(phrase.translations, lang)}
+                {getNativeTranslation(phrase)}
               </p>
             </div>
           </div>
 
-          {/* Example sentence */}
+          {/* Beispielsatz */}
           <div
             className="rounded-2xl p-5 mb-4"
             style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
@@ -262,18 +281,16 @@ export function LessonScreen() {
             <div className="flex items-start gap-3">
               <div className="flex-1">
                 <p className="text-base font-semibold mb-1.5" style={{ color: '#f0ede8' }}>
-                  {phrase.exampleDE}
+                  {targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE)}
                 </p>
                 <p className="text-sm" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-                  {getT(phrase.exampleTranslations, lang)}
+                  {lang === 'de' ? phrase.exampleDE : getT(phrase.exampleTranslations, lang)}
                 </p>
               </div>
-              {/* Small play button for example sentence */}
               <button
-                onClick={() => speak(phrase.exampleDE, 0.8, u => addApiCost(u.costEur))}
+                onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addApiCost(u.costEur))}
                 className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                 style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b' }}
-                title="Beispielsatz anhören"
               >
                 ▶
               </button>

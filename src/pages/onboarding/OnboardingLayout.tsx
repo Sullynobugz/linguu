@@ -4,27 +4,27 @@ import { t } from '../../i18n';
 import type { Language } from '../../types';
 
 interface OnboardingLayoutProps {
-  step: 1 | 2 | 3;
+  step: 1 | 2 | 3 | 4;
+  total?: 3 | 4;
   children: React.ReactNode;
   onBack?: () => void;
 }
 
-export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutProps) {
+export function OnboardingLayout({ step, total = 3, children, onBack }: OnboardingLayoutProps) {
   const { progress } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
 
-  const stepLabels = [
-    t('stepNativeLang', lang),
-    t('stepPath', lang),
-    t('stepLevel', lang),
-  ];
+  const labels3 = [t('stepNativeLang', lang), t('stepPath', lang), t('stepLevel', lang)];
+  const labels4 = [t('stepNativeLang', lang), t('stepTargetLang', lang), t('stepPath', lang), t('stepLevel', lang)];
+  const stepLabels = total === 4 ? labels4 : labels3;
+  const steps = Array.from({ length: total }, (_, i) => i + 1);
 
   return (
     <div
       className="min-h-screen flex flex-col"
       style={{ background: 'linear-gradient(135deg, #0f1117 0%, #131620 100%)' }}
     >
-      {/* Top row: back button (left) + logo (center) */}
+      {/* Top row */}
       <div className="flex items-center justify-between pt-8 px-6 pb-2">
         <div style={{ width: 64 }}>
           {onBack && (
@@ -40,7 +40,6 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
           )}
         </div>
 
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
@@ -48,10 +47,7 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
           >
             🇩🇪
           </div>
-          <span
-            className="text-2xl font-bold"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
-          >
+          <span className="text-2xl font-bold" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
             Linguu
           </span>
         </div>
@@ -62,7 +58,7 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
       {/* Progress indicator */}
       <div className="flex justify-center mb-10">
         <div className="flex items-center gap-3">
-          {[1, 2, 3].map(s => (
+          {steps.map(s => (
             <React.Fragment key={s}>
               <div className="flex flex-col items-center gap-1">
                 <div
@@ -71,29 +67,17 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
                     s < step
                       ? { background: '#f59e0b', color: '#0f1117' }
                       : s === step
-                      ? {
-                          background: 'transparent',
-                          border: '2px solid #f59e0b',
-                          color: '#f59e0b',
-                          boxShadow: '0 0 12px rgba(245,158,11,0.4)',
-                        }
-                      : {
-                          background: 'transparent',
-                          border: '2px solid rgba(255,255,255,0.15)',
-                          color: 'rgba(255,255,255,0.3)',
-                        }
+                      ? { background: 'transparent', border: '2px solid #f59e0b', color: '#f59e0b', boxShadow: '0 0 12px rgba(245,158,11,0.4)' }
+                      : { background: 'transparent', border: '2px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.3)' }
                   }
                 >
                   {s < step ? '✓' : s}
                 </div>
-                <span
-                  className="text-xs hidden sm:block"
-                  style={{ color: s <= step ? '#8b8fa8' : 'rgba(255,255,255,0.2)' }}
-                >
+                <span className="text-xs hidden sm:block" style={{ color: s <= step ? '#8b8fa8' : 'rgba(255,255,255,0.2)' }}>
                   {stepLabels[s - 1]}
                 </span>
               </div>
-              {s < 3 && (
+              {s < total && (
                 <div
                   className="w-8 h-0.5 rounded transition-all duration-500"
                   style={{ background: s < step ? '#f59e0b' : 'rgba(255,255,255,0.1)' }}

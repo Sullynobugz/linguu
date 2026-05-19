@@ -520,7 +520,7 @@ export function Dashboard() {
                     {badge.icon}
                   </div>
                   <p className="text-xs font-semibold" style={{ color: earned ? '#f59e0b' : '#8b8fa8' }}>
-                    {badge.name}
+                    {badge.name[lang] ?? badge.name['en']}
                   </p>
                   {earned && (
                     <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
@@ -533,7 +533,7 @@ export function Dashboard() {
           </div>
           {nextBadge && (
             <p className="text-xs mt-3 text-center" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-              {t('nextBadge', lang)} {nextBadge.icon} <strong style={{ color: '#f0ede8' }}>{nextBadge.name}</strong> — {nextBadge.description[lang]}
+              {t('nextBadge', lang)} {nextBadge.icon} <strong style={{ color: '#f0ede8' }}>{nextBadge.name[lang] ?? nextBadge.name['en']}</strong> — {nextBadge.description[lang]}
             </p>
           )}
         </div>

@@ -98,15 +98,16 @@ export async function translateText(
 }
 
 export async function explainPhrase(
-  germanPhrase: string,
-  language: Language,
+  phrase: string,
+  nativeLang: Language,
+  targetLang: Language,
   onChunk: (text: string) => void,
   onDone: (usage: ApiUsage) => void
 ): Promise<void> {
-  const system = `You are a friendly German language tutor helping immigrants learn German.
-Respond in ${LANG_NAMES[language]} (the user's native language).
+  const system = `You are a friendly language tutor helping someone learn ${LANG_NAMES[targetLang]}.
+Respond in ${LANG_NAMES[nativeLang]} (the user's native language).
 Be warm, encouraging, and practical. Keep responses concise (3-5 sentences max).`;
-  const user = `Explain when and how to use the German phrase: "${germanPhrase}"
+  const user = `Explain when and how to use the ${LANG_NAMES[targetLang]} phrase: "${phrase}"
 Include: 1) When to use it 2) Tone (formal/informal) 3) One practical tip for remembering it.`;
   await streamRequest(system, user, 300, onChunk, (u) => { logUsage('explainPhrase', u); onDone(u); });
 }

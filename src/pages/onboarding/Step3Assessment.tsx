@@ -272,10 +272,23 @@ const levelColors: Record<Level, string> = {
   A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#f59e0b',
 };
 
+const targetLangNameDE: Partial<Record<Language, string>> = {
+  de: 'Deutsch', en: 'Englisch', tr: 'Türkisch', ar: 'Arabisch',
+  es: 'Spanisch', uk: 'Ukrainisch', ru: 'Russisch', pl: 'Polnisch', ro: 'Rumänisch',
+};
+
+const selfAssessLevels: { level: Level; label: string; desc: string }[] = [
+  { level: 'A1', label: 'A1 — Anfänger',        desc: 'Ich kenne kaum Wörter oder Grundphrasen.' },
+  { level: 'A2', label: 'A2 — Grundkenntnisse', desc: 'Ich verstehe einfache Sätze und kann mich in vertrauten Situationen verständigen.' },
+  { level: 'B1', label: 'B1 — Mittelstufe',     desc: 'Ich kann mich in den meisten Alltagssituationen ausdrücken.' },
+  { level: 'B2', label: 'B2 — Fortgeschritten', desc: 'Ich kommuniziere fließend und verstehe komplexe Texte.' },
+];
+
 export function Step3Assessment() {
   const navigate = useNavigate();
   const { completeOnboarding, progress } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
+  const isGerman = lang === 'de';
 
   // Build questions once per render, keyed to language
   const [questions] = useState<DisplayQuestion[]>(() => buildQuestions(lang));
@@ -306,10 +319,64 @@ export function Step3Assessment() {
     }, 700);
   };
 
+  // Für deutsche Muttersprachler: einfache Selbsteinschätzung statt Quiz
+  if (isGerman) {
+    const targetName = targetLangNameDE[progress.targetLanguage as Language] ?? progress.targetLanguage ?? 'der Zielsprache';
+    return (
+      <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
+
+        <div className="text-center mb-8">
+          <h1
+            className="text-3xl sm:text-4xl font-bold mb-2"
+            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
+          >
+            Dein {targetName}-Niveau?
+          </h1>
+          <p className="text-base mt-1" style={{ color: '#8b8fa8' }}>
+            Wähle dein aktuelles Sprachniveau — wir passen die Inhalte darauf an.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3">
+          {selfAssessLevels.map(({ level, label, desc }) => (
+            <button
+              key={level}
+              onClick={() => { completeOnboarding(level); navigate('/'); }}
+              className="flex items-center gap-5 p-5 rounded-2xl text-left transition-all duration-200"
+              style={{
+                background: 'rgba(26,29,39,0.8)',
+                border: `2px solid ${levelColors[level]}30`,
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = levelColors[level];
+                (e.currentTarget as HTMLElement).style.background = `${levelColors[level]}12`;
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = `${levelColors[level]}30`;
+                (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+              }}
+            >
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
+                style={{ background: `${levelColors[level]}20`, color: levelColors[level], border: `2px solid ${levelColors[level]}50` }}
+              >
+                {level}
+              </div>
+              <div className="flex-1">
+                <div className="text-base font-semibold" style={{ color: '#f0ede8' }}>{label}</div>
+                <div className="text-sm mt-0.5" style={{ color: '#8b8fa8' }}>{desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </OnboardingLayout>
+    );
+  }
+
   if (showResult) {
     const msg = resultMessages[result][lang] ?? resultMessages[result]['en']!;
     return (
-      <OnboardingLayout step={3} onBack={() => navigate('/onboarding/2')}>
+      <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
         <div className="text-center animate-fade-in-up">
           <div
             className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 text-4xl"
@@ -351,7 +418,7 @@ export function Step3Assessment() {
   }
 
   return (
-    <OnboardingLayout step={3} onBack={() => navigate('/onboarding/2')}>
+    <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
       <div className="text-center mb-6">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"

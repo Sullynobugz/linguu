@@ -44,6 +44,7 @@ const items: ChecklistItem[] = [
     icon: '🗣️',
     isLangRequirement: true,
     titleByLang: {
+      de: 'Deutsches Sprachzertifikat B1',
       ar: 'شهادة لغة ألمانية B1',
       uk: 'Мовний сертифікат B1 з німецької',
       es: 'Certificado de alemán B1',
@@ -54,6 +55,7 @@ const items: ChecklistItem[] = [
       ru: 'Языковой сертификат по немецкому B1',
     },
     descByLang: {
+      de: 'Mindestens B1-Niveau — das ist dein Ziel in Linguu!',
       ar: 'مستوى B1 على الأقل — هذا هدفك في Linguu!',
       uk: 'Мінімум рівень B1 — це твоя ціль у Linguu!',
       es: 'Mínimo nivel B1 — ¡este es tu objetivo en Linguu!',
@@ -69,6 +71,7 @@ const items: ChecklistItem[] = [
     id: 'test',
     icon: '📝',
     titleByLang: {
+      de: 'Einbürgerungstest bestehen',
       ar: 'اجتياز اختبار التجنيس',
       uk: 'Скласти тест на натуралізацію',
       es: 'Superar el test de naturalización',
@@ -79,6 +82,7 @@ const items: ChecklistItem[] = [
       ru: 'Сдать тест на натурализацию',
     },
     descByLang: {
+      de: '33 Fragen — 17 richtige Antworten zum Bestehen',
       ar: '33 سؤالاً — يكفي 17 إجابة صحيحة للنجاح',
       uk: '33 запитання — достатньо 17 правильних відповідей',
       es: '33 preguntas — se necesitan 17 respuestas correctas para aprobar',
@@ -94,6 +98,7 @@ const items: ChecklistItem[] = [
     id: 'lebensunterhalt',
     icon: '💼',
     titleByLang: {
+      de: 'Lebensunterhalt eigenständig sichern',
       ar: 'تأمين الرزق بشكل مستقل',
       uk: 'Самостійне забезпечення засобів до існування',
       es: 'Asegurar el sustento de forma independiente',
@@ -104,6 +109,7 @@ const items: ChecklistItem[] = [
       ru: 'Самостоятельное обеспечение средств к существованию',
     },
     descByLang: {
+      de: 'Keine Sozialleistungen (außer in besonderen Ausnahmefällen)',
       ar: 'لا حاجة لمساعدات اجتماعية (باستثناء الحالات الاستثنائية)',
       uk: 'Без соціальної допомоги (за винятком окремих випадків)',
       es: 'Sin prestaciones sociales (excepto en casos excepcionales)',
@@ -119,6 +125,7 @@ const items: ChecklistItem[] = [
     id: 'verfassung',
     icon: '🏛️',
     titleByLang: {
+      de: 'Bekenntnis zur demokratischen Grundordnung',
       ar: 'الإقرار بالنظام الأساسي الديمقراطي',
       uk: 'Визнання основного демократичного ладу',
       es: 'Reconocimiento del orden democrático fundamental',
@@ -129,6 +136,7 @@ const items: ChecklistItem[] = [
       ru: 'Признание основного демократического строя',
     },
     descByLang: {
+      de: 'Bekenntnis zur freiheitlichen demokratischen Grundordnung des Grundgesetzes',
       ar: 'إقرار بالنظام الأساسي الحر الديمقراطي للجمهورية الفيدرالية',
       uk: 'Визнання вільного демократичного ладу Федеративної Республіки',
       es: 'Compromiso con el orden democrático liberal de la República Federal',
@@ -144,6 +152,7 @@ const items: ChecklistItem[] = [
     id: 'straffreiheit',
     icon: '⚖️',
     titleByLang: {
+      de: 'Keine Vorstrafen',
       ar: 'خلو من السجل الجنائي',
       uk: 'Відсутність судимостей',
       es: 'Sin antecedentes penales',
@@ -154,6 +163,7 @@ const items: ChecklistItem[] = [
       ru: 'Отсутствие судимости',
     },
     descByLang: {
+      de: 'Keine Verurteilungen (außer Bagatelldelikte)',
       ar: 'لا عقوبات جنائية (باستثناء المخالفات البسيطة)',
       uk: 'Відсутність кримінальних вироків (крім незначних правопорушень)',
       es: 'Sin condenas penales (excepto infracciones menores)',
@@ -169,6 +179,7 @@ const items: ChecklistItem[] = [
     id: 'staatsangehoerigkeit',
     icon: '🌍',
     titleByLang: {
+      de: 'Regelung der bisherigen Staatsangehörigkeit',
       ar: 'تنظيم الجنسية السابقة',
       uk: 'Врегулювання попереднього громадянства',
       es: 'Regulación de la ciudadanía anterior',
@@ -179,6 +190,7 @@ const items: ChecklistItem[] = [
       ru: 'Урегулирование предыдущего гражданства',
     },
     descByLang: {
+      de: 'Mehrstaatigkeit nun in den meisten Fällen erlaubt (Reform 2024)',
       ar: 'التعددية الجنسية مسموح بها الآن في أغلب الحالات (إصلاح 2024)',
       uk: 'Подвійне громадянство тепер дозволено в більшості випадків (реформа 2024)',
       es: 'La doble ciudadanía está ahora permitida en la mayoría de los casos (reforma 2024)',
@@ -214,6 +226,7 @@ export function EinbuergerungChecklist() {
   const isB1Reached = ['B1', 'B2'].includes(progress.level);
 
   const headings: Partial<Record<Language, string>> = {
+    de: 'Einbürgerungsvoraussetzungen in Deutschland',
     ar: 'متطلبات التجنيس في ألمانيا',
     uk: 'Вимоги для отримання громадянства Німеччини',
     es: 'Requisitos de naturalización en Alemania',
@@ -224,6 +237,7 @@ export function EinbuergerungChecklist() {
     ru: 'Требования для натурализации в Германии',
   };
   const subheadings: Partial<Record<Language, string>> = {
+    de: 'Hake ab, was du bereits erfüllt hast',
     ar: 'ضع علامة على ما أنجزته بالفعل',
     uk: 'Відмічай, що вже виконано',
     es: 'Marca lo que ya has cumplido',
@@ -232,6 +246,26 @@ export function EinbuergerungChecklist() {
     pl: 'Zaznacz, co już spełniłeś',
     ro: 'Bifează ce ai îndeplinit deja',
     ru: 'Отмечай, что уже выполнено',
+  };
+  const fulfilledLabel: Partial<Record<Language, string>> = {
+    de: 'erfüllt', en: 'fulfilled', ar: 'محقق', uk: 'виконано',
+    tr: 'karşılandı', pl: 'spełnione', ro: 'îndeplinite', ru: 'выполнено', es: 'cumplidos',
+  };
+  const currentLevelLabel: Partial<Record<Language, string>> = {
+    de: 'Dein aktuelles Niveau', en: 'Your current level', ar: 'مستواك الحالي',
+    uk: 'Твій рівень', tr: 'Mevcut seviyeniz', pl: 'Twój obecny poziom',
+    ro: 'Nivelul tău actual', ru: 'Твой текущий уровень', es: 'Tu nivel actual',
+  };
+  const b1ReachedMsg: Partial<Record<Language, string>> = {
+    de: 'B1-Niveau erreicht! Sprachliche Anforderung erfüllt.',
+    en: 'You reached B1 level! Language requirement fulfilled.',
+    ar: 'وصلت إلى مستوى B1! متطلب اللغة محقق.',
+    uk: 'Досягнуто рівень B1! Мовна вимога виконана.',
+    tr: 'B1 seviyesine ulaştınız! Dil şartı karşılandı.',
+    pl: 'Osiągnąłeś poziom B1! Wymóg językowy spełniony.',
+    ro: 'Ai atins nivelul B1! Cerința lingvistică îndeplinită.',
+    ru: 'Достигнут уровень B1! Языковое требование выполнено.',
+    es: '¡Alcanzaste el nivel B1! Requisito lingüístico cumplido.',
   };
 
   return (
@@ -280,7 +314,7 @@ export function EinbuergerungChecklist() {
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold" style={{ color: '#818cf8' }}>
-              {checkedCount} / {totalCount} {lang === 'de' ? 'erfüllt' : 'fulfilled'}
+              {checkedCount} / {totalCount} {fulfilledLabel[lang] ?? fulfilledLabel['en']}
             </span>
             <span className="text-2xl font-bold" style={{ color: '#818cf8' }}>
               {progressPct}%
@@ -306,14 +340,7 @@ export function EinbuergerungChecklist() {
                 {t('b1Goal', lang)}
               </p>
               <p className="text-xs mt-0.5" style={{ color: '#8b8fa8' }}>
-                {lang === 'ar' ? `مستواك الحالي: ${progress.level}` :
-                 lang === 'tr' ? `Mevcut seviyeniz: ${progress.level}` :
-                 lang === 'pl' ? `Twój obecny poziom: ${progress.level}` :
-                 lang === 'ro' ? `Nivelul tău actual: ${progress.level}` :
-                 lang === 'ru' ? `Твой текущий уровень: ${progress.level}` :
-                 lang === 'uk' ? `Твій рівень: ${progress.level}` :
-                 lang === 'es' ? `Tu nivel actual: ${progress.level}` :
-                 `Your current level: ${progress.level}`}
+                {(currentLevelLabel[lang] ?? currentLevelLabel['en'])}: {progress.level}
               </p>
             </div>
             <div
@@ -336,14 +363,7 @@ export function EinbuergerungChecklist() {
           >
             <span className="text-2xl">✅</span>
             <p className="font-semibold text-sm" style={{ color: '#10b981' }}>
-              {lang === 'ar' ? 'وصلت إلى مستوى B1! متطلب اللغة محقق.' :
-               lang === 'tr' ? 'B1 seviyesine ulaştınız! Dil şartı karşılandı.' :
-               lang === 'pl' ? 'Osiągnąłeś poziom B1! Wymóg językowy spełniony.' :
-               lang === 'ro' ? 'Ai atins nivelul B1! Cerința lingvistică îndeplinită.' :
-               lang === 'ru' ? 'Достигнут уровень B1! Языковое требование выполнено.' :
-               lang === 'uk' ? 'Досягнуто рівень B1! Мовна вимога виконана.' :
-               lang === 'es' ? '¡Alcanzaste el nivel B1! Requisito lingüístico cumplido.' :
-               'You reached B1 level! Language requirement fulfilled.'}
+              {b1ReachedMsg[lang] ?? b1ReachedMsg['en']}
             </p>
           </div>
         )}

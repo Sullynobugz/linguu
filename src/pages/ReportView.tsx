@@ -4,14 +4,14 @@ import { topics } from '../data/content';
 import { t } from '../i18n';
 import type { Language } from '../types';
 
-const topicTitlesNative: Record<Language, Record<string, string>> = {
+const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
   ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
   uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
   es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },
   en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies' },
 };
 
-const reportLabels: Record<Language, Record<string, string>> = {
+const reportLabels: Partial<Record<Language, Record<string, string>>> = {
   ar: {
     currentLevel: 'المستوى اللغوي الحالي',
     totalTime: 'إجمالي وقت التعلم',
@@ -94,15 +94,15 @@ const reportLabels: Record<Language, Record<string, string>> = {
   },
 };
 
-const daysLabel: Record<Language, string> = { ar: ' أيام', uk: ' днів', es: ' días', en: ' days' };
-const hoursLabel: Record<Language, string> = { ar: 'ساعة ', uk: 'год. ', es: 'h ', en: 'h ' };
-const minsLabel: Record<Language, string> = { ar: ' دقيقة', uk: ' хв.', es: ' min', en: ' min' };
+const daysLabel: Partial<Record<Language, string>> = { ar: ' أيام', uk: ' днів', es: ' días', en: ' days', de: ' Tage', tr: ' gün', pl: ' dni', ro: ' zile', ru: ' дней' };
+const hoursLabel: Partial<Record<Language, string>> = { ar: 'ساعة ', uk: 'год. ', es: 'h ', en: 'h ', de: 'h ', tr: 'sa ', pl: 'godz. ', ro: 'ore ', ru: 'ч. ' };
+const minsLabel: Partial<Record<Language, string>> = { ar: ' دقيقة', uk: ' хв.', es: ' min', en: ' min', de: ' Min', tr: ' dk', pl: ' min', ro: ' min', ru: ' мин' };
 
 export function ReportView() {
   const navigate = useNavigate();
   const { progress } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
-  const lbl = reportLabels[lang];
+  const lbl = reportLabels[lang] ?? reportLabels['en']!;
 
   const today = new Date().toLocaleDateString('de-DE', {
     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -217,7 +217,7 @@ export function ReportView() {
               const completed = progress.completedTopics.includes(topic.id);
               const seenCount = topic.phrases.filter(p => progress.seenPhrases.includes(p.id)).length;
               const score = progress.quizScores[topic.id];
-              const nativeTitle = topicTitlesNative[lang][topic.id] ?? topic.titleDE;
+              const nativeTitle = (topicTitlesNative[lang] ?? topicTitlesNative['en']!)[topic.id] ?? topic.titleDE;
 
               return (
                 <div

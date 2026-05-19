@@ -24,8 +24,8 @@ export interface Topic {
 export interface Badge {
   id: string;
   icon: string;
-  name: string;
-  description: Record<Language, string>;
+  name: Partial<Record<Language, string>>;
+  description: Partial<Record<Language, string>>;
   earned: boolean;
   earnedAt?: string;
 }

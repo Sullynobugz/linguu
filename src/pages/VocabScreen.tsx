@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
 import { useSpeak } from '../hooks/useSpeech';
-import { t, getT } from '../i18n';
+import { t, getT, langNames } from '../i18n';
 import type { Language } from '../types';
 
 interface VocabCard {
@@ -16,22 +16,41 @@ interface VocabCard {
   topicIcon: string;
 }
 
-function buildDeck(lang: Language, mastery: Record<string, 0 | 1 | 2>): VocabCard[] {
+function buildDeck(
+  nativeLang: Language,
+  targetLang: Language,
+  mastery: Record<string, 0 | 1 | 2>
+): VocabCard[] {
+  const isGermanSpeaker = nativeLang === 'de'
   const all: VocabCard[] = [];
   for (const topic of topics) {
     for (const phrase of topic.phrases) {
-      all.push({
-        phraseId: phrase.id,
-        german: phrase.german,
-        phonetics: phrase.phonetics,
-        native: getT(phrase.translations, lang),
-        nativeExample: getT(phrase.exampleTranslations, lang),
-        germanExample: phrase.exampleDE,
-        topicIcon: topic.icon,
-      });
+      if (isGermanSpeaker) {
+        // Vorne: Zielsprache (z.B. Ukrainisch) — was gelernt wird
+        // Hinten: Deutsch — was der Nutzer schon kennt
+        all.push({
+          phraseId: phrase.id,
+          german: getT(phrase.translations, targetLang) || phrase.german,
+          phonetics: '',
+          native: phrase.german,
+          nativeExample: phrase.exampleDE,
+          germanExample: getT(phrase.exampleTranslations, targetLang),
+          topicIcon: topic.icon,
+        });
+      } else {
+        // Standard: vorne Deutsch, hinten Muttersprache
+        all.push({
+          phraseId: phrase.id,
+          german: phrase.german,
+          phonetics: phrase.phonetics,
+          native: getT(phrase.translations, nativeLang),
+          nativeExample: getT(phrase.exampleTranslations, nativeLang),
+          germanExample: phrase.exampleDE,
+          topicIcon: topic.icon,
+        });
+      }
     }
   }
-  // Sort: new (0) and learning (1) first, mastered (2) last
   return [...all].sort((a, b) => {
     const ma = mastery[a.phraseId] ?? 0;
     const mb = mastery[b.phraseId] ?? 0;
@@ -39,19 +58,21 @@ function buildDeck(lang: Language, mastery: Record<string, 0 | 1 | 2>): VocabCar
   });
 }
 
-const ratingLabels = {
-  again:    { ar: 'مرة أخرى', uk: 'Ще раз', es: 'Otra vez', en: 'Again' },
-  good:     { ar: 'جيد', uk: 'Добре', es: 'Bien', en: 'Gut' },
-  mastered: { ar: 'أتقنته', uk: 'Засвоєно', es: 'Dominado', en: 'Gemeistert' },
-} as const;
+const targetLangLabel: Partial<Record<Language, string>> = {
+  de: 'Deutsch', en: 'Englisch', tr: 'Türkisch', ar: 'Arabisch',
+  es: 'Spanisch', uk: 'Ukrainisch', ru: 'Russisch', pl: 'Polnisch', ro: 'Rumänisch',
+};
+
 
 export function VocabScreen() {
   const navigate = useNavigate();
   const { progress, setVocabMastery, addApiCost, addXp } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
+  const targetLang = (progress.targetLanguage ?? 'de') as Language;
+  const isGermanSpeaker = lang === 'de';
   const { speak, stop } = useSpeak();
 
-  const [deck] = useState<VocabCard[]>(() => buildDeck(lang, progress.vocabMastery ?? {}));
+  const [deck] = useState<VocabCard[]>(() => buildDeck(lang, targetLang, progress.vocabMastery ?? {}));
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [rated, setRated] = useState<Set<string>>(new Set());
@@ -221,7 +242,7 @@ export function VocabScreen() {
                 }}
               >
                 <p className="text-xs uppercase tracking-widest mb-4" style={{ color: '#8b8fa8', opacity: 0.6 }}>
-                  {t('inGerman', lang)}
+                  {isGermanSpeaker ? `Auf ${targetLangLabel[targetLang] ?? targetLang}` : t('inGerman', lang)}
                 </p>
                 <h2
                   className="mb-3 leading-tight"
@@ -229,15 +250,17 @@ export function VocabScreen() {
                 >
                   {card.german}
                 </h2>
-                <p className="font-mono text-sm mb-5" style={{ color: 'rgba(240,237,232,0.4)' }}>
-                  [{card.phonetics}]
-                </p>
+                {card.phonetics && (
+                  <p className="font-mono text-sm mb-5" style={{ color: 'rgba(240,237,232,0.4)' }}>
+                    [{card.phonetics}]
+                  </p>
+                )}
                 <button
                   onClick={handlePlayDE}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
                   style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
                 >
-                  🔊 Auf Deutsch
+                  🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
                 </button>
                 <p className="text-xs mt-5 animate-pulse" style={{ color: '#8b8fa8' }}>
                   {t('tapToFlip', lang)}
@@ -272,7 +295,7 @@ export function VocabScreen() {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4"
                   style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8' }}
                 >
-                  🔊 {lang === 'ar' ? 'بالعربية' : lang === 'uk' ? 'Українською' : lang === 'es' ? 'En español' : 'In English'}
+                  🔊 {isGermanSpeaker ? (langNames['de']?.[lang] ?? 'Auf Deutsch') : (langNames[lang]?.[lang] ?? lang)}
                 </button>
                 <div
                   className="w-full rounded-xl p-3 text-sm"
@@ -297,7 +320,7 @@ export function VocabScreen() {
                 onMouseLeave={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.12)')}
               >
                 <span className="text-xl">🔄</span>
-                <span>{ratingLabels.again[lang]}</span>
+                <span>{t('again', lang)}</span>
               </button>
               <button
                 onClick={() => handleRate(1)}
@@ -307,7 +330,7 @@ export function VocabScreen() {
                 onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.12)')}
               >
                 <span className="text-xl">👍</span>
-                <span>{ratingLabels.good[lang]}</span>
+                <span>{t('good', lang)}</span>
               </button>
               <button
                 onClick={() => handleRate(2)}
@@ -317,7 +340,7 @@ export function VocabScreen() {
                 onMouseLeave={e => (e.currentTarget.style.background = 'rgba(16,185,129,0.12)')}
               >
                 <span className="text-xl">⭐</span>
-                <span>{ratingLabels.mastered[lang]}</span>
+                <span>{t('mastered', lang)}</span>
               </button>
             </div>
           ) : (

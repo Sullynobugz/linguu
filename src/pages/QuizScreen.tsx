@@ -3,14 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
 import { getEncouragingMessage } from '../api/claude';
-import { t, getT } from '../i18n';
+import { t, getT, langNames } from '../i18n';
 import { useSpeak } from '../hooks/useSpeech';
 import type { Language } from '../types';
 
 interface QuizQuestion {
   phraseId: string;
-  german: string;
-  correct: string;
+  learnPhrase: string;   // Phrase in Lernsprache (wird angezeigt)
+  correct: string;       // Richtige Übersetzung in Muttersprache
   options: string[];
 }
 
@@ -18,22 +18,28 @@ function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function buildQuiz(topicId: string, lang: Language): QuizQuestion[] {
+function buildQuiz(topicId: string, nativeLang: Language, targetLang: Language): QuizQuestion[] {
   const topic = topics.find(tt => tt.id === topicId);
   if (!topic) return [];
 
+  const getLearnPhrase = (p: typeof topic.phrases[0]) =>
+    targetLang === 'de' ? p.german : (getT(p.translations, targetLang) || p.german);
+  const getNativeAnswer = (p: typeof topic.phrases[0]) =>
+    nativeLang === 'de' ? p.german : getT(p.translations, nativeLang);
+
   const phrases = shuffle(topic.phrases).slice(0, 5);
   return phrases.map(phrase => {
-    const correct = getT(phrase.translations, lang);
+    const correct = getNativeAnswer(phrase);
     const others = shuffle(
       topic.phrases
         .filter(p => p.id !== phrase.id)
-        .map(p => getT(p.translations, lang))
+        .map(p => getNativeAnswer(p))
+        .filter(Boolean)
     ).slice(0, 3);
 
     return {
       phraseId: phrase.id,
-      german: phrase.german,
+      learnPhrase: getLearnPhrase(phrase),
       correct,
       options: shuffle([correct, ...others]),
     };
@@ -56,8 +62,10 @@ export function QuizScreen() {
   const { topicId } = useParams<{ topicId: string }>();
   const { progress, addXp, markTopicComplete, recordQuizScore, addApiCost } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
+  const targetLang = (progress.targetLanguage ?? 'de') as Language;
+  const learnLangLabel = langNames[targetLang]?.[lang] ?? targetLang;
 
-  const [questions] = useState<QuizQuestion[]>(() => buildQuiz(topicId ?? '', lang));
+  const [questions] = useState<QuizQuestion[]>(() => buildQuiz(topicId ?? '', lang, targetLang));
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [correct, setCorrect] = useState(0);
@@ -243,20 +251,20 @@ export function QuizScreen() {
             style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
           >
             <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#8b8fa8' }}>
-              {t('inGerman', lang)}
+              {learnLangLabel}
             </p>
             <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
-              {question.german}
+              {question.learnPhrase}
             </h2>
             {/* Play button — hear the phrase */}
             <button
-              onClick={() => speak(question.german, 0.9, u => addApiCost(u.costEur))}
+              onClick={() => speak(question.learnPhrase, 0.9, u => addApiCost(u.costEur))}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all"
               style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.2)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.12)')}
             >
-              🔊 {lang === 'ar' ? 'استمع' : lang === 'uk' ? 'Слухати' : lang === 'es' ? 'Escuchar' : 'Listen'}
+              🔊 {t('listen', lang)}
             </button>
           </div>
 

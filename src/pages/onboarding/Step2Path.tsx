@@ -132,7 +132,11 @@ export function Step2Path() {
   };
 
   return (
-    <OnboardingLayout step={2} onBack={() => navigate('/onboarding/1')}>
+    <OnboardingLayout
+      step={3}
+      total={4}
+      onBack={() => navigate('/onboarding/target')}
+    >
       <div className="text-center mb-8">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"

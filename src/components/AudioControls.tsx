@@ -8,23 +8,27 @@ const nativeLangLabel: Record<Language, string> = {
   uk: 'Українською',
   es: 'En español',
   en: 'In English',
+  tr: 'Türkçe\'de',
+  pl: 'Po polsku',
+  ro: 'În română',
+  ru: 'На русском',
+  de: 'Auf Deutsch',
 };
 
 const labels = {
-  listenDE:   { ar: 'بالألمانية', uk: 'Deutsch', es: 'Auf Deutsch', en: 'Auf Deutsch' },
-  slow:       { ar: 'ببطء', uk: 'Повільно', es: 'Despacio', en: 'Slow' },
-  speak:      { ar: 'تحدث', uk: 'Говорити', es: 'Hablar', en: 'Speak' },
-  stop:       { ar: 'إيقاف', uk: 'Стоп', es: 'Parar', en: 'Stop' },
-  loading:    { ar: 'جارٍ...', uk: 'Завантаж...', es: 'Cargando...', en: 'Loading...' },
-  processing: { ar: 'معالجة...', uk: 'Обробка...', es: 'Procesando...', en: 'Processing...' },
-  listening:  { ar: '● يستمع...', uk: '● Запис...', es: '● Grabando...', en: '● Recording...' },
-  close:      { ar: 'إغلاق', uk: 'закрити', es: 'cerrar', en: 'close' },
+  slow:       { ar: 'ببطء',       uk: 'Повільно',    es: 'Despacio',    en: 'Slow',        tr: 'Yavaş',    pl: 'Wolno',      ro: 'Încet',     ru: 'Медленно',  de: 'Langsam'    },
+  speak:      { ar: 'تحدث',       uk: 'Говорити',    es: 'Hablar',      en: 'Speak',       tr: 'Konuş',    pl: 'Mów',        ro: 'Vorbești',  ru: 'Говорить',  de: 'Sprechen'   },
+  stop:       { ar: 'إيقاف',      uk: 'Стоп',        es: 'Parar',       en: 'Stop',        tr: 'Dur',      pl: 'Stop',       ro: 'Stop',      ru: 'Стоп',      de: 'Stop'       },
+  loading:    { ar: 'جارٍ...',    uk: 'Завантаж...',  es: 'Cargando...', en: 'Loading...',  tr: 'Yüklüyor...',pl: 'Ładowanie...',ro: 'Încarcă...',ru: 'Загрузка...', de: 'Laden...'  },
+  processing: { ar: 'معالجة...',  uk: 'Обробка...',   es: 'Procesando...',en: 'Processing...',tr: 'İşleniyor...',pl: 'Przetwarza...',ro: 'Procesează...',ru: 'Обработка...',de: 'Verarbeite...' },
+  listening:  { ar: '● يستمع...', uk: '● Запис...',   es: '● Grabando...', en: '● Recording...',tr: '● Kaydediliyor...',pl: '● Nagrywa...',ro: '● Înregistrează...',ru: '● Запись...',de: '● Aufnahme...' },
+  close:      { ar: 'إغلاق',      uk: 'закрити',     es: 'cerrar',      en: 'close',       tr: 'kapat',    pl: 'zamknij',    ro: 'închide',   ru: 'закрыть',   de: 'schließen'  },
   feedback: {
-    perfect:   { ar: '🎉 ممتاز! نطق رائع!', uk: '🎉 Чудово! Ідеальна вимова!', es: '🎉 ¡Perfecto!', en: '🎉 Perfect pronunciation!' },
-    good:      { ar: '👍 جيد! استمر في التدرب', uk: '👍 Добре! Продовжуй', es: '👍 ¡Bien! Sigue practicando', en: '👍 Good! Keep practicing' },
-    try_again: { ar: '🔄 حاول مرة أخرى', uk: '🔄 Спробуй ще раз', es: '🔄 Inténtalo de nuevo', en: '🔄 Try again' },
+    perfect:   { ar: '🎉 ممتاز! نطق رائع!', uk: '🎉 Чудово! Ідеальна вимова!', es: '🎉 ¡Perfecto!', en: '🎉 Perfect pronunciation!', tr: '🎉 Mükemmel!', pl: '🎉 Idealnie!', ro: '🎉 Perfect!', ru: '🎉 Отлично!', de: '🎉 Perfekt!' },
+    good:      { ar: '👍 جيد! استمر في التدرب', uk: '👍 Добре! Продовжуй', es: '👍 ¡Bien! Sigue practicando', en: '👍 Good! Keep practicing', tr: '👍 İyi! Devam et', pl: '👍 Dobrze! Ćwicz dalej', ro: '👍 Bine! Continuă', ru: '👍 Хорошо! Продолжай', de: '👍 Gut! Weiter üben' },
+    try_again: { ar: '🔄 حاول مرة أخرى', uk: '🔄 Спробуй ще раз', es: '🔄 Inténtalo de nuevo', en: '🔄 Try again', tr: '🔄 Tekrar dene', pl: '🔄 Spróbuj ponownie', ro: '🔄 Încearcă din nou', ru: '🔄 Попробуй ещё раз', de: '🔄 Nochmal versuchen' },
   },
-} as const;
+};
 
 const statusColor = { perfect: '#10b981', good: '#f59e0b', try_again: '#ef4444' };
 
@@ -33,9 +37,10 @@ interface AudioControlsProps {
   nativeTranslation?: string;
   lang: Language;
   compact?: boolean;
+  learnLangLabel?: string;
 }
 
-export function AudioControls({ germanPhrase, nativeTranslation, lang, compact = false }: AudioControlsProps) {
+export function AudioControls({ germanPhrase, nativeTranslation, lang, compact = false, learnLangLabel }: AudioControlsProps) {
   const { addApiCost } = useProgress();
   const { speak, stop: stopSpeak, speaking, loading: ttsLoading } = useSpeak();
   const { listen, stop: stopListen, reset, listening, processing, result } = useListen();
@@ -88,7 +93,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
         }}
       >
         {ttsLoading && activeVoice === 'de' ? '⏳' : speaking && activeVoice === 'de' ? '⏹' : '🔊'}
-        {ttsLoading && activeVoice === 'de' ? labels.loading[lang] : speaking && activeVoice === 'de' ? labels.stop[lang] : 'Auf Deutsch'}
+        {ttsLoading && activeVoice === 'de' ? labels.loading[lang] ?? labels.loading['en'] : speaking && activeVoice === 'de' ? labels.stop[lang] ?? labels.stop['en'] : learnLangLabel ?? 'Auf Deutsch'}
       </button>
     );
   }
@@ -116,7 +121,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
           <span className="text-base">{ttsLoading && !deActive ? '⏳' : deActive ? '⏹' : '🔊'}</span>
           <div className="text-left">
             <div style={{ fontSize: 13, fontWeight: 700 }}>
-              {deActive ? labels.stop[lang] : 'Auf Deutsch'}
+              {deActive ? labels.stop[lang] ?? labels.stop['en'] : learnLangLabel ?? 'Auf Deutsch'}
             </div>
           </div>
         </button>
@@ -137,7 +142,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
             <span className="text-base">{ttsLoading && !natActive ? '⏳' : natActive ? '⏹' : '🔊'}</span>
             <div className="text-left">
               <div style={{ fontSize: 13, fontWeight: 700 }}>
-                {natActive ? labels.stop[lang] : nativeLangLabel[lang]}
+                {natActive ? labels.stop[lang] ?? labels.stop['en'] : nativeLangLabel[lang]}
               </div>
             </div>
           </button>
@@ -159,10 +164,10 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
             color: 'rgba(245,158,11,0.75)',
             opacity: ttsLoading && !deActive ? 0.5 : 1,
           }}
-          title={labels.slow[lang]}
+          title={labels.slow[lang] ?? labels.slow['en']}
         >
           <span>🐢</span>
-          <span>{labels.slow[lang]}</span>
+          <span>{labels.slow[lang] ?? labels.slow['en']}</span>
         </button>
 
         {/* Mic — Whisper */}
@@ -178,7 +183,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
         >
           <span className="text-base">{processing ? '⏳' : listening ? '🔴' : '🎤'}</span>
           <span>
-            {processing ? labels.processing[lang] : listening ? labels.listening[lang] : labels.speak[lang]}
+            {processing ? labels.processing[lang] ?? labels.processing['en'] : listening ? labels.listening[lang] ?? labels.listening['en'] : labels.speak[lang] ?? labels.speak['en']}
           </span>
         </button>
       </div>
@@ -194,7 +199,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
         >
           <div className="flex items-center justify-between mb-1">
             <span style={{ color: statusColor[result.status], fontWeight: 600, direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-              {labels.feedback[result.status][lang]}
+              {labels.feedback[result.status][lang] ?? labels.feedback[result.status]['en']}
             </span>
             <span className="text-sm font-bold" style={{ color: statusColor[result.status] }}>
               {result.score}%
@@ -212,7 +217,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
             />
           </div>
           <button onClick={reset} className="mt-2 text-xs" style={{ color: 'rgba(139,143,168,0.5)' }}>
-            ✕ {labels.close[lang]}
+            ✕ {labels.close[lang] ?? labels.close['en']}
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@ import { useProgress } from '../../store/ProgressContext';
 import { OnboardingLayout } from './OnboardingLayout';
 import type { Language } from '../../types';
 
+
 const languages: { code: Language; flag: string; native: string; subtitle: string }[] = [
   { code: 'de', flag: '🇩🇪', native: 'Deutsch',    subtitle: 'Wähle Deutsch' },
   { code: 'ar', flag: '🇸🇦', native: 'العربية',    subtitle: 'اختر العربية' },
@@ -17,12 +18,11 @@ const languages: { code: Language; flag: string; native: string; subtitle: strin
 
 export function Step1Language() {
   const navigate = useNavigate();
-  const { setLanguage, setTargetLanguage, progress } = useProgress();
+  const { setLanguage, progress } = useProgress();
 
   const handleSelect = (code: Language) => {
     setLanguage(code);
-    setTargetLanguage('de');
-    navigate('/onboarding/2');
+    navigate('/onboarding/target');
   };
 
   return (
@@ -35,10 +35,10 @@ export function Step1Language() {
           Linguu
         </h1>
         <p className="text-base" style={{ color: '#8b8fa8' }}>
-          Wähle deine Muttersprache
+          Wähle deine Muttersprache · Choose your language
         </p>
         <p className="text-sm mt-1" style={{ color: 'rgba(139,143,168,0.6)' }}>
-          Choose · Wybierz · Выбери · Seçin · Alege · اختر
+          Выбери · Обери · Seçin · Wybierz · Alege · اختر · Elige
         </p>
       </div>
 
