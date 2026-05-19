@@ -17,10 +17,11 @@ const languages: { code: Language; flag: string; native: string; subtitle: strin
 
 export function Step1Language() {
   const navigate = useNavigate();
-  const { setLanguage, progress } = useProgress();
+  const { setLanguage, setTargetLanguage, progress } = useProgress();
 
   const handleSelect = (code: Language) => {
     setLanguage(code);
+    setTargetLanguage('de');
     navigate('/onboarding/2');
   };
 

@@ -1,12 +1,24 @@
 import React from 'react';
+import { useProgress } from '../../store/ProgressContext';
+import { t } from '../../i18n';
+import type { Language } from '../../types';
 
 interface OnboardingLayoutProps {
-  step: 1 | 2 | 3 | 4;
+  step: 1 | 2 | 3;
   children: React.ReactNode;
   onBack?: () => void;
 }
 
 export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutProps) {
+  const { progress } = useProgress();
+  const lang = (progress.language ?? 'en') as Language;
+
+  const stepLabels = [
+    t('stepNativeLang', lang),
+    t('stepPath', lang),
+    t('stepLevel', lang),
+  ];
+
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -23,7 +35,7 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
               onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
               onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
             >
-              ← Zurück
+              {t('back', lang)}
             </button>
           )}
         </div>
@@ -50,7 +62,7 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
       {/* Progress indicator */}
       <div className="flex justify-center mb-10">
         <div className="flex items-center gap-3">
-          {[1, 2, 3, 4].map(s => (
+          {[1, 2, 3].map(s => (
             <React.Fragment key={s}>
               <div className="flex flex-col items-center gap-1">
                 <div
@@ -78,10 +90,10 @@ export function OnboardingLayout({ step, children, onBack }: OnboardingLayoutPro
                   className="text-xs hidden sm:block"
                   style={{ color: s <= step ? '#8b8fa8' : 'rgba(255,255,255,0.2)' }}
                 >
-                  {s === 1 ? 'Muttersprache' : s === 2 ? 'Lernsprache' : s === 3 ? 'Lernpfad' : 'Level'}
+                  {stepLabels[s - 1]}
                 </span>
               </div>
-              {s < 4 && (
+              {s < 3 && (
                 <div
                   className="w-8 h-0.5 rounded transition-all duration-500"
                   style={{ background: s < step ? '#f59e0b' : 'rgba(255,255,255,0.1)' }}

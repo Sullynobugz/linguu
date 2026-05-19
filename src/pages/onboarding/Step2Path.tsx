@@ -128,11 +128,11 @@ export function Step2Path() {
 
   const handleSelect = (id: Path) => {
     setPath(id);
-    navigate('/onboarding/4');
+    navigate('/onboarding/3');
   };
 
   return (
-    <OnboardingLayout step={3} onBack={() => navigate('/onboarding/2')}>
+    <OnboardingLayout step={2} onBack={() => navigate('/onboarding/1')}>
       <div className="text-center mb-8">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"
@@ -140,9 +140,6 @@ export function Step2Path() {
         >
           {t('choosePath', lang)}
         </h1>
-        <p className="text-base mt-1" style={{ color: '#8b8fa8' }}>
-          Was beschreibt deine Situation am besten?
-        </p>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -200,7 +197,7 @@ export function Step2Path() {
                     className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-semibold"
                     style={{ background: 'rgba(99,102,241,0.2)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.4)' }}
                   >
-                    Ziel: B1
+                    {t('zielB1', lang)}
                   </span>
                 )}
               </div>

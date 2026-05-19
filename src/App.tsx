@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProgressProvider, useProgress } from './store/ProgressContext';
 import { Step1Language } from './pages/onboarding/Step1Language';
-import { Step2Target } from './pages/onboarding/Step2Target';
 import { Step2Path } from './pages/onboarding/Step2Path';
 import { Step3Assessment } from './pages/onboarding/Step3Assessment';
 import { Dashboard } from './pages/Dashboard';
@@ -24,13 +23,10 @@ function AppRoutes() {
       <Routes>
         <Route path="/onboarding/1" element={<Step1Language />} />
         <Route path="/onboarding/2" element={
-          progress.language ? <Step2Target /> : <Navigate to="/onboarding/1" replace />
+          progress.language ? <Step2Path /> : <Navigate to="/onboarding/1" replace />
         } />
         <Route path="/onboarding/3" element={
-          progress.targetLanguage ? <Step2Path /> : <Navigate to="/onboarding/2" replace />
-        } />
-        <Route path="/onboarding/4" element={
-          progress.path ? <Step3Assessment /> : <Navigate to="/onboarding/3" replace />
+          progress.path ? <Step3Assessment /> : <Navigate to="/onboarding/2" replace />
         } />
         <Route path="*" element={<Navigate to="/onboarding/1" replace />} />
       </Routes>

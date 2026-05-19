@@ -1,6 +1,41 @@
 import type { Language } from './types';
 
 export const ui: Record<string, Partial<Record<Language, string>>> = {
+  // Onboarding step labels
+  stepNativeLang: {
+    de: 'Muttersprache',
+    ar: 'اللغة الأم',
+    uk: 'Рідна мова',
+    es: 'Lengua materna',
+    en: 'Native language',
+    tr: 'Ana dil',
+    pl: 'Język ojczysty',
+    ro: 'Limbă maternă',
+    ru: 'Родной язык',
+  },
+  stepPath: {
+    de: 'Lernpfad',
+    ar: 'مسار التعلم',
+    uk: 'Шлях навчання',
+    es: 'Ruta de aprendizaje',
+    en: 'Learning path',
+    tr: 'Öğrenme yolu',
+    pl: 'Ścieżka nauki',
+    ro: 'Cale de învățare',
+    ru: 'Путь обучения',
+  },
+  stepLevel: {
+    de: 'Niveau',
+    ar: 'المستوى',
+    uk: 'Рівень',
+    es: 'Nivel',
+    en: 'Level',
+    tr: 'Seviye',
+    pl: 'Poziom',
+    ro: 'Nivel',
+    ru: 'Уровень',
+  },
+
   // Onboarding
   welcomeTitle: {
     de: 'Willkommen bei Linguu',
@@ -93,6 +128,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ru: 'Твой прогресс',
   },
   xpUntilLevel: {
+    de: 'XP bis Level',
     ar: 'XP حتى المستوى',
     uk: 'XP до рівня',
     es: 'XP hasta el nivel',
@@ -207,6 +243,28 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Następna odznaka:',
     ro: 'Următoarea insignă:',
     ru: 'Следующий значок:',
+  },
+  badges: {
+    de: 'Badges',
+    ar: 'الشارات',
+    uk: 'Відзнаки',
+    es: 'Insignias',
+    en: 'Badges',
+    tr: 'Rozetler',
+    pl: 'Odznaki',
+    ro: 'Insigne',
+    ru: 'Значки',
+  },
+  zielB1: {
+    de: 'Ziel: B1',
+    ar: 'الهدف: B1',
+    uk: 'Ціль: B1',
+    es: 'Objetivo: B1',
+    en: 'Goal: B1',
+    tr: 'Hedef: B1',
+    pl: 'Cel: B1',
+    ro: 'Obiectiv: B1',
+    ru: 'Цель: B1',
   },
   reportLink: {
     de: '📄 Bericht für Behörden',

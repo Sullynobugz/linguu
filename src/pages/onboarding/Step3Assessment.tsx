@@ -309,7 +309,7 @@ export function Step3Assessment() {
   if (showResult) {
     const msg = resultMessages[result][lang] ?? resultMessages[result]['en']!;
     return (
-      <OnboardingLayout step={4} onBack={() => navigate('/onboarding/3')}>
+      <OnboardingLayout step={3} onBack={() => navigate('/onboarding/2')}>
         <div className="text-center animate-fade-in-up">
           <div
             className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 text-4xl"
@@ -351,7 +351,7 @@ export function Step3Assessment() {
   }
 
   return (
-    <OnboardingLayout step={4} onBack={() => navigate('/onboarding/3')}>
+    <OnboardingLayout step={3} onBack={() => navigate('/onboarding/2')}>
       <div className="text-center mb-6">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"

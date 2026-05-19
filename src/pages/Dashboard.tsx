@@ -499,8 +499,8 @@ export function Dashboard() {
 
         {/* Badges */}
         <div className="mb-10">
-          <h2 className="text-xl font-bold mb-5" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
-            Badges
+          <h2 className="text-xl font-bold mb-5" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+            {t('badges', lang)}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {allBadges.map(badge => {
