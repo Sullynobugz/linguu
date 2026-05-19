@@ -1,0 +1,14 @@
+/* Linguu App Styles — Tailwind handles most styling */
+
+@media print {
+  body {
+    background: white !important;
+    color: #111 !important;
+  }
+  #report {
+    color: #111 !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+}
