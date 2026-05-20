@@ -218,15 +218,15 @@ export function LessonScreen() {
       {/* Main content */}
       <div className="flex-1 flex flex-col justify-center py-6 relative">
 
-        {/* Back button — linker Rand, ragt nach rechts rein */}
+        {/* Back button — linker Rand */}
         <button
           onClick={handlePrev}
           disabled={isFirst}
-          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center text-xl transition-all duration-200 z-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
           style={{
-            width: 52,
-            height: 120,
-            borderRadius: '0 16px 16px 0',
+            width: 80,
+            height: 160,
+            borderRadius: '0 20px 20px 0',
             background: 'rgba(26,29,39,0.9)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderLeft: 'none',
@@ -235,20 +235,26 @@ export function LessonScreen() {
             cursor: isFirst ? 'default' : 'pointer',
           }}
         >
-          ←
+          <span style={{ fontSize: 22 }}>←</span>
+          <span style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+            {t('back', lang).replace(/←\s*/g, '')}
+          </span>
+          {lang !== 'de' && (
+            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+              {t('back', 'de').replace(/←\s*/g, '')}
+            </span>
+          )}
         </button>
 
-        {/* Next / Quiz button — rechter Rand, ragt nach links rein */}
+        {/* Next / Quiz button — rechter Rand */}
         <button
           onClick={handleNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center text-xl transition-all duration-200 z-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
           style={{
-            width: 52,
-            height: 120,
-            borderRadius: '16px 0 0 16px',
-            background: isLast
-              ? 'rgba(245,158,11,0.15)'
-              : 'linear-gradient(135deg, #f59e0b, #d97706)',
+            width: 80,
+            height: 160,
+            borderRadius: '20px 0 0 20px',
+            background: isLast ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
             border: isLast ? '1px solid rgba(245,158,11,0.4)' : 'none',
             borderRight: 'none',
             color: isLast ? '#f59e0b' : '#0f1117',
@@ -257,10 +263,22 @@ export function LessonScreen() {
           onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
-          {isLast ? '🎯' : '→'}
+          <span style={{ fontSize: isLast ? 20 : 22 }}>{isLast ? '🎯' : '→'}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+            {isLast
+              ? t('toQuiz', lang).replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
+              : t('next', lang).replace(/\s*←/g, '')}
+          </span>
+          {lang !== 'de' && (
+            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+              {isLast
+                ? t('toQuiz', 'de').replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
+                : t('next', 'de').replace(/\s*←/g, '')}
+            </span>
+          )}
         </button>
 
-        <div className="flex flex-col items-center px-16">
+        <div className="flex flex-col items-center px-[84px]">
         <div className="w-full max-w-2xl">
 
           {/* Lernphrase — large, central */}
