@@ -574,6 +574,30 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     de: 'Anhören',
   },
 
+  // Vocab mode toggle
+  vocabPhrases: {
+    de: '💬 Phrasen',
+    ar: '💬 عبارات',
+    uk: '💬 Фрази',
+    es: '💬 Frases',
+    en: '💬 Phrases',
+    tr: '💬 Cümleler',
+    pl: '💬 Frazy',
+    ro: '💬 Fraze',
+    ru: '💬 Фразы',
+  },
+  vocabWords: {
+    de: '🔤 Wörter',
+    ar: '🔤 كلمات',
+    uk: '🔤 Слова',
+    es: '🔤 Palabras',
+    en: '🔤 Words',
+    tr: '🔤 Kelimeler',
+    pl: '🔤 Słowa',
+    ro: '🔤 Cuvinte',
+    ru: '🔤 Слова',
+  },
+
   // Vocab
   vocabTitle: {
     de: 'Vokabelkarten',

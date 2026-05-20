@@ -5,6 +5,7 @@ import { topics } from '../data/content';
 import { words as allWords } from '../data/words';
 import { useSpeak } from '../hooks/useSpeech';
 import { t, getT, langNames } from '../i18n';
+import { BilingualText } from '../components/BilingualText';
 import type { Language, Word } from '../types';
 
 interface VocabCard {
@@ -212,7 +213,7 @@ export function VocabScreen() {
           className="text-2xl font-bold mb-3"
           style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
         >
-          {t('allMastered', lang)}
+          <BilingualText native={t('allMastered', lang)} de={t('allMastered', 'de')} lang={lang} />
         </h1>
         <p className="text-sm mb-8" style={{ color: '#8b8fa8' }}>
           {masteredCount} / {total} {t('masteredCount', lang)}
@@ -229,7 +230,7 @@ export function VocabScreen() {
           className="px-8 py-3.5 rounded-xl font-semibold text-sm"
           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
         >
-          {t('overview', lang)}
+          <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
       </div>
     );
@@ -255,10 +256,10 @@ export function VocabScreen() {
           onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
           onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
         >
-          ← {t('overview', lang)}
+          ← <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
         <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700 }}>
-          🃏 {t('vocabTitle', lang)}
+          🃏 <BilingualText native={t('vocabTitle', lang)} de={t('vocabTitle', 'de')} lang={lang} />
         </span>
         <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
           {idx + 1} / {total}
@@ -278,7 +279,11 @@ export function VocabScreen() {
               color: mode === m ? '#f59e0b' : '#8b8fa8',
             }}
           >
-            {m === 'phrases' ? '💬 Phrasen' : '🔤 Wörter'}
+            <BilingualText
+              native={t(m === 'phrases' ? 'vocabPhrases' : 'vocabWords', lang)}
+              de={t(m === 'phrases' ? 'vocabPhrases' : 'vocabWords', 'de')}
+              lang={lang}
+            />
           </button>
         ))}
       </div>
@@ -298,11 +303,15 @@ export function VocabScreen() {
       <div className="flex justify-center gap-6 pt-4 px-6">
         <div className="text-center">
           <div className="text-lg font-bold" style={{ color: '#10b981' }}>{masteredCount}</div>
-          <div className="text-xs" style={{ color: '#8b8fa8' }}>{t('masteredCount', lang)}</div>
+          <div className="text-xs" style={{ color: '#8b8fa8' }}>
+            <BilingualText native={t('masteredCount', lang)} de={t('masteredCount', 'de')} lang={lang} />
+          </div>
         </div>
         <div className="text-center">
           <div className="text-lg font-bold" style={{ color: '#f59e0b' }}>{total - masteredCount}</div>
-          <div className="text-xs" style={{ color: '#8b8fa8' }}>{t('again', lang)}</div>
+          <div className="text-xs" style={{ color: '#8b8fa8' }}>
+            <BilingualText native={t('again', lang)} de={t('again', 'de')} lang={lang} />
+          </div>
         </div>
         <div className="text-center">
           <div className="text-lg">{topicIcon}</div>
@@ -371,7 +380,7 @@ export function VocabScreen() {
                   🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
                 </button>
                 <p className="text-xs mt-4 animate-pulse" style={{ color: '#8b8fa8' }}>
-                  {t('tapToFlip', lang)}
+                  <BilingualText native={t('tapToFlip', lang)} de={t('tapToFlip', 'de')} lang={lang} />
                 </p>
               </div>
 
@@ -418,10 +427,10 @@ export function VocabScreen() {
           {flipped ? (
             <div className="grid grid-cols-3 gap-3 animate-fade-in-up">
               {([
-                { level: 0 as const, icon: '🔄', label: t('again', lang), color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)' },
-                { level: 1 as const, icon: '👍', label: t('good', lang), color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)' },
-                { level: 2 as const, icon: '⭐', label: t('mastered', lang), color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.35)' },
-              ]).map(({ level, icon, label, color, bg, border }) => (
+                { level: 0 as const, icon: '🔄', labelNative: t('again', lang), labelDE: t('again', 'de'), color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)' },
+                { level: 1 as const, icon: '👍', labelNative: t('good', lang), labelDE: t('good', 'de'), color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)' },
+                { level: 2 as const, icon: '⭐', labelNative: t('mastered', lang), labelDE: t('mastered', 'de'), color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.35)' },
+              ]).map(({ level, icon, labelNative, labelDE, color, bg, border }) => (
                 <button
                   key={level}
                   onClick={() => handleRate(level)}
@@ -431,13 +440,13 @@ export function VocabScreen() {
                   onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   <span className="text-xl">{icon}</span>
-                  <span>{label}</span>
+                  <BilingualText native={labelNative} de={labelDE} lang={lang} />
                 </button>
               ))}
             </div>
           ) : (
             <p className="text-center text-sm" style={{ color: '#8b8fa8' }}>
-              {t('vocabSubtitle', lang)}
+              <BilingualText native={t('vocabSubtitle', lang)} de={t('vocabSubtitle', 'de')} lang={lang} />
             </p>
           )}
         </div>

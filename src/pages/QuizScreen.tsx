@@ -4,6 +4,7 @@ import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
 import { getEncouragingMessage } from '../api/claude';
 import { t, getT, langNames } from '../i18n';
+import { BilingualText } from '../components/BilingualText';
 import { useSpeak } from '../hooks/useSpeech';
 import type { Language, Level } from '../types';
 
@@ -132,9 +133,9 @@ export function QuizScreen() {
           <div className="text-6xl mb-4">{isPerfect ? '🏆' : score >= 60 ? '🌟' : '💪'}</div>
           <h1
             className="text-3xl font-bold mb-2"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
           >
-            {t('yourResult', lang)}
+            <BilingualText native={t('yourResult', lang)} de={t('yourResult', 'de')} lang={lang} />
           </h1>
 
           <div className="flex justify-center gap-8 mb-6 mt-6">
@@ -142,13 +143,17 @@ export function QuizScreen() {
               <div className="text-4xl font-bold" style={{ color: '#f59e0b' }}>
                 {correct}/{questions.length}
               </div>
-              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>{t('correct', lang)}</div>
+              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                <BilingualText native={t('correct', lang)} de={t('correct', 'de')} lang={lang} />
+              </div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold" style={{ color: '#10b981' }}>
                 +{xpEarned}
               </div>
-              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>{t('xpEarned', lang)}</div>
+              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                <BilingualText native={t('xpEarned', lang)} de={t('xpEarned', 'de')} lang={lang} />
+              </div>
             </div>
           </div>
 
@@ -186,7 +191,7 @@ export function QuizScreen() {
               className="flex-1 py-3.5 rounded-xl font-semibold text-sm transition-all"
               style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)', color: '#f0ede8' }}
             >
-              {t('overview', lang)}
+              <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
             </button>
             <button
               onClick={() => {
@@ -204,7 +209,7 @@ export function QuizScreen() {
               onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
               onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             >
-              {t('keepLearning', lang)} →
+              <BilingualText native={t('keepLearning', lang) + ' →'} de={t('keepLearning', 'de') + ' →'} lang={lang} />
             </button>
           </div>
         </div>
@@ -269,13 +274,12 @@ export function QuizScreen() {
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.2)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.12)')}
             >
-              🔊 {t('listen', lang)}
+              🔊 <BilingualText native={t('listen', lang)} de={t('listen', 'de')} lang={lang} />
             </button>
           </div>
 
-          {/* Question in native language */}
-          <p className="text-sm text-center mb-4" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-            {t('whatDoesItMean', lang)}
+          <p className="text-sm text-center mb-4" style={{ color: '#8b8fa8' }}>
+            <BilingualText native={t('whatDoesItMean', lang)} de={t('whatDoesItMean', 'de')} lang={lang} />
           </p>
 
           <div className="grid grid-cols-1 gap-3">

@@ -5,6 +5,7 @@ import { topics, topicOrder } from '../data/content';
 import { allBadges } from '../data/badges';
 import { getXpForLevel, getNextLevel } from '../store/progress';
 import { t } from '../i18n';
+import { BilingualText } from '../components/BilingualText';
 import type { Level, Language } from '../types';
 
 const levelColors: Record<Level, string> = {
@@ -234,11 +235,8 @@ export function Dashboard() {
         >
           <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div>
-              {/* Title in native language */}
-              <h2
-                style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 22, fontWeight: 700, margin: 0, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-              >
-                {t('yourProgress', lang)}
+              <h2 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 22, fontWeight: 700, margin: 0 }}>
+                <BilingualText native={t('yourProgress', lang)} de={t('yourProgress', 'de')} lang={lang} />
               </h2>
               <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
                 {xpInLevel} / {xpNeeded} XP · {t('xpUntilLevel', lang)} {nextLevel ?? progress.level}
@@ -309,7 +307,7 @@ export function Dashboard() {
                 <span className="text-3xl">{suggested.icon}</span>
                 <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                   <p className="text-xs font-semibold mb-1" style={{ color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    {t('todayRecommended', lang)}
+                    <BilingualText native={t('todayRecommended', lang)} de={t('todayRecommended', 'de')} lang={lang} />
                   </p>
                   {/* Topic title in native language */}
                   <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 20, fontWeight: 700, margin: 0 }}>
@@ -352,7 +350,7 @@ export function Dashboard() {
                 <span className="text-3xl">🃏</span>
                 <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                   <p className="text-xs font-semibold mb-1" style={{ color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    {t('vocabDash', lang)}
+                    <BilingualText native={t('vocabDash', lang)} de={t('vocabDash', 'de')} lang={lang} />
                   </p>
                   <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 18, fontWeight: 700, margin: 0 }}>
                     {t('vocabTitle', lang)}
@@ -386,10 +384,10 @@ export function Dashboard() {
               <span className="text-3xl">🪪</span>
               <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                 <p className="text-xs font-semibold mb-1" style={{ color: '#818cf8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  {t('einbuergerungWidget', lang)}
+                  <BilingualText native={t('einbuergerungWidget', lang)} de={t('einbuergerungWidget', 'de')} lang={lang} />
                 </p>
                 <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 18, fontWeight: 700, margin: 0 }}>
-                  {t('b1Goal', lang)}
+                  <BilingualText native={t('b1Goal', lang)} de={t('b1Goal', 'de')} lang={lang} />
                 </h3>
                 <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
                   {t('einbuergerungWidgetSub', lang)}
@@ -406,11 +404,8 @@ export function Dashboard() {
         )}
 
         {/* Topic Cards */}
-        <h2
-          className="text-xl font-bold mb-5"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-        >
-          {t('yourTopics', lang)}
+        <h2 className="text-xl font-bold mb-5" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+          <BilingualText native={t('yourTopics', lang)} de={t('yourTopics', 'de')} lang={lang} />
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
           {orderedTopics.map((topic, idx) => {
@@ -453,8 +448,8 @@ export function Dashboard() {
                   {!unlocked ? (
                     <span className="text-lg">🔒</span>
                   ) : completed ? (
-                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b' }}>
-                      {t('done', lang)}
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold leading-tight" style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b' }}>
+                      <BilingualText native={t('done', lang)} de={t('done', 'de')} lang={lang} />
                     </span>
                   ) : seenCount > 0 ? (
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.07)', color: '#8b8fa8' }}>
@@ -499,8 +494,8 @@ export function Dashboard() {
 
         {/* Badges */}
         <div className="mb-10">
-          <h2 className="text-xl font-bold mb-5" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-            {t('badges', lang)}
+          <h2 className="text-xl font-bold mb-5" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            <BilingualText native={t('badges', lang)} de={t('badges', 'de')} lang={lang} />
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {allBadges.map(badge => {

@@ -5,6 +5,7 @@ import { topics } from '../data/content';
 import { explainPhrase } from '../api/claude';
 import { t, getT, langNames } from '../i18n';
 import { AudioControls } from '../components/AudioControls';
+import { BilingualText } from '../components/BilingualText';
 import { useSpeak } from '../hooks/useSpeech';
 import type { Language } from '../types';
 
@@ -161,7 +162,7 @@ export function LessonScreen() {
           onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
           onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
         >
-          ← {t('overview', lang)}
+          ← <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
         <div className="flex items-center gap-2 text-sm" style={{ color: '#8b8fa8' }}>
           <span>{topic.icon}</span>
@@ -278,7 +279,7 @@ export function LessonScreen() {
             style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
             <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.7 }}>
-              {t('example', lang)}
+              <BilingualText native={t('example', lang)} de={t('example', 'de')} lang={lang} />
             </p>
             <div className="flex items-start gap-3">
               <div className="flex-1">
@@ -310,7 +311,7 @@ export function LessonScreen() {
                 color: showExplanation ? '#f59e0b' : '#8b8fa8',
               }}
             >
-              {t('explain', lang)}
+              <BilingualText native={t('explain', lang)} de={t('explain', 'de')} lang={lang} />
               {explanationLoading && <span className="animate-pulse">...</span>}
             </button>
 
@@ -343,7 +344,7 @@ export function LessonScreen() {
                 cursor: isFirst ? 'default' : 'pointer',
               }}
             >
-              {t('back', lang)}
+              <BilingualText native={t('back', lang)} de={t('back', 'de')} lang={lang} />
             </button>
             <button
               onClick={handleNext}
@@ -352,7 +353,7 @@ export function LessonScreen() {
               onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
               onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             >
-              {isLast ? t('toQuiz', lang) : t('next', lang)}
+              <BilingualText native={isLast ? t('toQuiz', lang) : t('next', lang)} de={isLast ? t('toQuiz', 'de') : t('next', 'de')} lang={lang} />
             </button>
           </div>
         </div>
