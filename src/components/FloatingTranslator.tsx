@@ -5,6 +5,11 @@ import { translateText } from '../api/claude';
 import { whisperTranscribe, ttsSpeak } from '../api/openaiAudio';
 import type { Language } from '../types';
 
+const ttsVoice: Partial<Record<Language, string>> = {
+  de: 'nova', en: 'alloy', ar: 'shimmer', uk: 'shimmer',
+  es: 'nova', tr: 'echo', pl: 'echo', ro: 'echo', ru: 'shimmer',
+};
+
 const LANGS: { code: Language; label: string; flag: string }[] = [
   { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', label: 'English', flag: '🇬🇧' },
@@ -17,7 +22,7 @@ const LANGS: { code: Language; label: string; flag: string }[] = [
   { code: 'es', label: 'Español', flag: '🇪🇸' },
 ];
 
-function useSide(voiceRef: React.MutableRefObject<boolean>, mutedRef: React.MutableRefObject<boolean>) {
+function useSide(voiceRef: React.MutableRefObject<boolean>, mutedRef: React.MutableRefObject<boolean>, addOpenAiCost: (n: number) => void, addClaudeCost: (n: number) => void) {
   const [listening, setListening] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -69,7 +74,7 @@ function useSide(voiceRef: React.MutableRefObject<boolean>, mutedRef: React.Muta
       const blob = new Blob(chunksRef.current, { type: mimeType });
 
       try {
-        const text = await whisperTranscribe(blob, duration);
+        const text = await whisperTranscribe(blob, duration, u => addOpenAiCost(u.costEur), fromRef.current);
         setTranscript(text);
 
         let full = '';
@@ -78,12 +83,13 @@ function useSide(voiceRef: React.MutableRefObject<boolean>, mutedRef: React.Muta
           fromRef.current,
           toRef.current,
           chunk => { full += chunk; setTranslation(full); },
-          () => {}
+          usage => addClaudeCost(usage.costEur)
         );
 
         if (voiceRef.current && full && !mutedRef.current) {
           try {
-            const audio = await ttsSpeak(full, 1.0);
+            const voice = ttsVoice[toRef.current] ?? 'nova';
+            const audio = await ttsSpeak(full, 1.0, u => addOpenAiCost(u.costEur), voice);
             await audio.play();
           } catch { /* ignore TTS errors */ }
         }
@@ -216,7 +222,7 @@ function Panel({ lang, onLangChange, side, toLang }: PanelProps) {
 }
 
 export function FloatingTranslator() {
-  const { progress } = useProgress();
+  const { progress, addOpenAiCost, addClaudeCost } = useProgress();
   const { muted } = useAudio();
   const [open, setOpen] = useState(false);
   const [voiceOutput, setVoiceOutput] = useState(false);
@@ -232,8 +238,8 @@ export function FloatingTranslator() {
     return native;
   });
 
-  const sideA = useSide(voiceRef, mutedRef);
-  const sideB = useSide(voiceRef, mutedRef);
+  const sideA = useSide(voiceRef, mutedRef, addOpenAiCost, addClaudeCost);
+  const sideB = useSide(voiceRef, mutedRef, addOpenAiCost, addClaudeCost);
 
   if (!open) {
     return (

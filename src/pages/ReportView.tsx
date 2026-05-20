@@ -5,10 +5,15 @@ import { t } from '../i18n';
 import type { Language } from '../types';
 
 const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
+  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall' },
   ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
   uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
   es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },
   en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies' },
+  tr: { jobcenter: 'İş Merkezi', arzt: 'Doktor', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar' },
+  pl: { jobcenter: 'Urząd Pracy', arzt: 'Lekarz', wohnung: 'Szukanie Mieszkania', alltag: 'Życie Codzienne', behoerden: 'Urzędy', notfall: 'Sytuacje Awaryjne' },
+  ro: { jobcenter: 'Oficiul de Șomaj', arzt: 'Medic', wohnung: 'Apartament', alltag: 'Viața Cotidiană', behoerden: 'Instituții', notfall: 'Urgențe' },
+  ru: { jobcenter: 'Центр Занятости', arzt: 'Врач', wohnung: 'Поиск Квартиры', alltag: 'Повседневная Жизнь', behoerden: 'Госорганы', notfall: 'Чрезвычайные Ситуации' },
 };
 
 const reportLabels: Partial<Record<Language, Record<string, string>>> = {
@@ -92,6 +97,106 @@ const reportLabels: Partial<Record<Language, Record<string, string>>> = {
     user: 'User',
     footer: 'Created with Linguu — learn German for daily life',
   },
+  de: {
+    currentLevel: 'Aktuelles Sprachniveau',
+    totalTime: 'Gesamte Lernzeit',
+    activeDays: 'Aktive Tage',
+    completedLessons: 'Abgeschlossene Lektionen',
+    learnedPhrases: 'Gelernte Phrasen',
+    quizAvg: 'Quiz-Durchschnitt',
+    longestStreak: 'Längste Serie',
+    totalXp: 'Gesamt XP',
+    currentStreak: 'Aktuelle Serie',
+    topics: 'Behandelte Themen',
+    badges: 'Verdiente Abzeichen',
+    noQuiz: 'Noch kein Quiz abgeschlossen',
+    inProgress: 'In Bearbeitung',
+    notStarted: 'Noch nicht begonnen',
+    anon: 'Anonym (keine persönlichen Daten gespeichert)',
+    created: 'Erstellt am',
+    user: 'Nutzer',
+    footer: 'Erstellt mit Linguu — Sprachen lernen für den Alltag',
+  },
+  tr: {
+    currentLevel: 'Mevcut dil seviyesi',
+    totalTime: 'Toplam öğrenme süresi',
+    activeDays: 'Aktif günler',
+    completedLessons: 'Tamamlanan dersler',
+    learnedPhrases: 'Öğrenilen ifadeler',
+    quizAvg: 'Quiz ortalaması',
+    longestStreak: 'En uzun seri',
+    totalXp: 'Toplam XP',
+    currentStreak: 'Mevcut seri',
+    topics: 'Ele alınan konular',
+    badges: 'Kazanılan rozetler',
+    noQuiz: 'Henüz quiz tamamlanmadı',
+    inProgress: 'Devam ediyor',
+    notStarted: 'Başlanmadı',
+    anon: 'Anonim (kişisel veri saklanmaz)',
+    created: 'Oluşturulma tarihi',
+    user: 'Kullanıcı',
+    footer: 'Linguu ile oluşturuldu — günlük yaşam için Almanca öğren',
+  },
+  pl: {
+    currentLevel: 'Aktualny poziom języka',
+    totalTime: 'Łączny czas nauki',
+    activeDays: 'Aktywne dni',
+    completedLessons: 'Ukończone lekcje',
+    learnedPhrases: 'Nauczone zwroty',
+    quizAvg: 'Średnia z quizów',
+    longestStreak: 'Najdłuższa seria',
+    totalXp: 'Łącznie XP',
+    currentStreak: 'Aktualna seria',
+    topics: 'Omówione tematy',
+    badges: 'Zdobyte odznaki',
+    noQuiz: 'Brak ukończonych quizów',
+    inProgress: 'W toku',
+    notStarted: 'Nie zaczęto',
+    anon: 'Anonimowy (brak przechowywanych danych osobowych)',
+    created: 'Data utworzenia',
+    user: 'Użytkownik',
+    footer: 'Stworzone z Linguu — ucz się niemieckiego na co dzień',
+  },
+  ro: {
+    currentLevel: 'Nivelul lingvistic actual',
+    totalTime: 'Timp total de învățare',
+    activeDays: 'Zile active',
+    completedLessons: 'Lecții finalizate',
+    learnedPhrases: 'Fraze învățate',
+    quizAvg: 'Media quizurilor',
+    longestStreak: 'Cea mai lungă serie',
+    totalXp: 'Total XP',
+    currentStreak: 'Seria actuală',
+    topics: 'Teme abordate',
+    badges: 'Insigne câștigate',
+    noQuiz: 'Niciun quiz finalizat încă',
+    inProgress: 'În curs',
+    notStarted: 'Neînceput',
+    anon: 'Anonim (fără date personale stocate)',
+    created: 'Data creării',
+    user: 'Utilizator',
+    footer: 'Creat cu Linguu — învață germana pentru viața de zi cu zi',
+  },
+  ru: {
+    currentLevel: 'Текущий уровень языка',
+    totalTime: 'Общее время обучения',
+    activeDays: 'Активные дни',
+    completedLessons: 'Завершённые уроки',
+    learnedPhrases: 'Выученные фразы',
+    quizAvg: 'Средний балл за тесты',
+    longestStreak: 'Самая длинная серия',
+    totalXp: 'Всего XP',
+    currentStreak: 'Текущая серия',
+    topics: 'Пройденные темы',
+    badges: 'Полученные значки',
+    noQuiz: 'Тесты ещё не пройдены',
+    inProgress: 'В процессе',
+    notStarted: 'Не начато',
+    anon: 'Анонимно (личные данные не хранятся)',
+    created: 'Дата создания',
+    user: 'Пользователь',
+    footer: 'Создано с Linguu — учи немецкий для повседневной жизни',
+  },
 };
 
 const daysLabel: Partial<Record<Language, string>> = { ar: ' أيام', uk: ' днів', es: ' días', en: ' days', de: ' Tage', tr: ' gün', pl: ' dni', ro: ' zile', ru: ' дней' };
@@ -104,7 +209,11 @@ export function ReportView() {
   const lang = (progress.language ?? 'en') as Language;
   const lbl = reportLabels[lang] ?? reportLabels['en']!;
 
-  const today = new Date().toLocaleDateString('de-DE', {
+  const localeMap: Partial<Record<Language, string>> = {
+    de: 'de-DE', ar: 'ar-SA', uk: 'uk-UA', es: 'es-ES',
+    en: 'en-GB', tr: 'tr-TR', pl: 'pl-PL', ro: 'ro-RO', ru: 'ru-RU',
+  };
+  const today = new Date().toLocaleDateString(localeMap[lang] ?? 'de-DE', {
     day: '2-digit', month: '2-digit', year: 'numeric',
   });
 
@@ -171,7 +280,9 @@ export function ReportView() {
           >
             {t('reportTitle', lang)}
           </h2>
-          <p className="text-sm" style={{ color: '#8b8fa8' }}>Linguu Fortschrittsbericht</p>
+          {lang !== 'de' && (
+            <p className="text-sm" style={{ color: '#8b8fa8' }}>Linguu Fortschrittsbericht</p>
+          )}
           <p className="text-sm mt-2" style={{ color: '#8b8fa8' }}>
             {lbl.created}: {today}
           </p>
@@ -271,9 +382,11 @@ export function ReportView() {
           <p className="text-xs" style={{ color: 'rgba(139,143,168,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
             {lbl.footer}
           </p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.4)' }}>
-            Erstellt mit Linguu — Deutsch lernen für den Alltag
-          </p>
+          {lang !== 'de' && (
+            <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.4)' }}>
+              Erstellt mit Linguu — Sprachen lernen für den Alltag
+            </p>
+          )}
         </div>
       </div>
     </div>
