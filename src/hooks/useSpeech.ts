@@ -9,6 +9,7 @@ export function useSpeak() {
   const [speaking, setSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentAudio = useRef<HTMLAudioElement | null>(null);
+  const reqId = useRef(0);
 
   const speak = useCallback(async (
     text: string,
@@ -17,28 +18,34 @@ export function useSpeak() {
     voice = 'nova'
   ) => {
     if (muted) return;
-    // Stop any current playback
     if (currentAudio.current) {
       currentAudio.current.pause();
       currentAudio.current = null;
     }
 
+    const thisReq = ++reqId.current;
     setLoading(true);
+    setSpeaking(false);
     try {
       const audio = await ttsSpeak(text, speed, onUsage, voice);
+      // A newer request was started while we were fetching — discard this result
+      if (reqId.current !== thisReq) return;
       currentAudio.current = audio;
       audio.onplay = () => { setLoading(false); setSpeaking(true); };
       audio.onended = () => { setSpeaking(false); currentAudio.current = null; };
       audio.onerror = () => { setSpeaking(false); setLoading(false); currentAudio.current = null; };
       await audio.play();
     } catch (err) {
-      console.error('TTS error:', err);
-      setLoading(false);
-      setSpeaking(false);
+      if (reqId.current === thisReq) {
+        console.error('TTS error:', err);
+        setLoading(false);
+        setSpeaking(false);
+      }
     }
-  }, []);
+  }, [muted]);
 
   const stop = useCallback(() => {
+    reqId.current++;
     if (currentAudio.current) {
       currentAudio.current.pause();
       currentAudio.current = null;

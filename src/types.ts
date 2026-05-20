@@ -30,6 +30,15 @@ export interface Badge {
   earnedAt?: string;
 }
 
+export interface Word {
+  id: string;
+  german: string;
+  article?: 'der' | 'die' | 'das';
+  type: 'nomen' | 'verb' | 'adjektiv' | 'ausdruck';
+  topicId: string;
+  translations: Partial<Record<Language, string>>;
+}
+
 export interface UserProgress {
   language: Language | null;
   targetLanguage: Language | null;
@@ -46,12 +55,13 @@ export interface UserProgress {
   longestStreak: number;
   activeDays: number;
   totalTimeMinutes: number;
-  sessionApiCostEur: number;
-  totalApiCostEur: number;
+  openAiCostEur: number;
+  claudeCostEur: number;
   onboardingComplete: boolean;
   assessmentLevel: Level | null;
   // 0 = new, 1 = learning, 2 = mastered
   vocabMastery: Record<string, 0 | 1 | 2>;
+  wordMastery: Record<string, 0 | 1 | 2>;
   einbuergerungChecklist: Record<string, boolean>;
 }
 

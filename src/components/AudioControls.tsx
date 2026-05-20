@@ -41,7 +41,7 @@ interface AudioControlsProps {
 }
 
 export function AudioControls({ germanPhrase, nativeTranslation, lang, compact = false, learnLangLabel }: AudioControlsProps) {
-  const { addApiCost } = useProgress();
+  const { addOpenAiCost } = useProgress();
   const { speak, stop: stopSpeak, speaking, loading: ttsLoading } = useSpeak();
   const { listen, stop: stopListen, reset, listening, processing, result } = useListen();
   const [activeVoice, setActiveVoice] = useState<'de' | 'native' | null>(null);
@@ -56,27 +56,27 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
   const handleListenDE = () => {
     if (isActive) { stopSpeak(); return; }
     setActiveVoice('de');
-    speak(germanPhrase, 0.9, u => addApiCost(u.costEur), 'nova');
+    speak(germanPhrase, 0.9, u => addOpenAiCost(u.costEur), 'nova');
   };
 
   const handleListenNative = () => {
     if (!nativeTranslation) return;
     if (isActive) { stopSpeak(); return; }
     setActiveVoice('native');
-    speak(nativeTranslation, 0.9, u => addApiCost(u.costEur), 'shimmer');
+    speak(nativeTranslation, 0.9, u => addOpenAiCost(u.costEur), 'shimmer');
   };
 
   const handleSlow = () => {
     if (isActive) { stopSpeak(); return; }
     setActiveVoice('de');
-    speak(germanPhrase, 0.6, u => addApiCost(u.costEur), 'nova');
+    speak(germanPhrase, 0.6, u => addOpenAiCost(u.costEur), 'nova');
   };
 
   const handleMic = () => {
     if (listening) { stopListen(); return; }
     if (processing) return;
     reset();
-    listen(germanPhrase, u => addApiCost(u.costEur));
+    listen(germanPhrase, u => addOpenAiCost(u.costEur));
   };
 
   if (compact) {

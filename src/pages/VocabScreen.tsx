@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
+import { words as allWords } from '../data/words';
 import { useSpeak } from '../hooks/useSpeech';
 import { t, getT, langNames } from '../i18n';
-import type { Language } from '../types';
+import type { Language, Word } from '../types';
 
 interface VocabCard {
   phraseId: string;
@@ -64,62 +65,143 @@ const targetLangLabel: Partial<Record<Language, string>> = {
 };
 
 
+type VocabMode = 'phrases' | 'words';
+
+interface WordCard {
+  wordId: string;
+  german: string;
+  article?: string;
+  type: Word['type'];
+  native: string;
+  topicId: string;
+}
+
+function buildWordDeck(nativeLang: Language, mastery: Record<string, 0 | 1 | 2>): WordCard[] {
+  return [...allWords]
+    .map(w => ({
+      wordId: w.id,
+      german: w.german,
+      article: w.article,
+      type: w.type,
+      native: w.translations[nativeLang] ?? w.translations['en'] ?? w.german,
+      topicId: w.topicId,
+    }))
+    .sort((a, b) => (mastery[a.wordId] ?? 0) - (mastery[b.wordId] ?? 0));
+}
+
+const typeLabel: Record<Word['type'], string> = {
+  nomen: 'Nomen',
+  verb: 'Verb',
+  adjektiv: 'Adjektiv',
+  ausdruck: 'Ausdruck',
+};
+
+const typeColor: Record<Word['type'], string> = {
+  nomen: '#818cf8',
+  verb: '#10b981',
+  adjektiv: '#f59e0b',
+  ausdruck: '#f472b6',
+};
+
 export function VocabScreen() {
   const navigate = useNavigate();
-  const { progress, setVocabMastery, addApiCost, addXp } = useProgress();
+  const { progress, setVocabMastery, setWordMastery, addOpenAiCost, addXp } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
   const targetLang = (progress.targetLanguage ?? 'de') as Language;
   const isGermanSpeaker = lang === 'de';
   const { speak, stop } = useSpeak();
 
-  const [deck] = useState<VocabCard[]>(() => buildDeck(lang, targetLang, progress.vocabMastery ?? {}));
-  const [idx, setIdx] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [rated, setRated] = useState<Set<string>>(new Set());
-  const [sessionMastery, setSessionMastery] = useState<Record<string, 0 | 1 | 2>>({ ...progress.vocabMastery });
+  const [mode, setMode] = useState<VocabMode>('phrases');
 
-  const card = deck[idx];
-  const total = deck.length;
-  const masteredCount = Object.values(sessionMastery).filter(v => v === 2).length;
+  // Phrase deck
+  const [phraseDeck] = useState<VocabCard[]>(() => buildDeck(lang, targetLang, progress.vocabMastery ?? {}));
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [phraseFlipped, setPhraseFlipped] = useState(false);
+  const [phraseRated, setPhraseRated] = useState<Set<string>>(new Set());
+  const [sessionPhraseMastery, setSessionPhraseMastery] = useState<Record<string, 0 | 1 | 2>>({ ...progress.vocabMastery });
 
-  // Auto-play German when card changes
+  // Word deck
+  const [wordDeck] = useState<WordCard[]>(() => buildWordDeck(lang, progress.wordMastery ?? {}));
+  const [wordIdx, setWordIdx] = useState(0);
+  const [wordFlipped, setWordFlipped] = useState(false);
+  const [wordRated, setWordRated] = useState<Set<string>>(new Set());
+  const [sessionWordMastery, setSessionWordMastery] = useState<Record<string, 0 | 1 | 2>>({ ...progress.wordMastery });
+
+  const autoPlayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const idx = mode === 'phrases' ? phraseIdx : wordIdx;
+  const card = mode === 'phrases' ? phraseDeck[phraseIdx] : null;
+  const wcard = mode === 'words' ? wordDeck[wordIdx] : null;
+  const total = mode === 'phrases' ? phraseDeck.length : wordDeck.length;
+  const masteredCount = mode === 'phrases'
+    ? Object.values(sessionPhraseMastery).filter(v => v === 2).length
+    : Object.values(sessionWordMastery).filter(v => v === 2).length;
+  const flipped = mode === 'phrases' ? phraseFlipped : wordFlipped;
+
+  const germanText = mode === 'phrases'
+    ? (card?.german ?? '')
+    : wcard ? (wcard.article ? `${wcard.article} ${wcard.german}` : wcard.german) : '';
+
+  const cancelAutoPlay = () => {
+    if (autoPlayTimer.current) { clearTimeout(autoPlayTimer.current); autoPlayTimer.current = null; }
+  };
+
+  // Auto-play when card/word changes
   useEffect(() => {
-    if (!card) return;
-    const t = setTimeout(() => {
-      speak(card.german, 0.9, u => addApiCost(u.costEur), 'nova');
+    if (!germanText) return;
+    autoPlayTimer.current = setTimeout(() => {
+      speak(germanText, 0.9, u => addOpenAiCost(u.costEur), 'nova');
     }, 300);
-    return () => { clearTimeout(t); stop(); };
+    return () => { cancelAutoPlay(); stop(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx]);
+  }, [idx, mode]);
 
   const handleFlip = useCallback(() => {
-    setFlipped(f => !f);
-  }, []);
+    if (mode === 'phrases') setPhraseFlipped(f => !f);
+    else setWordFlipped(f => !f);
+  }, [mode]);
 
   const handleRate = useCallback((level: 0 | 1 | 2) => {
-    if (!card) return;
-    setVocabMastery(card.phraseId, level);
-    setSessionMastery(prev => ({ ...prev, [card.phraseId]: level }));
-    if (!rated.has(card.phraseId)) {
-      addXp(5);
-      setRated(prev => new Set([...prev, card.phraseId]));
+    if (mode === 'phrases') {
+      if (!card) return;
+      setVocabMastery(card.phraseId, level);
+      setSessionPhraseMastery(prev => ({ ...prev, [card.phraseId]: level }));
+      if (!phraseRated.has(card.phraseId)) {
+        addXp(5);
+        setPhraseRated(prev => new Set([...prev, card.phraseId]));
+      }
+      setPhraseFlipped(false);
+      setPhraseIdx(i => i + 1);
+    } else {
+      if (!wcard) return;
+      setWordMastery(wcard.wordId, level);
+      setSessionWordMastery(prev => ({ ...prev, [wcard.wordId]: level }));
+      if (!wordRated.has(wcard.wordId)) {
+        addXp(3);
+        setWordRated(prev => new Set([...prev, wcard.wordId]));
+      }
+      setWordFlipped(false);
+      setWordIdx(i => i + 1);
     }
-    setFlipped(false);
-    setIdx(i => i + 1);
-  }, [card, rated, setVocabMastery, addXp]);
+  }, [mode, card, wcard, phraseRated, wordRated, setVocabMastery, setWordMastery, addXp]);
 
   const handlePlayDE = (e: React.MouseEvent) => {
     e.stopPropagation();
-    speak(card.german, 0.9, u => addApiCost(u.costEur), 'nova');
+    cancelAutoPlay();
+    speak(germanText, 0.9, u => addOpenAiCost(u.costEur), 'nova');
   };
 
   const handlePlayNative = (e: React.MouseEvent) => {
     e.stopPropagation();
-    speak(card.native, 0.9, u => addApiCost(u.costEur), 'shimmer');
+    cancelAutoPlay();
+    const nativeText = mode === 'phrases' ? card?.native ?? '' : wcard?.native ?? '';
+    speak(nativeText, 0.9, u => addOpenAiCost(u.costEur), 'shimmer');
   };
 
-  // All cards rated
-  if (!card || idx >= total) {
+  const currentCard = mode === 'phrases' ? card : wcard;
+  const isDone = !currentCard || idx >= total;
+
+  if (isDone) {
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
@@ -136,6 +218,13 @@ export function VocabScreen() {
           {masteredCount} / {total} {t('masteredCount', lang)}
         </p>
         <button
+          onClick={() => { if (mode === 'phrases') setPhraseIdx(0); else setWordIdx(0); }}
+          className="px-8 py-3.5 rounded-xl font-semibold text-sm mb-3"
+          style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', color: '#f59e0b' }}
+        >
+          ↩ Nochmal
+        </button>
+        <button
           onClick={() => navigate('/')}
           className="px-8 py-3.5 rounded-xl font-semibold text-sm"
           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
@@ -146,8 +235,11 @@ export function VocabScreen() {
     );
   }
 
-  const currentMastery = sessionMastery[card.phraseId] ?? 0;
+  const currentMastery = mode === 'phrases'
+    ? (sessionPhraseMastery[(card as VocabCard).phraseId] ?? 0)
+    : (sessionWordMastery[(wcard as WordCard).wordId] ?? 0);
   const masteryLabel = currentMastery === 2 ? '⭐' : currentMastery === 1 ? '📖' : '🆕';
+  const topicIcon = mode === 'phrases' ? (card as VocabCard).topicIcon : '📖';
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
@@ -173,8 +265,26 @@ export function VocabScreen() {
         </span>
       </div>
 
+      {/* Mode toggle */}
+      <div className="flex gap-2 px-6 pt-4">
+        {(['phrases', 'words'] as VocabMode[]).map(m => (
+          <button
+            key={m}
+            onClick={() => { cancelAutoPlay(); stop(); setMode(m); }}
+            className="flex-1 py-2 rounded-xl text-sm font-semibold transition-all"
+            style={{
+              background: mode === m ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.05)',
+              border: `1px solid ${mode === m ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.08)'}`,
+              color: mode === m ? '#f59e0b' : '#8b8fa8',
+            }}
+          >
+            {m === 'phrases' ? '💬 Phrasen' : '🔤 Wörter'}
+          </button>
+        ))}
+      </div>
+
       {/* Progress bar */}
-      <div className="w-full h-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      <div className="w-full h-1 mt-3" style={{ background: 'rgba(255,255,255,0.06)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
@@ -195,7 +305,7 @@ export function VocabScreen() {
           <div className="text-xs" style={{ color: '#8b8fa8' }}>{t('again', lang)}</div>
         </div>
         <div className="text-center">
-          <div className="text-lg">{card.topicIcon}</div>
+          <div className="text-lg">{topicIcon}</div>
           <div className="text-xs" style={{ color: '#8b8fa8' }}>{masteryLabel}</div>
         </div>
       </div>
@@ -207,11 +317,7 @@ export function VocabScreen() {
           {/* Card with flip effect */}
           <div
             onClick={handleFlip}
-            style={{
-              perspective: '1000px',
-              cursor: 'pointer',
-              marginBottom: 24,
-            }}
+            style={{ perspective: '1000px', cursor: 'pointer', marginBottom: 24 }}
           >
             <div
               style={{
@@ -219,76 +325,73 @@ export function VocabScreen() {
                 transformStyle: 'preserve-3d',
                 transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                minHeight: 260,
+                minHeight: 240,
               }}
             >
-              {/* Front: German */}
+              {/* Front */}
               <div
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
-                  background: 'rgba(26,29,39,0.9)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 24,
-                  padding: 32,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  minHeight: 260,
+                  position: 'absolute', inset: 0,
+                  backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+                  background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 24, padding: 32,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  textAlign: 'center', minHeight: 240,
                 }}
               >
-                <p className="text-xs uppercase tracking-widest mb-4" style={{ color: '#8b8fa8', opacity: 0.6 }}>
-                  {isGermanSpeaker ? `Auf ${targetLangLabel[targetLang] ?? targetLang}` : t('inGerman', lang)}
-                </p>
+                {mode === 'words' && wcard && (
+                  <span
+                    className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full mb-4"
+                    style={{ background: `${typeColor[wcard.type]}18`, color: typeColor[wcard.type], border: `1px solid ${typeColor[wcard.type]}40` }}
+                  >
+                    {typeLabel[wcard.type]}
+                  </span>
+                )}
+                {mode === 'words' && wcard?.article && (
+                  <p className="text-base mb-1" style={{ color: '#818cf8', fontWeight: 500 }}>
+                    {wcard.article}
+                  </p>
+                )}
                 <h2
                   className="mb-3 leading-tight"
-                  style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 700 }}
+                  style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700 }}
                 >
-                  {card.german}
+                  {mode === 'phrases' ? card?.german : wcard?.german}
                 </h2>
-                {card.phonetics && (
-                  <p className="font-mono text-sm mb-5" style={{ color: 'rgba(240,237,232,0.4)' }}>
+                {mode === 'phrases' && card?.phonetics && (
+                  <p className="font-mono text-sm mb-4" style={{ color: 'rgba(240,237,232,0.4)' }}>
                     [{card.phonetics}]
                   </p>
                 )}
                 <button
                   onClick={handlePlayDE}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-2"
                   style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
                 >
                   🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
                 </button>
-                <p className="text-xs mt-5 animate-pulse" style={{ color: '#8b8fa8' }}>
+                <p className="text-xs mt-4 animate-pulse" style={{ color: '#8b8fa8' }}>
                   {t('tapToFlip', lang)}
                 </p>
               </div>
 
-              {/* Back: Native translation */}
+              {/* Back */}
               <div
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
+                  position: 'absolute', inset: 0,
+                  backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
                   transform: 'rotateY(180deg)',
-                  background: 'rgba(26,29,39,0.9)',
-                  border: '1px solid rgba(99,102,241,0.4)',
-                  borderRadius: 24,
-                  padding: 32,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  minHeight: 260,
+                  background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(99,102,241,0.4)',
+                  borderRadius: 24, padding: 32,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  textAlign: 'center', minHeight: 240,
                 }}
               >
-                <p className="text-2xl font-bold mb-3" style={{ color: '#818cf8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-                  {card.native}
+                <p
+                  className="text-2xl font-bold mb-4"
+                  style={{ color: '#818cf8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+                >
+                  {mode === 'phrases' ? card?.native : wcard?.native}
                 </p>
                 <button
                   onClick={handlePlayNative}
@@ -297,51 +400,40 @@ export function VocabScreen() {
                 >
                   🔊 {isGermanSpeaker ? (langNames['de']?.[lang] ?? 'Auf Deutsch') : (langNames[lang]?.[lang] ?? lang)}
                 </button>
-                <div
-                  className="w-full rounded-xl p-3 text-sm"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
-                  dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                >
-                  <p style={{ color: '#f0ede8', fontStyle: 'italic' }}>„{card.germanExample}"</p>
-                  <p className="mt-1" style={{ color: '#8b8fa8', fontSize: 12 }}>{card.nativeExample}</p>
-                </div>
+                {mode === 'phrases' && card && (
+                  <div
+                    className="w-full rounded-xl p-3 text-sm"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                  >
+                    <p style={{ color: '#f0ede8', fontStyle: 'italic' }}>„{card.germanExample}"</p>
+                    <p className="mt-1" style={{ color: '#8b8fa8', fontSize: 12 }}>{card.nativeExample}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Rating buttons — only shown when flipped */}
+          {/* Rating buttons */}
           {flipped ? (
             <div className="grid grid-cols-3 gap-3 animate-fade-in-up">
-              <button
-                onClick={() => handleRate(0)}
-                className="py-4 rounded-xl font-semibold text-sm flex flex-col items-center gap-1 transition-all"
-                style={{ background: 'rgba(239,68,68,0.12)', border: '2px solid rgba(239,68,68,0.35)', color: '#ef4444' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.2)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.12)')}
-              >
-                <span className="text-xl">🔄</span>
-                <span>{t('again', lang)}</span>
-              </button>
-              <button
-                onClick={() => handleRate(1)}
-                className="py-4 rounded-xl font-semibold text-sm flex flex-col items-center gap-1 transition-all"
-                style={{ background: 'rgba(245,158,11,0.12)', border: '2px solid rgba(245,158,11,0.35)', color: '#f59e0b' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.2)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.12)')}
-              >
-                <span className="text-xl">👍</span>
-                <span>{t('good', lang)}</span>
-              </button>
-              <button
-                onClick={() => handleRate(2)}
-                className="py-4 rounded-xl font-semibold text-sm flex flex-col items-center gap-1 transition-all"
-                style={{ background: 'rgba(16,185,129,0.12)', border: '2px solid rgba(16,185,129,0.35)', color: '#10b981' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(16,185,129,0.2)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(16,185,129,0.12)')}
-              >
-                <span className="text-xl">⭐</span>
-                <span>{t('mastered', lang)}</span>
-              </button>
+              {([
+                { level: 0 as const, icon: '🔄', label: t('again', lang), color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)' },
+                { level: 1 as const, icon: '👍', label: t('good', lang), color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)' },
+                { level: 2 as const, icon: '⭐', label: t('mastered', lang), color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.35)' },
+              ]).map(({ level, icon, label, color, bg, border }) => (
+                <button
+                  key={level}
+                  onClick={() => handleRate(level)}
+                  className="py-4 rounded-xl font-semibold text-sm flex flex-col items-center gap-1 transition-all"
+                  style={{ background: bg, border: `2px solid ${border}`, color }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                >
+                  <span className="text-xl">{icon}</span>
+                  <span>{label}</span>
+                </button>
+              ))}
             </div>
           ) : (
             <p className="text-center text-sm" style={{ color: '#8b8fa8' }}>

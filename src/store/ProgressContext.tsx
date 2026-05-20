@@ -9,12 +9,14 @@ interface ProgressContextValue {
   markPhrasesSeen: (phraseIds: string[]) => void;
   markTopicComplete: (topicId: string) => void;
   recordQuizScore: (topicId: string, score: number, perfect: boolean) => void;
-  addApiCost: (eur: number) => void;
+  addOpenAiCost: (eur: number) => void;
+  addClaudeCost: (eur: number) => void;
   setLanguage: (lang: UserProgress['language']) => void;
   setTargetLanguage: (lang: UserProgress['targetLanguage']) => void;
   setPath: (path: UserProgress['path']) => void;
   completeOnboarding: (level: Level) => void;
   setVocabMastery: (phraseId: string, level: 0 | 1 | 2) => void;
+  setWordMastery: (wordId: string, level: 0 | 1 | 2) => void;
   toggleEinbuergerungCheck: (itemId: string) => void;
   xpAnimation: number | null;
 }
@@ -116,12 +118,12 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     });
   }, [checkAndAwardBadges]);
 
-  const addApiCost = useCallback((eur: number) => {
-    setProgress(p => ({
-      ...p,
-      sessionApiCostEur: p.sessionApiCostEur + eur,
-      totalApiCostEur: p.totalApiCostEur + eur,
-    }));
+  const addOpenAiCost = useCallback((eur: number) => {
+    setProgress(p => ({ ...p, openAiCostEur: p.openAiCostEur + eur }));
+  }, []);
+
+  const addClaudeCost = useCallback((eur: number) => {
+    setProgress(p => ({ ...p, claudeCostEur: p.claudeCostEur + eur }));
   }, []);
 
   const setLanguage = useCallback((lang: UserProgress['language']) => {
@@ -154,6 +156,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  const setWordMastery = useCallback((wordId: string, level: 0 | 1 | 2) => {
+    setProgress(p => ({
+      ...p,
+      wordMastery: { ...p.wordMastery, [wordId]: level },
+    }));
+  }, []);
+
   const toggleEinbuergerungCheck = useCallback((itemId: string) => {
     setProgress(p => ({
       ...p,
@@ -171,12 +180,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       markPhrasesSeen,
       markTopicComplete,
       recordQuizScore,
-      addApiCost,
+      addOpenAiCost,
+      addClaudeCost,
       setLanguage,
       setTargetLanguage,
       setPath,
       completeOnboarding,
       setVocabMastery,
+      setWordMastery,
       toggleEinbuergerungCheck,
       xpAnimation,
     }}>

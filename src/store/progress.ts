@@ -18,11 +18,12 @@ const defaultProgress: UserProgress = {
   longestStreak: 0,
   activeDays: 0,
   totalTimeMinutes: 0,
-  sessionApiCostEur: 0,
-  totalApiCostEur: 0,
+  openAiCostEur: 0,
+  claudeCostEur: 0,
   onboardingComplete: false,
   assessmentLevel: null,
   vocabMastery: {},
+  wordMastery: {},
   einbuergerungChecklist: {},
 };
 

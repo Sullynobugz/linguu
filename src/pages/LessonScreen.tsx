@@ -45,7 +45,7 @@ const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
 export function LessonScreen() {
   const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
-  const { progress, addXp, markPhrasesSeen, addApiCost } = useProgress();
+  const { progress, addXp, markPhrasesSeen, addOpenAiCost, addClaudeCost } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
   const targetLang = (progress.targetLanguage ?? 'de') as Language;
 
@@ -97,7 +97,7 @@ export function LessonScreen() {
     // Auto-play via OpenAI TTS after short delay
     if (autoPlay) {
       autoPlayTimeoutRef.current = setTimeout(() => {
-        speak(getLearnPhrase(p), 0.9, u => addApiCost(u.costEur));
+        speak(getLearnPhrase(p), 0.9, u => addOpenAiCost(u.costEur));
       }, 400);
     }
   };
@@ -135,7 +135,7 @@ export function LessonScreen() {
         lang,
         targetLang,
         chunk => setExplanation(prev => prev + chunk),
-        usage => addApiCost(usage.costEur)
+        usage => addClaudeCost(usage.costEur)
       );
     } catch {
       setExplanation('Fehler. Bitte versuche es erneut.');
@@ -289,7 +289,7 @@ export function LessonScreen() {
                 </p>
               </div>
               <button
-                onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addApiCost(u.costEur))}
+                onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addOpenAiCost(u.costEur))}
                 className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                 style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b' }}
               >

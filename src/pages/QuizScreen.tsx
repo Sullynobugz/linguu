@@ -61,7 +61,7 @@ const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
 export function QuizScreen() {
   const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
-  const { progress, addXp, markTopicComplete, recordQuizScore, addApiCost } = useProgress();
+  const { progress, addXp, markTopicComplete, recordQuizScore, addOpenAiCost, addClaudeCost } = useProgress();
   const lang = (progress.language ?? 'en') as Language;
   const targetLang = (progress.targetLanguage ?? 'de') as Language;
   const learnLangLabel = langNames[targetLang]?.[lang] ?? targetLang;
@@ -94,7 +94,7 @@ export function QuizScreen() {
       getEncouragingMessage(lang, correct, questions.length, (text, usage) => {
         setEncouragement(text);
         setLoadingMsg(false);
-        addApiCost(usage.costEur);
+        addClaudeCost(usage.costEur);
       }).catch(() => setLoadingMsg(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -263,7 +263,7 @@ export function QuizScreen() {
             </h2>
             {/* Play button — hear the phrase */}
             <button
-              onClick={() => speak(question.learnPhrase, 0.9, u => addApiCost(u.costEur))}
+              onClick={() => speak(question.learnPhrase, 0.9, u => addOpenAiCost(u.costEur))}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all"
               style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.2)')}
