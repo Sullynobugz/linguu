@@ -251,6 +251,7 @@ export function LessonScreen() {
               germanPhrase={getLearnPhrase(phrase)}
               nativeTranslation={getNativeTranslation(phrase)}
               lang={lang}
+              targetLang={targetLang}
               learnLangLabel={learnLangLabel}
             />
           </div>

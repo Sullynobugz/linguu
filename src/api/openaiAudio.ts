@@ -54,16 +54,16 @@ export async function ttsSpeak(
 export async function whisperTranscribe(
   audioBlob: Blob,
   durationSec: number,
-  onUsage?: (u: AudioUsage) => void
+  onUsage?: (u: AudioUsage) => void,
+  lang = 'de'
 ): Promise<string> {
   const formData = new FormData();
-  // Whisper accepts webm, mp4, mp3, wav, ogg etc.
   const ext = audioBlob.type.includes('ogg') ? 'ogg'
     : audioBlob.type.includes('mp4') ? 'mp4'
     : 'webm';
   formData.append('file', audioBlob, `recording.${ext}`);
   formData.append('model', 'whisper-1');
-  formData.append('language', 'de');  // force German recognition
+  formData.append('language', lang);
 
   const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
     method: 'POST',

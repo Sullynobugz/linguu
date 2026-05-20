@@ -36,11 +36,12 @@ interface AudioControlsProps {
   germanPhrase: string;
   nativeTranslation?: string;
   lang: Language;
+  targetLang?: Language;
   compact?: boolean;
   learnLangLabel?: string;
 }
 
-export function AudioControls({ germanPhrase, nativeTranslation, lang, compact = false, learnLangLabel }: AudioControlsProps) {
+export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLang = 'de', compact = false, learnLangLabel }: AudioControlsProps) {
   const { addOpenAiCost } = useProgress();
   const { speak, stop: stopSpeak, speaking, loading: ttsLoading } = useSpeak();
   const { listen, stop: stopListen, reset, listening, processing, result } = useListen();
@@ -76,7 +77,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, compact =
     if (listening) { stopListen(); return; }
     if (processing) return;
     reset();
-    listen(germanPhrase, u => addOpenAiCost(u.costEur));
+    listen(germanPhrase, u => addOpenAiCost(u.costEur), targetLang);
   };
 
   if (compact) {

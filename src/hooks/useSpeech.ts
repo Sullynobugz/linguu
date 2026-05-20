@@ -66,17 +66,17 @@ export interface RecognitionResult {
   status: PronunciationStatus;
 }
 
-function normStr(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[.,!?;:'"„"«»]/g, '')
-    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
-    .trim();
+function normStr(s: string, lang?: string): string {
+  let n = s.toLowerCase().replace(/[.,!?;:'"„"«»¿¡]/g, '').trim();
+  if (lang === 'de') {
+    n = n.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+  }
+  return n;
 }
 
-function scorePronunciation(expected: string, heard: string): RecognitionResult {
-  const expWords = normStr(expected).split(/\s+/);
-  const heardWords = normStr(heard).split(/\s+/);
+function scorePronunciation(expected: string, heard: string, lang?: string): RecognitionResult {
+  const expWords = normStr(expected, lang).split(/\s+/);
+  const heardWords = normStr(heard, lang).split(/\s+/);
   let matches = 0;
   for (const w of expWords) {
     if (heardWords.some(h => h === w || h.includes(w) || w.includes(h))) matches++;
@@ -98,7 +98,8 @@ export function useListen() {
 
   const listen = useCallback(async (
     expectedPhrase: string,
-    onUsage?: (u: AudioUsage) => void
+    onUsage?: (u: AudioUsage) => void,
+    lang = 'de'
   ) => {
     if (listening) return;
 
@@ -130,8 +131,8 @@ export function useListen() {
         const blob = new Blob(chunksRef.current, { type: mimeType });
 
         try {
-          const transcript = await whisperTranscribe(blob, durationSec, onUsage);
-          const scored = scorePronunciation(expectedPhrase, transcript);
+          const transcript = await whisperTranscribe(blob, durationSec, onUsage, lang);
+          const scored = scorePronunciation(expectedPhrase, transcript, lang);
           setResult(scored);
         } catch (err) {
           console.error('Whisper error:', err);
