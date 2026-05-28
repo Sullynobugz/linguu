@@ -48,15 +48,16 @@ function buildQuiz(topicId: string, nativeLang: Language, targetLang: Language):
 }
 
 const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
-  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall' },
-  ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
-  uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
-  es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },
-  en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies' },
-  tr: { jobcenter: 'İş Merkezi', arzt: 'Doktor', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar' },
-  pl: { jobcenter: 'Urząd Pracy', arzt: 'Lekarz', wohnung: 'Szukanie Mieszkania', alltag: 'Życie Codzienne', behoerden: 'Urzędy', notfall: 'Sytuacje Awaryjne' },
-  ro: { jobcenter: 'Oficiul de Șomaj', arzt: 'Medic', wohnung: 'Apartament', alltag: 'Viața Cotidiană', behoerden: 'Instituții', notfall: 'Urgențe' },
-  ru: { jobcenter: 'Центр Занятости', arzt: 'Врач', wohnung: 'Поиск Квартиры', alltag: 'Повседневная Жизнь', behoerden: 'Госорганы', notfall: 'Чрезвычайные Ситуации' },
+  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall', schule: 'Schule & Kinder', freizeit: 'Freizeit & Integration' },
+  ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ', schule: 'المدرسة والأطفال', freizeit: 'الترفيه والاندماج' },
+  uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації', schule: 'Школа та діти', freizeit: 'Дозвілля та інтеграція' },
+  es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias', schule: 'Escuela e hijos', freizeit: 'Ocio e integración' },
+  en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies', schule: 'School & Children', freizeit: 'Leisure & Integration' },
+  ku: { jobcenter: 'Navenda Kar', arzt: 'Bijîşk', wohnung: 'Lêgerîna Malê', alltag: 'Jiyana Rojane', behoerden: 'Dezgehên Fermî', notfall: 'Rewşên Acîl', schule: 'Dibistan û Zarok', freizeit: 'Demxweşî û Entegrasyon' },
+  tr: { jobcenter: 'İş Merkezi', arzt: 'Doktor', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar', schule: 'Okul ve Çocuklar', freizeit: 'Boş Zaman ve Entegrasyon' },
+  pl: { jobcenter: 'Urząd Pracy', arzt: 'Lekarz', wohnung: 'Szukanie Mieszkania', alltag: 'Życie Codzienne', behoerden: 'Urzędy', notfall: 'Sytuacje Awaryjne', schule: 'Szkoła i Dzieci', freizeit: 'Czas Wolny i Integracja' },
+  ro: { jobcenter: 'Oficiul de Șomaj', arzt: 'Medic', wohnung: 'Apartament', alltag: 'Viața Cotidiană', behoerden: 'Instituții', notfall: 'Urgențe', schule: 'Școală și Copii', freizeit: 'Timp Liber și Integrare' },
+  ru: { jobcenter: 'Центр Занятости', arzt: 'Врач', wohnung: 'Поиск Квартиры', alltag: 'Повседневная Жизнь', behoerden: 'Госорганы', notfall: 'Чрезвычайные Ситуации', schule: 'Школа и Дети', freizeit: 'Досуг и Интеграция' },
 };
 
 export function QuizScreen() {
@@ -227,15 +228,18 @@ export function QuizScreen() {
       >
         <button
           onClick={() => navigate(`/lesson/${topicId}`)}
-          className="text-sm transition-all"
+          className="text-sm transition-all flex flex-col items-start"
           style={{ color: '#8b8fa8' }}
           onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
           onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
         >
-          ← {t('lesson', lang)}
+          ← <BilingualText native={t('lesson', lang)} de={t('lesson', 'de')} lang={lang} />
         </button>
-        <span style={{ color: '#8b8fa8', fontSize: 14 }}>
-          {topic.icon} {t('quiz', lang)}: {nativeTitle}
+        <span style={{ color: '#8b8fa8', fontSize: 14 }} className="flex flex-col items-center">
+          <span>{topic.icon} {nativeTitle}</span>
+          {lang !== 'de' && (
+            <span style={{ fontSize: 10, opacity: 0.4 }}>{t('quiz', 'de')}: {topic.titleDE}</span>
+          )}
         </span>
         <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
           {currentIdx + 1}/{questions.length}

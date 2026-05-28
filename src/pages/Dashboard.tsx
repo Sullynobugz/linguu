@@ -23,137 +23,27 @@ const levelBadgeLabels: Record<Level, string> = {
 };
 
 const topicTitles: Partial<Record<Language, Record<string, string>>> = {
-  ar: {
-    jobcenter: 'عند مركز العمل',
-    arzt: 'عند الطبيب',
-    wohnung: 'البحث عن شقة',
-    alltag: 'الحياة اليومية',
-    behoerden: 'الجهات الرسمية',
-    notfall: 'حالات الطوارئ',
-  },
-  uk: {
-    jobcenter: 'У центрі зайнятості',
-    arzt: 'У лікаря',
-    wohnung: 'Пошук квартири',
-    alltag: 'Повсякденне життя',
-    behoerden: 'Держоргани',
-    notfall: 'Надзвичайні ситуації',
-  },
-  es: {
-    jobcenter: 'En la oficina de empleo',
-    arzt: 'En el médico',
-    wohnung: 'Buscar apartamento',
-    alltag: 'Vida cotidiana',
-    behoerden: 'Organismos oficiales',
-    notfall: 'Emergencias',
-  },
-  en: {
-    jobcenter: 'At the Job Center',
-    arzt: 'At the Doctor',
-    wohnung: 'Finding an Apartment',
-    alltag: 'Daily Life',
-    behoerden: 'Government Offices',
-    notfall: 'Emergencies',
-  },
-  tr: {
-    jobcenter: 'İş Merkezinde',
-    arzt: 'Doktorda',
-    wohnung: 'Daire Arama',
-    alltag: 'Günlük Yaşam',
-    behoerden: 'Resmi Kurumlar',
-    notfall: 'Acil Durumlar',
-  },
-  pl: {
-    jobcenter: 'W Urzędzie Pracy',
-    arzt: 'U lekarza',
-    wohnung: 'Szukanie mieszkania',
-    alltag: 'Życie codzienne',
-    behoerden: 'Urzędy państwowe',
-    notfall: 'Sytuacje awaryjne',
-  },
-  ro: {
-    jobcenter: 'La Oficiul de șomaj',
-    arzt: 'La medic',
-    wohnung: 'Căutare apartament',
-    alltag: 'Viața cotidiană',
-    behoerden: 'Instituții oficiale',
-    notfall: 'Urgențe',
-  },
-  ru: {
-    jobcenter: 'В центре занятости',
-    arzt: 'У врача',
-    wohnung: 'Поиск квартиры',
-    alltag: 'Повседневная жизнь',
-    behoerden: 'Государственные органы',
-    notfall: 'Чрезвычайные ситуации',
-  },
+  ar: { jobcenter: 'عند مركز العمل', arzt: 'عند الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'حالات الطوارئ', schule: 'المدرسة والأطفال', freizeit: 'الترفيه والاندماج' },
+  uk: { jobcenter: 'У центрі зайнятості', arzt: 'У лікаря', wohnung: 'Пошук квартири', alltag: 'Повсякденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації', schule: 'Школа та діти', freizeit: 'Дозвілля та інтеграція' },
+  es: { jobcenter: 'En la oficina de empleo', arzt: 'En el médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias', schule: 'Escuela e hijos', freizeit: 'Ocio e integración' },
+  en: { jobcenter: 'At the Job Center', arzt: 'At the Doctor', wohnung: 'Finding an Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies', schule: 'School & Children', freizeit: 'Leisure & Integration' },
+  ku: { jobcenter: 'Li Navenda Karê', arzt: 'Li Bijîşk', wohnung: 'Lêgerîna Malê', alltag: 'Jiyana Rojane', behoerden: 'Dezgehên Fermî', notfall: 'Rewşên Acîl', schule: 'Dibistan û Zarok', freizeit: 'Demxweşî û Entegrasyon' },
+  tr: { jobcenter: 'İş Merkezinde', arzt: 'Doktorda', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar', schule: 'Okul ve Çocuklar', freizeit: 'Boş Zaman ve Entegrasyon' },
+  pl: { jobcenter: 'W Urzędzie Pracy', arzt: 'U lekarza', wohnung: 'Szukanie mieszkania', alltag: 'Życie codzienne', behoerden: 'Urzędy państwowe', notfall: 'Sytuacje awaryjne', schule: 'Szkoła i dzieci', freizeit: 'Czas wolny i integracja' },
+  ro: { jobcenter: 'La Oficiul de șomaj', arzt: 'La medic', wohnung: 'Căutare apartament', alltag: 'Viața cotidiană', behoerden: 'Instituții oficiale', notfall: 'Urgențe', schule: 'Școală și copii', freizeit: 'Timp liber și integrare' },
+  ru: { jobcenter: 'В центре занятости', arzt: 'У врача', wohnung: 'Поиск квартиры', alltag: 'Повседневная жизнь', behoerden: 'Государственные органы', notfall: 'Чрезвычайные ситуации', schule: 'Школа и дети', freizeit: 'Досуг и интеграция' },
 };
 
 const topicSubtitles: Partial<Record<Language, Record<string, string>>> = {
-  ar: {
-    jobcenter: 'المواعيد، الوثائق، الأسئلة',
-    arzt: 'الأعراض، المواعيد الطبية',
-    wohnung: 'الإيجار، العقود، الجيران',
-    alltag: 'التسوق، المواصلات',
-    behoerden: 'التسجيل، النماذج',
-    notfall: 'السلامة أولاً — متاح دائماً',
-  },
-  uk: {
-    jobcenter: 'Записи, документи, запитання',
-    arzt: 'Симптоми, лікарські записи',
-    wohnung: 'Оренда, договори, сусіди',
-    alltag: 'Шопінг, транспорт',
-    behoerden: 'Реєстрація, форми',
-    notfall: 'Безпека перш за все — завжди доступно',
-  },
-  es: {
-    jobcenter: 'Citas, documentos, preguntas',
-    arzt: 'Síntomas, citas médicas',
-    wohnung: 'Alquiler, contratos, vecinos',
-    alltag: 'Compras, transporte',
-    behoerden: 'Registro, formularios',
-    notfall: 'Seguridad primero — siempre disponible',
-  },
-  en: {
-    jobcenter: 'Appointments, documents, questions',
-    arzt: 'Symptoms, medical appointments',
-    wohnung: 'Rent, contracts, neighbors',
-    alltag: 'Shopping, transport',
-    behoerden: 'Registration, forms',
-    notfall: 'Safety first — always available',
-  },
-  tr: {
-    jobcenter: 'Randevular, belgeler, sorular',
-    arzt: 'Belirtiler, doktor randevuları',
-    wohnung: 'Kira, sözleşmeler, komşular',
-    alltag: 'Alışveriş, ulaşım',
-    behoerden: 'Kayıt, formlar',
-    notfall: 'Güvenlik önce — her zaman erişilebilir',
-  },
-  pl: {
-    jobcenter: 'Wizyty, dokumenty, pytania',
-    arzt: 'Objawy, wizyty lekarskie',
-    wohnung: 'Wynajem, umowy, sąsiedzi',
-    alltag: 'Zakupy, transport',
-    behoerden: 'Rejestracja, formularze',
-    notfall: 'Bezpieczeństwo przede wszystkim — zawsze dostępne',
-  },
-  ro: {
-    jobcenter: 'Programări, documente, întrebări',
-    arzt: 'Simptome, programări medicale',
-    wohnung: 'Chirie, contracte, vecini',
-    alltag: 'Cumpărături, transport',
-    behoerden: 'Înregistrare, formulare',
-    notfall: 'Siguranța pe primul loc — mereu disponibil',
-  },
-  ru: {
-    jobcenter: 'Записи, документы, вопросы',
-    arzt: 'Симптомы, записи к врачу',
-    wohnung: 'Аренда, договоры, соседи',
-    alltag: 'Покупки, транспорт',
-    behoerden: 'Регистрация, формы',
-    notfall: 'Безопасность прежде всего — всегда доступно',
-  },
+  ar: { jobcenter: 'المواعيد، الوثائق، الأسئلة', arzt: 'الأعراض، المواعيد الطبية', wohnung: 'الإيجار، العقود، الجيران', alltag: 'التسوق، المواصلات', behoerden: 'التسجيل، النماذج', notfall: 'السلامة أولاً — متاح دائماً', schule: 'المدارس، الحضانة، الدعم', freizeit: 'رياضة، ثقافة، أنشطة اجتماعية' },
+  uk: { jobcenter: 'Записи, документи, запитання', arzt: 'Симптоми, лікарські записи', wohnung: 'Оренда, договори, сусіди', alltag: 'Шопінг, транспорт', behoerden: 'Реєстрація, форми', notfall: 'Безпека перш за все — завжди доступно', schule: 'Школи, садочки, підтримка', freizeit: 'Спорт, культура, соціальна участь' },
+  es: { jobcenter: 'Citas, documentos, preguntas', arzt: 'Síntomas, citas médicas', wohnung: 'Alquiler, contratos, vecinos', alltag: 'Compras, transporte', behoerden: 'Registro, formularios', notfall: 'Seguridad primero — siempre disponible', schule: 'Colegios, guarderías, apoyo', freizeit: 'Deporte, cultura, vida social' },
+  en: { jobcenter: 'Appointments, documents, questions', arzt: 'Symptoms, medical appointments', wohnung: 'Rent, contracts, neighbors', alltag: 'Shopping, transport', behoerden: 'Registration, forms', notfall: 'Safety first — always available', schule: 'Schools, daycare, support', freizeit: 'Sport, culture, social life' },
+  ku: { jobcenter: 'Randevû, belge, pirsan', arzt: 'Nîşan, randevûyên bijîşkî', wohnung: 'Kirê, girêbest, cînar', alltag: 'Kirîn, veguhastî', behoerden: 'Tomarkirin, form', notfall: 'Ewlehî pêşî ye — her tim peyda ye', schule: 'Dibistan, kreş, piştgirî', freizeit: 'Werzîş, çand, jiyana civakî' },
+  tr: { jobcenter: 'Randevular, belgeler, sorular', arzt: 'Belirtiler, doktor randevuları', wohnung: 'Kira, sözleşmeler, komşular', alltag: 'Alışveriş, ulaşım', behoerden: 'Kayıt, formlar', notfall: 'Güvenlik önce — her zaman erişilebilir', schule: 'Okullar, anaokul, destek', freizeit: 'Spor, kültür, sosyal yaşam' },
+  pl: { jobcenter: 'Wizyty, dokumenty, pytania', arzt: 'Objawy, wizyty lekarskie', wohnung: 'Wynajem, umowy, sąsiedzi', alltag: 'Zakupy, transport', behoerden: 'Rejestracja, formularze', notfall: 'Bezpieczeństwo przede wszystkim — zawsze dostępne', schule: 'Szkoły, przedszkola, wsparcie', freizeit: 'Sport, kultura, życie towarzyskie' },
+  ro: { jobcenter: 'Programări, documente, întrebări', arzt: 'Simptome, programări medicale', wohnung: 'Chirie, contracte, vecini', alltag: 'Cumpărături, transport', behoerden: 'Înregistrare, formulare', notfall: 'Siguranța pe primul loc — mereu disponibil', schule: 'Școli, grădinițe, sprijin', freizeit: 'Sport, cultură, viață socială' },
+  ru: { jobcenter: 'Записи, документы, вопросы', arzt: 'Симптомы, записи к врачу', wohnung: 'Аренда, договоры, соседи', alltag: 'Покупки, транспорт', behoerden: 'Регистрация, формы', notfall: 'Безопасность прежде всего — всегда доступно', schule: 'Школы, детские сады, поддержка', freizeit: 'Спорт, культура, общественная жизнь' },
 };
 
 function isTopicUnlocked(_id: string, userLevel: Level, alwaysUnlocked: boolean, requiredLevel: Level | null): boolean {
@@ -322,10 +212,10 @@ export function Dashboard() {
                   </p>
                 </div>
                 <div
-                  className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105"
+                  className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105 flex flex-col items-center"
                   style={{ background: '#f59e0b', color: '#0f1117' }}
                 >
-                  {t('start', lang)}
+                  <BilingualText native={t('start', lang)} de={t('start', 'de')} lang={lang} />
                 </div>
               </div>
             </div>
@@ -360,10 +250,10 @@ export function Dashboard() {
                   </p>
                 </div>
                 <div
-                  className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105"
+                  className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105 flex flex-col items-center"
                   style={{ background: '#6366f1', color: '#fff' }}
                 >
-                  {t('start', lang).replace(' ←', ' →')}
+                  <BilingualText native={t('start', lang).replace(' ←', ' →')} de={t('start', 'de').replace(' ←', ' →')} lang={lang} />
                 </div>
               </div>
             </div>
@@ -394,10 +284,10 @@ export function Dashboard() {
                 </p>
               </div>
               <div
-                className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105 whitespace-nowrap"
+                className="px-4 py-2 rounded-xl font-semibold text-sm transition-all group-hover:scale-105 whitespace-nowrap flex flex-col items-center"
                 style={{ background: '#6366f1', color: '#fff' }}
               >
-                {t('einbuergerungWidgetCta', lang)}
+                <BilingualText native={t('einbuergerungWidgetCta', lang)} de={t('einbuergerungWidgetCta', 'de')} lang={lang} />
               </div>
             </div>
           </div>
@@ -542,7 +432,7 @@ export function Dashboard() {
             onMouseEnter={e => (e.currentTarget.style.color = '#f59e0b')}
             onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
           >
-            {t('reportLink', lang)}
+            <BilingualText native={t('reportLink', lang)} de={t('reportLink', 'de')} lang={lang} />
           </button>
         </div>
       </div>

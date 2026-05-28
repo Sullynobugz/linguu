@@ -62,7 +62,7 @@ function buildDeck(
 
 const targetLangLabel: Partial<Record<Language, string>> = {
   de: 'Deutsch', en: 'Englisch', tr: 'Türkisch', ar: 'Arabisch',
-  es: 'Spanisch', uk: 'Ukrainisch', ru: 'Russisch', pl: 'Polnisch', ro: 'Rumänisch',
+  es: 'Spanisch', uk: 'Ukrainisch', ru: 'Russisch', pl: 'Polnisch', ro: 'Rumänisch', ku: 'Kurdisch',
 };
 
 
@@ -128,6 +128,10 @@ export function VocabScreen() {
   const [wordRated, setWordRated] = useState<Set<string>>(new Set());
   const [sessionWordMastery, setSessionWordMastery] = useState<Record<string, 0 | 1 | 2>>({ ...progress.wordMastery });
 
+  // Card animation
+  const [animatingOut, setAnimatingOut] = useState(false);
+  const [animationType, setAnimationType] = useState<'repeat' | 'forward'>('forward');
+
   const autoPlayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const idx = mode === 'phrases' ? phraseIdx : wordIdx;
@@ -163,27 +167,35 @@ export function VocabScreen() {
   }, [mode]);
 
   const handleRate = useCallback((level: 0 | 1 | 2) => {
-    if (mode === 'phrases') {
-      if (!card) return;
-      setVocabMastery(card.phraseId, level);
-      setSessionPhraseMastery(prev => ({ ...prev, [card.phraseId]: level }));
-      if (!phraseRated.has(card.phraseId)) {
-        addXp(5);
-        setPhraseRated(prev => new Set([...prev, card.phraseId]));
+    const type = level === 0 ? 'repeat' : 'forward';
+    setAnimationType(type);
+    setAnimatingOut(true);
+    const delay = level === 0 ? 560 : 300;
+
+    setTimeout(() => {
+      if (mode === 'phrases') {
+        if (!card) return;
+        setVocabMastery(card.phraseId, level);
+        setSessionPhraseMastery(prev => ({ ...prev, [card.phraseId]: level }));
+        if (!phraseRated.has(card.phraseId)) {
+          addXp(5);
+          setPhraseRated(prev => new Set([...prev, card.phraseId]));
+        }
+        setPhraseFlipped(false);
+        setPhraseIdx(i => i + 1);
+      } else {
+        if (!wcard) return;
+        setWordMastery(wcard.wordId, level);
+        setSessionWordMastery(prev => ({ ...prev, [wcard.wordId]: level }));
+        if (!wordRated.has(wcard.wordId)) {
+          addXp(3);
+          setWordRated(prev => new Set([...prev, wcard.wordId]));
+        }
+        setWordFlipped(false);
+        setWordIdx(i => i + 1);
       }
-      setPhraseFlipped(false);
-      setPhraseIdx(i => i + 1);
-    } else {
-      if (!wcard) return;
-      setWordMastery(wcard.wordId, level);
-      setSessionWordMastery(prev => ({ ...prev, [wcard.wordId]: level }));
-      if (!wordRated.has(wcard.wordId)) {
-        addXp(3);
-        setWordRated(prev => new Set([...prev, wcard.wordId]));
-      }
-      setWordFlipped(false);
-      setWordIdx(i => i + 1);
-    }
+      setAnimatingOut(false);
+    }, delay);
   }, [mode, card, wcard, phraseRated, wordRated, setVocabMastery, setWordMastery, addXp]);
 
   const handlePlayDE = (e: React.MouseEvent) => {
@@ -223,7 +235,7 @@ export function VocabScreen() {
           className="px-8 py-3.5 rounded-xl font-semibold text-sm mb-3"
           style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', color: '#f59e0b' }}
         >
-          ↩ Nochmal
+          ↩ <BilingualText native={t('again', lang)} de={t('again', 'de')} lang={lang} />
         </button>
         <button
           onClick={() => navigate('/')}
@@ -320,132 +332,190 @@ export function VocabScreen() {
       </div>
 
       {/* Flashcard */}
-      <div className="flex-1 flex items-center justify-center px-6 py-6">
+      <div className="flex-1 flex items-center justify-center px-6 py-4">
         <div className="w-full max-w-lg">
 
-          {/* Card with flip effect */}
-          <div
-            onClick={handleFlip}
-            style={{ perspective: '1000px', cursor: 'pointer', marginBottom: 24 }}
-          >
+          {/* Card stack + flip */}
+          <div style={{ position: 'relative', marginBottom: 20 }}>
+            {/* Decorative stack cards behind */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 24,
+              background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.05)',
+              transform: 'translateY(10px) translateX(8px) rotate(2.5deg)',
+              zIndex: 0,
+            }} />
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: 24,
+              background: 'rgba(26,29,39,0.65)', border: '1px solid rgba(255,255,255,0.07)',
+              transform: 'translateY(5px) translateX(4px) rotate(1.2deg)',
+              zIndex: 1,
+            }} />
+
+            {/* Animated card wrapper */}
             <div
               style={{
-                position: 'relative',
-                transformStyle: 'preserve-3d',
-                transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                minHeight: 240,
+                position: 'relative', zIndex: 2,
+                ...(animatingOut
+                  ? animationType === 'repeat'
+                    ? {
+                        transform: 'translateX(60px) translateY(52px) rotate(9deg) scale(0.82)',
+                        opacity: 0,
+                        transition: 'transform 0.52s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.44s ease',
+                        pointerEvents: 'none' as const,
+                      }
+                    : {
+                        transform: 'translateX(-110%) rotate(-6deg)',
+                        opacity: 0,
+                        transition: 'transform 0.28s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.24s ease',
+                        pointerEvents: 'none' as const,
+                      }
+                  : {
+                      transform: 'none',
+                      opacity: 1,
+                      transition: 'opacity 0.18s ease',
+                    }),
               }}
             >
-              {/* Front */}
+              {/* Flip container */}
               <div
-                style={{
-                  position: 'absolute', inset: 0,
-                  backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-                  background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 24, padding: 32,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  textAlign: 'center', minHeight: 240,
-                }}
+                onClick={!animatingOut ? handleFlip : undefined}
+                style={{ perspective: '1000px', cursor: animatingOut ? 'default' : 'pointer' }}
               >
-                {mode === 'words' && wcard && (
-                  <span
-                    className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full mb-4"
-                    style={{ background: `${typeColor[wcard.type]}18`, color: typeColor[wcard.type], border: `1px solid ${typeColor[wcard.type]}40` }}
-                  >
-                    {typeLabel[wcard.type]}
-                  </span>
-                )}
-                {mode === 'words' && wcard?.article && (
-                  <p className="text-base mb-1" style={{ color: '#818cf8', fontWeight: 500 }}>
-                    {wcard.article}
-                  </p>
-                )}
-                <h2
-                  className="mb-3 leading-tight"
-                  style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 700 }}
+                <div
+                  style={{
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                    minHeight: 220,
+                  }}
                 >
-                  {mode === 'phrases' ? card?.german : wcard?.german}
-                </h2>
-                {mode === 'phrases' && card?.phonetics && (
-                  <p className="font-mono text-sm mb-4" style={{ color: 'rgba(240,237,232,0.4)' }}>
-                    [{card.phonetics}]
-                  </p>
-                )}
-                <button
-                  onClick={handlePlayDE}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-2"
-                  style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
-                >
-                  🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
-                </button>
-                <p className="text-xs mt-4 animate-pulse" style={{ color: '#8b8fa8' }}>
-                  <BilingualText native={t('tapToFlip', lang)} de={t('tapToFlip', 'de')} lang={lang} />
-                </p>
-              </div>
-
-              {/* Back */}
-              <div
-                style={{
-                  position: 'absolute', inset: 0,
-                  backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-                  transform: 'rotateY(180deg)',
-                  background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(99,102,241,0.4)',
-                  borderRadius: 24, padding: 32,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  textAlign: 'center', minHeight: 240,
-                }}
-              >
-                <p
-                  className="text-2xl font-bold mb-4"
-                  style={{ color: '#818cf8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-                >
-                  {mode === 'phrases' ? card?.native : wcard?.native}
-                </p>
-                <button
-                  onClick={handlePlayNative}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4"
-                  style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8' }}
-                >
-                  🔊 {isGermanSpeaker ? (langNames['de']?.[lang] ?? 'Auf Deutsch') : (langNames[lang]?.[lang] ?? lang)}
-                </button>
-                {mode === 'phrases' && card && (
+                  {/* Front */}
                   <div
-                    className="w-full rounded-xl p-3 text-sm"
-                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
-                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                    style={{
+                      position: 'absolute', inset: 0,
+                      backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+                      background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: 24, padding: '28px 28px 24px',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      textAlign: 'center', minHeight: 220,
+                    }}
                   >
-                    <p style={{ color: '#f0ede8', fontStyle: 'italic' }}>„{card.germanExample}"</p>
-                    <p className="mt-1" style={{ color: '#8b8fa8', fontSize: 12 }}>{card.nativeExample}</p>
+                    {mode === 'words' && wcard && (
+                      <span
+                        className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full mb-3"
+                        style={{ background: `${typeColor[wcard.type]}18`, color: typeColor[wcard.type], border: `1px solid ${typeColor[wcard.type]}40` }}
+                      >
+                        {typeLabel[wcard.type]}
+                      </span>
+                    )}
+                    {mode === 'words' && wcard?.article && (
+                      <p className="text-base mb-1" style={{ color: '#818cf8', fontWeight: 500 }}>
+                        {wcard.article}
+                      </p>
+                    )}
+                    <h2
+                      className="mb-3 leading-tight"
+                      style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(26px, 6vw, 40px)', fontWeight: 700 }}
+                    >
+                      {mode === 'phrases' ? card?.german : wcard?.german}
+                    </h2>
+                    {mode === 'phrases' && card?.phonetics && (
+                      <p className="font-mono text-sm mb-3" style={{ color: 'rgba(240,237,232,0.4)' }}>
+                        [{card.phonetics}]
+                      </p>
+                    )}
+                    <button
+                      onClick={handlePlayDE}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-1"
+                      style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
+                    >
+                      🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
+                    </button>
+                    {/* Prominenter Flip-Button */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleFlip(); }}
+                      className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm"
+                      style={{
+                        background: 'rgba(129,140,248,0.18)',
+                        border: '1.5px solid rgba(129,140,248,0.5)',
+                        color: '#a5b4fc',
+                        boxShadow: '0 0 12px rgba(129,140,248,0.15)',
+                      }}
+                    >
+                      ↩ <BilingualText native={t('tapToFlip', lang)} de={t('tapToFlip', 'de')} lang={lang} />
+                    </button>
                   </div>
-                )}
+
+                  {/* Back */}
+                  <div
+                    style={{
+                      position: 'absolute', inset: 0,
+                      backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(99,102,241,0.4)',
+                      borderRadius: 24, padding: '28px 28px 24px',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      textAlign: 'center', minHeight: 220,
+                    }}
+                  >
+                    <p
+                      className="text-2xl font-bold mb-3"
+                      style={{ color: '#818cf8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+                    >
+                      {mode === 'phrases' ? card?.native : wcard?.native}
+                    </p>
+                    <button
+                      onClick={handlePlayNative}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3"
+                      style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8' }}
+                    >
+                      🔊 {isGermanSpeaker ? (langNames['de']?.[lang] ?? 'Auf Deutsch') : (langNames[lang]?.[lang] ?? lang)}
+                    </button>
+                    {mode === 'phrases' && card && (
+                      <div
+                        className="w-full rounded-xl p-3 text-sm"
+                        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                        dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                      >
+                        <p style={{ color: '#f0ede8', fontStyle: 'italic' }}>„{card.germanExample}"</p>
+                        <p className="mt-1" style={{ color: '#8b8fa8', fontSize: 12 }}>{card.nativeExample}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Rating buttons */}
+          {/* Rating buttons — immer sichtbar wenn geflippt, gesperrt während Animation */}
           {flipped ? (
-            <div className="grid grid-cols-3 gap-3 animate-fade-in-up">
+            <div className="grid grid-cols-3 gap-3">
               {([
-                { level: 0 as const, icon: '🔄', labelNative: t('again', lang), labelDE: t('again', 'de'), color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)' },
-                { level: 1 as const, icon: '👍', labelNative: t('good', lang), labelDE: t('good', 'de'), color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)' },
-                { level: 2 as const, icon: '⭐', labelNative: t('mastered', lang), labelDE: t('mastered', 'de'), color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.35)' },
+                { level: 0 as const, icon: '🔄', labelNative: t('again', lang), labelDE: t('again', 'de'), color: '#ef4444', bg: 'rgba(239,68,68,0.14)', border: 'rgba(239,68,68,0.45)' },
+                { level: 1 as const, icon: '👍', labelNative: t('good', lang), labelDE: t('good', 'de'), color: '#f59e0b', bg: 'rgba(245,158,11,0.14)', border: 'rgba(245,158,11,0.45)' },
+                { level: 2 as const, icon: '⭐', labelNative: t('mastered', lang), labelDE: t('mastered', 'de'), color: '#10b981', bg: 'rgba(16,185,129,0.14)', border: 'rgba(16,185,129,0.45)' },
               ]).map(({ level, icon, labelNative, labelDE, color, bg, border }) => (
                 <button
                   key={level}
-                  onClick={() => handleRate(level)}
-                  className="py-4 rounded-xl font-semibold text-sm flex flex-col items-center gap-1 transition-all"
-                  style={{ background: bg, border: `2px solid ${border}`, color }}
-                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
-                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                  onClick={() => !animatingOut && handleRate(level)}
+                  disabled={animatingOut}
+                  className="py-4 rounded-2xl font-semibold text-sm flex flex-col items-center gap-1.5 transition-opacity"
+                  style={{
+                    background: bg,
+                    border: `2px solid ${border}`,
+                    color,
+                    opacity: animatingOut ? 0.4 : 1,
+                    boxShadow: `0 2px 12px ${bg}`,
+                  }}
                 >
-                  <span className="text-xl">{icon}</span>
+                  <span className="text-2xl">{icon}</span>
                   <BilingualText native={labelNative} de={labelDE} lang={lang} />
                 </button>
               ))}
             </div>
           ) : (
-            <p className="text-center text-sm" style={{ color: '#8b8fa8' }}>
+            <p className="text-center text-xs" style={{ color: 'rgba(139,143,168,0.5)' }}>
               <BilingualText native={t('vocabSubtitle', lang)} de={t('vocabSubtitle', 'de')} lang={lang} />
             </p>
           )}

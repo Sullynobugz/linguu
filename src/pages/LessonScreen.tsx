@@ -10,6 +10,7 @@ import { useSpeak } from '../hooks/useSpeech';
 import type { Language } from '../types';
 
 const phoneticsLabel: Partial<Record<Language, string>> = {
+  de: 'Aussprache',
   ar: 'النطق',
   uk: 'Вимова',
   es: 'Pronunciación',
@@ -18,9 +19,11 @@ const phoneticsLabel: Partial<Record<Language, string>> = {
   pl: 'Wymowa',
   ro: 'Pronunție',
   ru: 'Произношение',
+  ku: 'Dengbêjî',
 };
 
 const translationLabel: Partial<Record<Language, string>> = {
+  de: 'Übersetzung',
   ar: 'الترجمة',
   uk: 'Переклад',
   es: 'Traducción',
@@ -29,18 +32,20 @@ const translationLabel: Partial<Record<Language, string>> = {
   pl: 'Tłumaczenie',
   ro: 'Traducere',
   ru: 'Перевод',
+  ku: 'Werger',
 };
 
 const topicTitlesNative: Partial<Record<Language, Record<string, string>>> = {
-  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall' },
-  ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ' },
-  uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації' },
-  es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias' },
-  en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies' },
-  tr: { jobcenter: 'İş Merkezi', arzt: 'Doktor', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar' },
-  pl: { jobcenter: 'Urząd Pracy', arzt: 'Lekarz', wohnung: 'Szukanie Mieszkania', alltag: 'Codzienne Życie', behoerden: 'Urzędy', notfall: 'Sytuacje Awaryjne' },
-  ro: { jobcenter: 'Oficiul de Șomaj', arzt: 'Medic', wohnung: 'Apartament', alltag: 'Viața Cotidiană', behoerden: 'Instituții', notfall: 'Urgențe' },
-  ru: { jobcenter: 'Центр Занятости', arzt: 'Врач', wohnung: 'Поиск Квартиры', alltag: 'Повседневная Жизнь', behoerden: 'Госорганы', notfall: 'Чрезвычайные Ситуации' },
+  de: { jobcenter: 'Jobcenter', arzt: 'Arzt', wohnung: 'Wohnung suchen', alltag: 'Alltag', behoerden: 'Behörden', notfall: 'Notfall', schule: 'Schule & Kinder', freizeit: 'Freizeit & Integration' },
+  ar: { jobcenter: 'مركز العمل', arzt: 'الطبيب', wohnung: 'البحث عن شقة', alltag: 'الحياة اليومية', behoerden: 'الجهات الرسمية', notfall: 'الطوارئ', schule: 'المدرسة والأطفال', freizeit: 'الترفيه والاندماج' },
+  uk: { jobcenter: 'Центр зайнятості', arzt: 'Лікар', wohnung: 'Пошук квартири', alltag: 'Щоденне життя', behoerden: 'Держоргани', notfall: 'Надзвичайні ситуації', schule: 'Школа та діти', freizeit: 'Дозвілля та інтеграція' },
+  es: { jobcenter: 'Oficina de empleo', arzt: 'Médico', wohnung: 'Buscar apartamento', alltag: 'Vida cotidiana', behoerden: 'Organismos oficiales', notfall: 'Emergencias', schule: 'Escuela e hijos', freizeit: 'Ocio e integración' },
+  en: { jobcenter: 'Job Center', arzt: 'Doctor', wohnung: 'Finding Apartment', alltag: 'Daily Life', behoerden: 'Government Offices', notfall: 'Emergencies', schule: 'School & Children', freizeit: 'Leisure & Integration' },
+  ku: { jobcenter: 'Navenda Kar', arzt: 'Bijîşk', wohnung: 'Lêgerîna Malê', alltag: 'Jiyana Rojane', behoerden: 'Dezgehên Fermî', notfall: 'Rewşên Acîl', schule: 'Dibistan û Zarok', freizeit: 'Demxweşî û Entegrasyon' },
+  tr: { jobcenter: 'İş Merkezi', arzt: 'Doktor', wohnung: 'Daire Arama', alltag: 'Günlük Yaşam', behoerden: 'Resmi Kurumlar', notfall: 'Acil Durumlar', schule: 'Okul ve Çocuklar', freizeit: 'Boş Zaman ve Entegrasyon' },
+  pl: { jobcenter: 'Urząd Pracy', arzt: 'Lekarz', wohnung: 'Szukanie Mieszkania', alltag: 'Codzienne Życie', behoerden: 'Urzędy', notfall: 'Sytuacje Awaryjne', schule: 'Szkoła i Dzieci', freizeit: 'Czas Wolny i Integracja' },
+  ro: { jobcenter: 'Oficiul de Șomaj', arzt: 'Medic', wohnung: 'Apartament', alltag: 'Viața Cotidiană', behoerden: 'Instituții', notfall: 'Urgențe', schule: 'Școală și Copii', freizeit: 'Timp Liber și Integrare' },
+  ru: { jobcenter: 'Центр Занятости', arzt: 'Врач', wohnung: 'Поиск Квартиры', alltag: 'Повседневная Жизнь', behoerden: 'Госорганы', notfall: 'Чрезвычайные Ситуации', schule: 'Школа и Дети', freizeit: 'Досуг и Интеграция' },
 };
 
 export function LessonScreen() {
@@ -109,6 +114,7 @@ export function LessonScreen() {
     return () => {
       if (autoPlayTimeoutRef.current) clearTimeout(autoPlayTimeoutRef.current);
       window.speechSynthesis?.cancel();
+      stop(); // cancel any in-flight TTS fetch so ghost audio can't play on the next screen
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -224,23 +230,24 @@ export function LessonScreen() {
           disabled={isFirst}
           className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
           style={{
-            width: 80,
-            height: 160,
-            borderRadius: '0 20px 20px 0',
-            background: 'rgba(26,29,39,0.9)',
+            width: 108,
+            height: 180,
+            borderRadius: '0 24px 24px 0',
+            background: 'rgba(26,29,39,0.92)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderLeft: 'none',
             color: isFirst ? 'rgba(240,237,232,0.1)' : '#f0ede8',
             backdropFilter: 'blur(12px)',
             cursor: isFirst ? 'default' : 'pointer',
+            boxShadow: isFirst ? 'none' : '4px 0 20px rgba(0,0,0,0.3)',
           }}
         >
-          <span style={{ fontSize: 22 }}>←</span>
-          <span style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+          <span style={{ fontSize: 26 }}>←</span>
+          <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
             {t('back', lang).replace(/←\s*/g, '')}
           </span>
           {lang !== 'de' && (
-            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
               {t('back', 'de').replace(/←\s*/g, '')}
             </span>
           )}
@@ -251,26 +258,27 @@ export function LessonScreen() {
           onClick={handleNext}
           className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
           style={{
-            width: 80,
-            height: 160,
-            borderRadius: '20px 0 0 20px',
-            background: isLast ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
-            border: isLast ? '1px solid rgba(245,158,11,0.4)' : 'none',
+            width: 108,
+            height: 180,
+            borderRadius: '24px 0 0 24px',
+            background: isLast ? 'rgba(245,158,11,0.18)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
+            border: isLast ? '1px solid rgba(245,158,11,0.5)' : 'none',
             borderRight: 'none',
             color: isLast ? '#f59e0b' : '#0f1117',
             backdropFilter: 'blur(12px)',
+            boxShadow: isLast ? '4px 0 20px rgba(245,158,11,0.15)' : '-4px 0 20px rgba(245,158,11,0.25)',
           }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+          onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
-          <span style={{ fontSize: isLast ? 20 : 22 }}>{isLast ? '🎯' : '→'}</span>
-          <span style={{ fontSize: 11, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+          <span style={{ fontSize: isLast ? 22 : 26 }}>{isLast ? '🎯' : '→'}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
             {isLast
               ? t('toQuiz', lang).replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
               : t('next', lang).replace(/\s*←/g, '')}
           </span>
           {lang !== 'de' && (
-            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 64 }}>
+            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
               {isLast
                 ? t('toQuiz', 'de').replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
                 : t('next', 'de').replace(/\s*←/g, '')}
@@ -278,7 +286,7 @@ export function LessonScreen() {
           )}
         </button>
 
-        <div className="flex flex-col items-center px-[84px]">
+        <div className="flex flex-col items-center px-[112px]">
         <div className="w-full max-w-2xl">
 
           {/* Lernphrase — large, central */}
