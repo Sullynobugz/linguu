@@ -21,16 +21,18 @@ npm run dev   # http://localhost:5173
 ```
 
 ## Aktueller Stand
-MVP läuft vollständig lokal (`localhost:5173`). Folgende Features sind implementiert:
-- Onboarding (Sprache, Pfad, Level-Assessment)
-- 6 Themen × 8 Phrasen (Jobcenter, Arzt, Wohnung, Alltag, Behörden, Notfall)
-- Vokabeltrainer (Flashcards, Phrasen + Einzelwörter)
-- Quiz (5 Fragen pro Thema, Multiple Choice)
-- TTS (OpenAI `nova`/`shimmer`) + Spracherkennung (Whisper)
-- AI-Erklärungen (Claude Sonnet) + Quiz-Motivation
-- Zweisprachige UI (Muttersprache + Deutsch) in allen Screens
-- Einbürgerung-Checkliste (StAG 2024)
-- Behörden-Bericht (druckbar)
+Vollwertiges Produkt, läuft lokal (`localhost:5173`). Nicht deployed (API-Keys im Bundle).
+
+- **8 Themen**: Jobcenter, Arzt, Wohnung, Alltag, Behörden, Notfälle, Schule & Kinder, Freizeit & Integration
+- **~400 Phrasen** (~67 pro Thema, `src/data/content.ts`, 4844 Zeilen)
+- **2.000 Vokabeln** (`src/data/words.ts`, 2789 Zeilen)
+- **5 Sprachen**: Arabisch, Ukrainisch, Spanisch, Englisch, Kurdisch
+- Onboarding (Sprache → Pfad → Level-Assessment A1–B2)
+- Vokabeltrainer (Flashcards mit Flip-Animation, Mastery-Level)
+- Quiz (Multiple Choice + Claude-Motivationsnachrichten)
+- TTS zweisprachig (OpenAI `nova`/`shimmer`) + Whisper Aussprache-Scoring
+- AI-Erklärungen (Claude Sonnet, Streaming)
+- XP/Level/Streak/Badges, Einbürgerungs-Checkliste (StAG 2024), Behörden-Report (druckbar)
 - Kein Backend — alles localStorage
 
 ## ⚠️ Sicherheitsnotiz — API Keys
@@ -39,9 +41,10 @@ MVP läuft vollständig lokal (`localhost:5173`). Folgende Features sind impleme
 **Vor Go-Live:** Backend-Proxy nötig (z.B. Vercel Edge Functions). Nie mit diesen Keys deployen wie sie sind.
 
 ## Nächste Schritte
-1. **Jobcenter-Content erweitern** — von 8 auf 16 Phrasen (für Demo-Termin)
-2. **Deployment** — Vercel, aber erst nach Backend-Proxy für API-Keys
-3. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist USP, aber UI-mäßig versteckt
+1. **Deployment** — Vercel Edge Functions als Proxy für API-Keys, dann public deploybar
+2. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
+3. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
+4. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
 
 ## Differenzierung
 Nicht Duolingo-Klon — fokussiert auf konkrete Behörden-/Alltagssituationen die Einwanderer tatsächlich brauchen. Spracherkennung via Whisper erlaubt echtes Sprechen üben.
