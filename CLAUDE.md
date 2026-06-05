@@ -7,21 +7,23 @@ Aktiv
 Mobile-first Web-App für Menschen die neu nach Deutschland kommen. Fokus auf echte Alltagssituationen: Jobcenter, Arztbesuch, Wohnung suchen, Behördengänge. Kein Backend — alles im Browser via localStorage.
 
 ## Tech Stack
-- **Framework**: React + TypeScript + Vite
-- **Styling**: Tailwind CSS
-- **Routing**: React Router DOM
+- **Framework**: Next.js 15 (App Router) + React + TypeScript
+- **Styling**: Tailwind CSS v4
+- **Routing**: React Router DOM (SPA via `app/page.tsx` dynamic import, SSR disabled)
+- **API-Proxy**: Next.js API Routes (`app/api/claude`, `app/api/openai/tts`, `app/api/openai/whisper`, `app/api/assessment/save`)
 - **KI**: Anthropic API (`claude-sonnet-4-6`) — Erklärungen, Quiz-Motivation
 - **Sprachausgabe (TTS)**: OpenAI TTS (`tts-1`) — `nova` für Deutsch, `shimmer` für Muttersprache
 - **Spracherkennung**: OpenAI Whisper (`whisper-1`)
 - **Persistenz**: localStorage (kein Backend)
+- **Cross-App Tracking**: WID-Code via `src/lib/widTracking.ts` — meldet Lernfortschritt an WID-Dashboard
 
 ## Dev-Befehle
 ```bash
-npm run dev   # http://localhost:5173
+npm run dev   # http://localhost:3001 (Next.js)
 ```
 
 ## Aktueller Stand
-Vollwertiges Produkt, läuft lokal (`localhost:5173`). Nicht deployed (API-Keys im Bundle).
+Vollwertiges Produkt, läuft lokal. Auf Next.js migriert (API-Keys sicher serverseitig). Nicht deployed.
 
 - **8 Themen**: Jobcenter, Arzt, Wohnung, Alltag, Behörden, Notfälle, Schule & Kinder, Freizeit & Integration
 - **~400 Phrasen** (~67 pro Thema, `src/data/content.ts`, 4844 Zeilen)
