@@ -40,10 +40,10 @@ Vollwertiges Produkt, läuft lokal. Auf Next.js migriert (API-Keys sicher server
 ## ⚠️ Sicherheitsnotiz — API Keys
 `VITE_ANTHROPIC_API_KEY` und `VITE_OPENAI_API_KEY` liegen im Browser-Bundle (durch `VITE_`-Prefix).
 **Für Demo:** Kein Problem — Demo wird lokal gezeigt, kein öffentlicher Zugriff.
-**Vor Go-Live:** Backend-Proxy nötig (z.B. Vercel Edge Functions). Nie mit diesen Keys deployen wie sie sind.
+**Vor Go-Live:** Backend-Proxy nötig (API-Keys in serverseitige Next.js-Route-Handler, ohne VITE_-Prefix). Nie mit diesen Keys deployen wie sie sind.
 
 ## Nächste Schritte
-1. **Deployment** — Vercel Edge Functions als Proxy für API-Keys, dann public deploybar
+1. **Deployment** — Coolify (Hetzner) → linguu.techstag.de, API-Keys in serverseitige Route Handler migrieren
 2. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
 3. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
 4. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
