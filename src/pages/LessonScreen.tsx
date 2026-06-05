@@ -7,6 +7,7 @@ import { t, getT, langNames } from '../i18n';
 import { AudioControls } from '../components/AudioControls';
 import { BilingualText } from '../components/BilingualText';
 import { useSpeak } from '../hooks/useSpeech';
+import { trackProgress } from '../lib/widTracking';
 import type { Language } from '../types';
 
 const phoneticsLabel: Partial<Record<Language, string>> = {
@@ -74,6 +75,7 @@ export function LessonScreen() {
 
   const { speak, stop } = useSpeak();
   const autoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lessonStartRef = useRef<number>(Date.now());
 
   useEffect(() => {
     if (!topic) navigate('/');
@@ -120,8 +122,17 @@ export function LessonScreen() {
   }, []);
 
   const handleNext = () => {
-    if (!isLast) handlePhraseView(currentIdx + 1);
-    else navigate(`/quiz/${topicId}`);
+    if (!isLast) {
+      handlePhraseView(currentIdx + 1);
+    } else {
+      trackProgress({
+        topicId: topicId!,
+        lessonType: 'phrases',
+        xpEarned: seenInSession.size * 10,
+        durationSeconds: Math.round((Date.now() - lessonStartRef.current) / 1000),
+      });
+      navigate(`/quiz/${topicId}`);
+    }
   };
 
   const handlePrev = () => {

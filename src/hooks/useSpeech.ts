@@ -28,10 +28,9 @@ export function useSpeak() {
     setSpeaking(false);
     try {
       const audio = await ttsSpeak(text, speed, onUsage, voice);
-      // A newer request was started while we were fetching — discard this result
       if (reqId.current !== thisReq) return;
       currentAudio.current = audio;
-      audio.onplay = () => { setLoading(false); setSpeaking(true); };
+      audio.onplay  = () => { setLoading(false); setSpeaking(true); };
       audio.onended = () => { setSpeaking(false); currentAudio.current = null; };
       audio.onerror = () => { setSpeaking(false); setLoading(false); currentAudio.current = null; };
       await audio.play();

@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
+import { getWidCode, setWidCode as saveWidCode, clearWidCode } from '../lib/widTracking';
 import { ProgressBar } from '../components/ProgressBar';
 import { topics, topicOrder } from '../data/content';
 import { allBadges } from '../data/badges';
@@ -62,6 +64,14 @@ export function Dashboard() {
   const orderedIds = topicOrder[path];
   const orderedTopics = orderedIds.map(id => topics.find(tt => tt.id === id)!).filter(Boolean);
 
+  const [widCode, setWidCodeState] = useState<string | null>(null);
+  const [showWidInput, setShowWidInput] = useState(false);
+  const [widInput, setWidInput] = useState('');
+
+  useEffect(() => {
+    setWidCodeState(getWidCode());
+  }, []);
+
   const { min, max } = getXpForLevel(progress.level);
   const nextLevel = getNextLevel(progress.level);
   const xpInLevel = progress.xp - min;
@@ -118,6 +128,92 @@ export function Dashboard() {
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* WID-Code Banner */}
+        {widCode ? (
+          <div
+            className="flex items-center justify-between rounded-xl px-4 py-2.5 mb-5 animate-fade-in-up"
+            style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}
+          >
+            <div className="flex items-center gap-2">
+              <span style={{ color: '#10b981', fontSize: 14 }}>🔗</span>
+              <span className="text-sm font-semibold" style={{ color: '#10b981' }}>
+                WID-Code: {widCode}
+              </span>
+              <span className="text-xs" style={{ color: 'rgba(16,185,129,0.6)' }}>
+                · Fortschritt wird geteilt
+              </span>
+            </div>
+            <button
+              onClick={() => { clearWidCode(); setWidCodeState(null); }}
+              className="text-xs px-2 py-0.5 rounded transition-all"
+              style={{ color: 'rgba(16,185,129,0.5)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(16,185,129,0.5)')}
+            >
+              ✕
+            </button>
+          </div>
+        ) : showWidInput ? (
+          <div
+            className="rounded-xl px-4 py-3 mb-5 animate-fade-in-up"
+            style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.09)' }}
+          >
+            <p className="text-xs mb-2" style={{ color: '#8b8fa8' }}>
+              WID-Code eingeben, um Lernfortschritt an deinen Koordinator zu melden
+            </p>
+            <div className="flex gap-2">
+              <input
+                value={widInput}
+                onChange={e => setWidInput(e.target.value.toUpperCase())}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && widInput.length >= 4) {
+                    saveWidCode(widInput);
+                    setWidCodeState(widInput);
+                    setShowWidInput(false);
+                    setWidInput('');
+                  }
+                }}
+                placeholder="z. B. AB12CD"
+                maxLength={12}
+                className="flex-1 px-3 py-1.5 rounded-lg text-sm bg-transparent outline-none"
+                style={{ border: '1px solid rgba(255,255,255,0.12)', color: '#f0ede8' }}
+                autoFocus
+              />
+              <button
+                disabled={widInput.length < 4}
+                onClick={() => {
+                  saveWidCode(widInput);
+                  setWidCodeState(widInput);
+                  setShowWidInput(false);
+                  setWidInput('');
+                }}
+                className="px-3 py-1.5 rounded-lg text-sm font-semibold transition-all"
+                style={{ background: widInput.length >= 4 ? '#f59e0b' : 'rgba(255,255,255,0.08)', color: widInput.length >= 4 ? '#0f1117' : '#8b8fa8' }}
+              >
+                OK
+              </button>
+              <button
+                onClick={() => { setShowWidInput(false); setWidInput(''); }}
+                className="px-2 py-1.5 rounded-lg text-sm"
+                style={{ color: '#8b8fa8' }}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowWidInput(true)}
+            className="flex items-center gap-1.5 mb-4 text-xs transition-all"
+            style={{ color: 'rgba(139,143,168,0.4)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(139,143,168,0.8)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(139,143,168,0.4)')}
+          >
+            <span>🔗</span>
+            <span>WID-Code verknüpfen</span>
+          </button>
+        )}
+
         {/* Progress Card */}
         <div
           className="rounded-2xl p-6 mb-8 animate-fade-in-up"

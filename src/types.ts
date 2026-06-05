@@ -1,4 +1,4 @@
-export type Language = 'ar' | 'uk' | 'es' | 'en' | 'tr' | 'pl' | 'ro' | 'ru' | 'de';
+export type Language = 'ar' | 'uk' | 'es' | 'en' | 'tr' | 'pl' | 'ro' | 'ru' | 'de' | 'ku';
 export type Path = 'neu' | 'beruf' | 'sprache' | 'einbuergerung';
 export type Level = 'A1' | 'A2' | 'B1' | 'B2';
 

@@ -3671,15 +3671,15 @@ export const topics: Topic[] = [
         phonetics: 'Myn KINT ist fer-SHVUN-den',
         translations: { ar: 'طفلي اختفى.', uk: 'Моя дитина зникла.', es: 'Mi hijo/a ha desaparecido.', en: 'My child has disappeared.', ku: 'Zarokê min winda bû.' },
         exampleDE: 'Hilfe! Mein Kind ist verschwunden. Es ist fünf Jahre alt und heißt Lena.',
-        exampleTranslations: { ar: 'مساعدة! طفلي اختفى. عمره خمس سنوات واسمه/اسمها لينا.', uk: 'Допоможіть! Моя дитина зникла. Їй п'ять років, її звуть Лена.', es: '¡Ayuda! Mi hijo/a ha desaparecido. Tiene cinco años y se llama Lena.', en: 'Help! My child has disappeared. They are five years old and their name is Lena.', ku: 'Alîkarî! Zarokê min winda bû. Pênc salî ye û navê wê Lena ye.' },
+        exampleTranslations: { ar: 'مساعدة! طفلي اختفى. عمره خمس سنوات واسمه/اسمها لينا.', uk: 'Допоможіть! Моя дитина зникла. Їй п\'ять років, її звуть Лена.', es: '¡Ayuda! Mi hijo/a ha desaparecido. Tiene cinco años y se llama Lena.', en: 'Help! My child has disappeared. They are five years old and their name is Lena.', ku: 'Alîkarî! Zarokê min winda bû. Pênc salî ye û navê wê Lena ye.' },
       },
       {
         id: 'nf25',
         german: 'Ich werde zu Hause geschlagen.',
         phonetics: 'Ish VER-de tsu HAU-ze ge-SHLA-gen',
-        translations: { ar: 'أتعرض للضرب في المنزل.', uk: 'Мене б'ють вдома.', es: 'Me están golpeando en casa.', en: 'I am being beaten at home.', ku: 'Li malê li min tê xistin.' },
+        translations: { ar: 'أتعرض للضرب في المنزل.', uk: 'Мене б\'ють вдома.', es: 'Me están golpeando en casa.', en: 'I am being beaten at home.', ku: 'Li malê li min tê xistin.' },
         exampleDE: 'Ich brauche sofort Schutz. Ich werde zu Hause geschlagen und habe Angst um mein Leben.',
-        exampleTranslations: { ar: 'أحتاج إلى الحماية فوراً. أتعرض للضرب في المنزل وأخشى على حياتي.', uk: 'Мені негайно потрібен захист. Мене б'ють вдома, і я боюся за своє життя.', es: 'Necesito protección de inmediato. Me están golpeando en casa y temo por mi vida.', en: 'I need protection immediately. I am being beaten at home and fear for my life.', ku: 'Tavilê parastin hewce ye. Li malê li min tê xistin û ez ji jiyana xwe ditirsim.' },
+        exampleTranslations: { ar: 'أحتاج إلى الحماية فوراً. أتعرض للضرب في المنزل وأخشى على حياتي.', uk: 'Мені негайно потрібен захист. Мене б\'ють вдома, і я боюся за своє життя.', es: 'Necesito protección de inmediato. Me están golpeando en casa y temo por mi vida.', en: 'I need protection immediately. I am being beaten at home and fear for my life.', ku: 'Tavilê parastin hewce ye. Li malê li min tê xistin û ez ji jiyana xwe ditirsim.' },
       },
       {
         id: 'nf26',
@@ -3883,8 +3883,6 @@ export const topics: Topic[] = [
       },
     ],
   },
-];
-
   {
     id: 'schule',
     icon: '🏫',

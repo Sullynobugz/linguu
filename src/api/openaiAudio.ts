@@ -1,4 +1,3 @@
-const OPENAI_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 
 // Cost constants (USD → EUR @ 0.92)
 const TTS_COST_PER_CHAR = 0.000015 * 0.92;    // $0.015 / 1K chars
@@ -9,6 +8,25 @@ export interface AudioUsage {
   detail: string;
 }
 
+// ── TTS CACHE ────────────────────────────────────────────────────
+// Speichert Blob-URLs im Speicher — vermeidet doppelte API-Anfragen
+// und reduziert Latenz bei wiederholten Phrasen erheblich.
+const ttsCache = new Map<string, string>();
+const MAX_CACHE_SIZE = 60;
+
+function ttsCacheKey(text: string, voice: string, speed: number) {
+  return `${voice}:${speed}:${text}`;
+}
+
+function evictOldestCacheEntry() {
+  const firstKey = ttsCache.keys().next().value;
+  if (firstKey) {
+    const url = ttsCache.get(firstKey)!;
+    URL.revokeObjectURL(url);
+    ttsCache.delete(firstKey);
+  }
+}
+
 // ── TEXT-TO-SPEECH ──────────────────────────────────────────────
 // Returns an <Audio> element ready to play, or throws.
 export async function ttsSpeak(
@@ -17,37 +35,35 @@ export async function ttsSpeak(
   onUsage?: (u: AudioUsage) => void,
   voice = 'nova'
 ): Promise<HTMLAudioElement> {
-  const response = await fetch('https://api.openai.com/v1/audio/speech', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${OPENAI_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'tts-1',
-      input: text,
-      voice,
-      speed,
-    }),
-  });
+  const cacheKey = ttsCacheKey(text, voice, speed);
+  let url = ttsCache.get(cacheKey);
 
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`TTS error ${response.status}: ${err}`);
+  if (!url) {
+    const response = await fetch('/api/openai/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'tts-1', input: text, voice, speed }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`TTS error ${response.status}: ${err}`);
+    }
+
+    const blob = await response.blob();
+    url = URL.createObjectURL(blob);
+
+    if (ttsCache.size >= MAX_CACHE_SIZE) evictOldestCacheEntry();
+    ttsCache.set(cacheKey, url);
+
+    if (onUsage) {
+      const costEur = text.length * TTS_COST_PER_CHAR;
+      console.log(`[Linguu Audio] TTS | ${text.length} chars | €${costEur.toFixed(5)}`);
+      onUsage({ costEur, detail: `TTS ${text.length} chars` });
+    }
   }
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const audio = new Audio(url);
-
-  if (onUsage) {
-    const costEur = text.length * TTS_COST_PER_CHAR;
-    const usage: AudioUsage = { costEur, detail: `TTS ${text.length} chars` };
-    console.log(`[Linguu Audio] TTS | ${text.length} chars | €${costEur.toFixed(5)}`);
-    onUsage(usage);
-  }
-
-  return audio;
+  return new Audio(url);
 }
 
 // ── SPEECH-TO-TEXT (WHISPER) ────────────────────────────────────
@@ -65,9 +81,8 @@ export async function whisperTranscribe(
   formData.append('model', 'whisper-1');
   formData.append('language', lang);
 
-  const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+  const response = await fetch('/api/openai/whisper', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${OPENAI_KEY}` },
     body: formData,
   });
 

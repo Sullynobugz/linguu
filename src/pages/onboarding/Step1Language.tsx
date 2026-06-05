@@ -4,16 +4,17 @@ import { OnboardingLayout } from './OnboardingLayout';
 import type { Language } from '../../types';
 
 
-const languages: { code: Language; flag: string; native: string; subtitle: string }[] = [
-  { code: 'de', flag: '🇩🇪', native: 'Deutsch',    subtitle: 'Wähle Deutsch' },
+const languages: { code: Language; flag: string; native: string; subtitle: string; beta?: boolean }[] = [
   { code: 'ar', flag: '🇸🇦', native: 'العربية',    subtitle: 'اختر العربية' },
-  { code: 'tr', flag: '🇹🇷', native: 'Türkçe',     subtitle: 'Türkçe seç' },
   { code: 'uk', flag: '🇺🇦', native: 'Українська', subtitle: 'Оберіть українську' },
-  { code: 'ru', flag: '🇷🇺', native: 'Русский',    subtitle: 'Выбери русский' },
-  { code: 'pl', flag: '🇵🇱', native: 'Polski',     subtitle: 'Wybierz polski' },
-  { code: 'ro', flag: '🇷🇴', native: 'Română',     subtitle: 'Alege română' },
+  { code: 'ku', flag: '🏔️',  native: 'Kurdî',      subtitle: 'Kurdî hilbijêre' },
   { code: 'es', flag: '🇪🇸', native: 'Español',    subtitle: 'Elige español' },
-  { code: 'en', flag: '🇬🇧', native: 'English',    subtitle: 'Choose English' },
+  { code: 'en', flag: '🇬🇧', native: 'English',    subtitle: 'Choose English', beta: true },
+  { code: 'tr', flag: '🇹🇷', native: 'Türkçe',     subtitle: 'Türkçe seç',     beta: true },
+  { code: 'ru', flag: '🇷🇺', native: 'Русский',    subtitle: 'Выбери русский', beta: true },
+  { code: 'pl', flag: '🇵🇱', native: 'Polski',     subtitle: 'Wybierz polski', beta: true },
+  { code: 'ro', flag: '🇷🇴', native: 'Română',     subtitle: 'Alege română',   beta: true },
+  { code: 'de', flag: '🇩🇪', native: 'Deutsch',    subtitle: 'Wähle Deutsch',  beta: true },
 ];
 
 export function Step1Language() {
@@ -49,7 +50,7 @@ export function Step1Language() {
             <button
               key={lang.code}
               onClick={() => handleSelect(lang.code)}
-              className="group flex flex-col items-center gap-2 p-5 rounded-2xl transition-all duration-200"
+              className="group flex flex-col items-center gap-2 p-5 rounded-2xl transition-all duration-200 relative"
               style={{
                 background: selected ? 'rgba(245,158,11,0.15)' : 'rgba(26,29,39,0.8)',
                 border: selected ? '2px solid #f59e0b' : '2px solid rgba(255,255,255,0.08)',
@@ -68,12 +69,20 @@ export function Step1Language() {
                 }
               }}
             >
+              {lang.beta && (
+                <span
+                  className="absolute top-2 right-2 text-xs font-bold px-1.5 py-0.5 rounded-full"
+                  style={{ background: 'rgba(139,143,168,0.25)', color: '#8b8fa8', fontSize: '9px', letterSpacing: '0.04em' }}
+                >
+                  BETA
+                </span>
+              )}
               <span className="text-4xl">{lang.flag}</span>
               <div className="text-center">
                 <div
                   className="text-lg font-semibold"
                   style={{
-                    color: '#f0ede8',
+                    color: lang.beta ? '#8b8fa8' : '#f0ede8',
                     direction: lang.code === 'ar' ? 'rtl' : 'ltr',
                   }}
                 >

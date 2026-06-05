@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useProgress } from '../store/ProgressContext';
 import { topics } from '../data/content';
@@ -6,6 +6,7 @@ import { getEncouragingMessage } from '../api/claude';
 import { t, getT, langNames } from '../i18n';
 import { BilingualText } from '../components/BilingualText';
 import { useSpeak } from '../hooks/useSpeech';
+import { trackProgress } from '../lib/widTracking';
 import type { Language, Level } from '../types';
 
 interface QuizQuestion {
@@ -77,6 +78,7 @@ export function QuizScreen() {
   const [loadingMsg, setLoadingMsg] = useState(false);
 
   const { speak } = useSpeak();
+  const quizStartRef = useRef<number>(Date.now());
   const topic = topics.find(tt => tt.id === topicId);
   const question = questions[currentIdx];
   const nativeTitle = (topicTitlesNative[lang] ?? topicTitlesNative['en'])![topicId ?? ''] ?? (topic?.titleDE ?? '');
@@ -91,6 +93,15 @@ export function QuizScreen() {
       addXp(50 + (isPerfect ? 30 : 0));
       markTopicComplete(topicId);
       recordQuizScore(topicId, Math.round((correct / questions.length) * 100), isPerfect);
+
+      const quizScore = Math.round((correct / questions.length) * 100);
+      trackProgress({
+        topicId: topicId!,
+        lessonType: 'quiz',
+        score: quizScore,
+        xpEarned: 50 + (isPerfect ? 30 : 0),
+        durationSeconds: Math.round((Date.now() - quizStartRef.current) / 1000),
+      });
 
       setLoadingMsg(true);
       getEncouragingMessage(lang, correct, questions.length, (text, usage) => {

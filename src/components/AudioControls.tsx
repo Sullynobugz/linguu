@@ -13,20 +13,21 @@ const nativeLangLabel: Record<Language, string> = {
   ro: 'În română',
   ru: 'На русском',
   de: 'Auf Deutsch',
+  ku: 'Bi Kurdî',
 };
 
 const labels = {
-  slow:       { ar: 'ببطء',       uk: 'Повільно',    es: 'Despacio',    en: 'Slow',        tr: 'Yavaş',    pl: 'Wolno',      ro: 'Încet',     ru: 'Медленно',  de: 'Langsam'    },
-  speak:      { ar: 'تحدث',       uk: 'Говорити',    es: 'Hablar',      en: 'Speak',       tr: 'Konuş',    pl: 'Mów',        ro: 'Vorbești',  ru: 'Говорить',  de: 'Sprechen'   },
-  stop:       { ar: 'إيقاف',      uk: 'Стоп',        es: 'Parar',       en: 'Stop',        tr: 'Dur',      pl: 'Stop',       ro: 'Stop',      ru: 'Стоп',      de: 'Stop'       },
-  loading:    { ar: 'جارٍ...',    uk: 'Завантаж...',  es: 'Cargando...', en: 'Loading...',  tr: 'Yüklüyor...',pl: 'Ładowanie...',ro: 'Încarcă...',ru: 'Загрузка...', de: 'Laden...'  },
-  processing: { ar: 'معالجة...',  uk: 'Обробка...',   es: 'Procesando...',en: 'Processing...',tr: 'İşleniyor...',pl: 'Przetwarza...',ro: 'Procesează...',ru: 'Обработка...',de: 'Verarbeite...' },
-  listening:  { ar: '● يستمع...', uk: '● Запис...',   es: '● Grabando...', en: '● Recording...',tr: '● Kaydediliyor...',pl: '● Nagrywa...',ro: '● Înregistrează...',ru: '● Запись...',de: '● Aufnahme...' },
-  close:      { ar: 'إغلاق',      uk: 'закрити',     es: 'cerrar',      en: 'close',       tr: 'kapat',    pl: 'zamknij',    ro: 'închide',   ru: 'закрыть',   de: 'schließen'  },
+  slow:       { ar: 'ببطء',       uk: 'Повільно',    es: 'Despacio',    en: 'Slow',        tr: 'Yavaş',    pl: 'Wolno',      ro: 'Încet',     ru: 'Медленно',  de: 'Langsam',   ku: 'Hêdî'         },
+  speak:      { ar: 'تحدث',       uk: 'Говорити',    es: 'Hablar',      en: 'Speak',       tr: 'Konuş',    pl: 'Mów',        ro: 'Vorbești',  ru: 'Говорить',  de: 'Sprechen',  ku: 'Biaxive'      },
+  stop:       { ar: 'إيقاف',      uk: 'Стоп',        es: 'Parar',       en: 'Stop',        tr: 'Dur',      pl: 'Stop',       ro: 'Stop',      ru: 'Стоп',      de: 'Stop',      ku: 'Bisekine'     },
+  loading:    { ar: 'جارٍ...',    uk: 'Завантаж...',  es: 'Cargando...', en: 'Loading...',  tr: 'Yüklüyor...',pl: 'Ładowanie...',ro: 'Încarcă...',ru: 'Загрузка...', de: 'Laden...',  ku: 'Tê barkirin...' },
+  processing: { ar: 'معالجة...',  uk: 'Обробка...',   es: 'Procesando...',en: 'Processing...',tr: 'İşleniyor...',pl: 'Przetwarza...',ro: 'Procesează...',ru: 'Обработка...',de: 'Verarbeite...',ku: 'Tê karkirin...' },
+  listening:  { ar: '● يستمع...', uk: '● Запис...',   es: '● Grabando...', en: '● Recording...',tr: '● Kaydediliyor...',pl: '● Nagrywa...',ro: '● Înregistrează...',ru: '● Запись...',de: '● Aufnahme...',ku: '● Tê tomarkirin...' },
+  close:      { ar: 'إغلاق',      uk: 'закрити',     es: 'cerrar',      en: 'close',       tr: 'kapat',    pl: 'zamknij',    ro: 'închide',   ru: 'закрыть',   de: 'schließen', ku: 'bigire'       },
   feedback: {
-    perfect:   { ar: '🎉 ممتاز! نطق رائع!', uk: '🎉 Чудово! Ідеальна вимова!', es: '🎉 ¡Perfecto!', en: '🎉 Perfect pronunciation!', tr: '🎉 Mükemmel!', pl: '🎉 Idealnie!', ro: '🎉 Perfect!', ru: '🎉 Отлично!', de: '🎉 Perfekt!' },
-    good:      { ar: '👍 جيد! استمر في التدرب', uk: '👍 Добре! Продовжуй', es: '👍 ¡Bien! Sigue practicando', en: '👍 Good! Keep practicing', tr: '👍 İyi! Devam et', pl: '👍 Dobrze! Ćwicz dalej', ro: '👍 Bine! Continuă', ru: '👍 Хорошо! Продолжай', de: '👍 Gut! Weiter üben' },
-    try_again: { ar: '🔄 حاول مرة أخرى', uk: '🔄 Спробуй ще раз', es: '🔄 Inténtalo de nuevo', en: '🔄 Try again', tr: '🔄 Tekrar dene', pl: '🔄 Spróbuj ponownie', ro: '🔄 Încearcă din nou', ru: '🔄 Попробуй ещё раз', de: '🔄 Nochmal versuchen' },
+    perfect:   { ar: '🎉 ممتاز! نطق رائع!', uk: '🎉 Чудово! Ідеальна вимова!', es: '🎉 ¡Perfecto!', en: '🎉 Perfect pronunciation!', tr: '🎉 Mükemmel!', pl: '🎉 Idealnie!', ro: '🎉 Perfect!', ru: '🎉 Отлично!', de: '🎉 Perfekt!', ku: '🎉 Bêkêmasî! Xweş axivî!' },
+    good:      { ar: '👍 جيد! استمر في التدرب', uk: '👍 Добре! Продовжуй', es: '👍 ¡Bien! Sigue practicando', en: '👍 Good! Keep practicing', tr: '👍 İyi! Devam et', pl: '👍 Dobrze! Ćwicz dalej', ro: '👍 Bine! Continuă', ru: '👍 Хорошо! Продолжай', de: '👍 Gut! Weiter üben', ku: '👍 Baş! Berdewam bike' },
+    try_again: { ar: '🔄 حاول مرة أخرى', uk: '🔄 Спробуй ще раз', es: '🔄 Inténtalo de nuevo', en: '🔄 Try again', tr: '🔄 Tekrar dene', pl: '🔄 Spróbuj ponownie', ro: '🔄 Încearcă din nou', ru: '🔄 Попробуй ещё раз', de: '🔄 Nochmal versuchen', ku: '🔄 Dîsa biceribîne' },
   },
 };
 
@@ -53,6 +54,18 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
   useEffect(() => {
     if (!speaking && !ttsLoading) setActiveVoice(null);
   }, [speaking, ttsLoading]);
+
+  // Cancel in-flight fetch when phrase changes (prevents old phrase playing on new card)
+  useEffect(() => {
+    stopSpeak();
+    setActiveVoice(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [germanPhrase]);
+
+  // Cancel in-flight TTS fetch on unmount
+  useEffect(() => {
+    return () => { stopSpeak(); };
+  }, [stopSpeak]);
 
   const handleListenDE = () => {
     if (isActive) { stopSpeak(); return; }

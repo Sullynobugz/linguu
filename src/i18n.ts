@@ -12,6 +12,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Język ojczysty',
     ro: 'Limbă maternă',
     ru: 'Родной язык',
+    ku: 'Zimanê dayikê',
   },
   stepTargetLang: {
     de: 'Lernsprache',
@@ -23,6 +24,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Język docelowy',
     ro: 'Limbă țintă',
     ru: 'Изучаемый язык',
+    ku: 'Zimanê hînbûnê',
   },
   stepPath: {
     de: 'Lernpfad',
@@ -34,6 +36,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Ścieżka nauki',
     ro: 'Cale de învățare',
     ru: 'Путь обучения',
+    ku: 'Rêya hînbûnê',
   },
   stepLevel: {
     de: 'Niveau',
@@ -45,6 +48,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Poziom',
     ro: 'Nivel',
     ru: 'Уровень',
+    ku: 'Ast',
   },
 
   // Onboarding
@@ -58,6 +62,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Witaj w Linguu',
     ro: 'Bun venit la Linguu',
     ru: 'Добро пожаловать в Linguu',
+    ku: 'Xêr hatî Linguu',
   },
   chooseLanguage: {
     de: 'Wähle deine Muttersprache',
@@ -69,6 +74,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Wybierz swój język ojczysty',
     ro: 'Alege-ți limba maternă',
     ru: 'Выбери свой родной язык',
+    ku: 'Zimanê xwe yê dayikê hilbijêre',
   },
   choosePath: {
     de: 'Was beschreibt deine Situation am besten?',
@@ -80,6 +86,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Co najlepiej opisuje Twoją sytuację?',
     ro: 'Ce îți descrie cel mai bine situația?',
     ru: 'Что лучше всего описывает твою ситуацию?',
+    ku: 'Rewşa te ya herî baş çi ye?',
   },
   whereAreYou: {
     de: 'Was ist dein aktuelles Sprachniveau?',
@@ -91,6 +98,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Jaki jest Twój obecny poziom?',
     ro: 'Care este nivelul tău actual?',
     ru: 'Какой у тебя текущий уровень?',
+    ku: 'Asta zimanê te ya niha çi ye?',
   },
   assessmentHint: {
     de: 'Beantworte diese einfachen Fragen auf Deutsch',
@@ -102,6 +110,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Odpowiedz na te proste pytania po niemiecku',
     ro: 'Răspunde la aceste întrebări simple despre germană',
     ru: 'Ответь на эти простые вопросы по немецкому',
+    ku: 'Bersivê ji van pirsên hêsan ên Almanî bide',
   },
   questionOf: {
     de: 'Frage {0} von {1}',
@@ -113,6 +122,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Pytanie {0} z {1}',
     ro: 'Întrebarea {0} din {1}',
     ru: 'Вопрос {0} из {1}',
+    ku: 'Pirsa {0} ji {1}',
   },
   startNow: {
     de: 'Jetzt starten ←',
@@ -124,6 +134,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Zacznij teraz ←',
     ro: 'Începe acum ←',
     ru: 'Начать сейчас ←',
+    ku: 'Nû dest pê bike ←',
   },
 
   // Dashboard
@@ -137,6 +148,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Twoje postępy',
     ro: 'Progresul tău',
     ru: 'Твой прогресс',
+    ku: 'Pêşkevtina te',
   },
   xpUntilLevel: {
     de: 'XP bis Level',
@@ -148,6 +160,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'XP do poziomu',
     ro: 'XP până la nivel',
     ru: 'XP до уровня',
+    ku: 'XP heta ast',
   },
   days: {
     de: 'Tage',
@@ -159,6 +172,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'dni',
     ro: 'zile',
     ru: 'дней',
+    ku: 'roj',
   },
   yourTopics: {
     de: 'Deine Lernthemen',
@@ -170,6 +184,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Twoje tematy nauki',
     ro: 'Temele tale de învățare',
     ru: 'Твои темы для обучения',
+    ku: 'Mijarên hînbûna te',
   },
   todayRecommended: {
     de: 'Heute empfohlen',
@@ -181,6 +196,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Polecane dzisiaj',
     ro: 'Recomandat astăzi',
     ru: 'Рекомендовано сегодня',
+    ku: 'Îro pêşniyar kirin',
   },
   start: {
     de: 'Starten ←',
@@ -192,6 +208,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Zacznij ←',
     ro: 'Începe ←',
     ru: 'Начать ←',
+    ku: 'Dest pê bike ←',
   },
   done: {
     de: '✓ Fertig',
@@ -203,6 +220,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '✓ Gotowe',
     ro: '✓ Gata',
     ru: '✓ Готово',
+    ku: '✓ Qediya',
   },
   inProgress: {
     ar: 'جارٍ',
@@ -214,6 +232,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'În curs',
     ru: 'В процессе',
     de: 'In Bearbeitung',
+    ku: 'Di pêvajoyê de',
   },
   notStarted: {
     ar: 'لم يبدأ بعد',
@@ -225,6 +244,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'Neîncepute',
     ru: 'Ещё не начато',
     de: 'Noch nicht begonnen',
+    ku: 'Hêj dest pê nekiriye',
   },
   unlockedFrom: {
     ar: 'متاح من المستوى',
@@ -236,6 +256,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'Disponibil de la nivel',
     ru: 'Доступно с уровня',
     de: 'Verfügbar ab Niveau',
+    ku: 'Ji astê vedigire:',
   },
   completed: {
     de: 'abgeschlossen',
@@ -247,6 +268,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'ukończono',
     ro: 'finalizat',
     ru: 'завершено',
+    ku: 'temam',
   },
   nextBadge: {
     de: 'Nächster Badge:',
@@ -258,6 +280,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Następna odznaka:',
     ro: 'Următoarea insignă:',
     ru: 'Следующий значок:',
+    ku: 'Nîşana pêşîn:',
   },
   badges: {
     de: 'Badges',
@@ -269,6 +292,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Odznaki',
     ro: 'Insigne',
     ru: 'Значки',
+    ku: 'Nîşan',
   },
   zielB1: {
     de: 'Ziel: B1',
@@ -280,6 +304,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Cel: B1',
     ro: 'Obiectiv: B1',
     ru: 'Цель: B1',
+    ku: 'Mebest: B1',
   },
   reportLink: {
     de: '📄 Bericht für Behörden',
@@ -291,6 +316,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '📄 Raport dla urzędów',
     ro: '📄 Raport pentru autorități',
     ru: '📄 Отчёт для органов власти',
+    ku: '📄 Raporta ji bo dezgehên fermî',
   },
 
   // Einbürgerung
@@ -304,6 +330,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Droga do obywatelstwa',
     ro: 'Drumul spre cetățenie',
     ru: 'Путь к гражданству',
+    ku: 'Rêya welatbûnê',
   },
   einbuergerungWidgetSub: {
     de: 'Einbürgerungsvoraussetzungen prüfen',
@@ -315,6 +342,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Sprawdź wymagania naturalizacyjne',
     ro: 'Verifică cerințele de naturalizare',
     ru: 'Проверь требования для натурализации',
+    ku: 'Mercên welatbûnê kontrol bike',
   },
   einbuergerungWidgetCta: {
     de: 'Voraussetzungen ←',
@@ -326,6 +354,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Wymagania ←',
     ro: 'Cerințe ←',
     ru: 'Условия ←',
+    ku: 'Merc ←',
   },
   b1Goal: {
     de: 'Dein Ziel: B1-Niveau für die Einbürgerung',
@@ -337,6 +366,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Twój cel: poziom B1 dla obywatelstwa',
     ro: 'Obiectivul tău: nivelul B1 pentru cetățenie',
     ru: 'Твоя цель: уровень B1 для гражданства',
+    ku: 'Mebesta te: asta B1 ji bo welatbûnê',
   },
 
   // Lesson
@@ -350,6 +380,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'Prezentare generală',
     ru: 'Обзор',
     de: 'Übersicht',
+    ku: 'Sernavek',
   },
   phrasesOf: {
     de: 'Ausdruck {0} von {1}',
@@ -361,6 +392,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Wyrażenie {0} z {1}',
     ro: 'Expresia {0} din {1}',
     ru: 'Фраза {0} из {1}',
+    ku: 'Birêz {0} ji {1}',
   },
   seen: {
     de: 'gesehen',
@@ -372,6 +404,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'widziane',
     ro: 'văzute',
     ru: 'просмотрено',
+    ku: 'dîtiye',
   },
   example: {
     de: 'Beispiel',
@@ -383,6 +416,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Przykład',
     ro: 'Exemplu',
     ru: 'Пример',
+    ku: 'Mînak',
   },
   explain: {
     de: '💡 Erkläre mir das',
@@ -394,6 +428,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '💡 Wyjaśnij mi to',
     ro: '💡 Explică-mi asta',
     ru: '💡 Объясни мне это',
+    ku: '💡 Ji min re rave bike',
   },
   back: {
     de: '← Zurück',
@@ -405,6 +440,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '← Wróć',
     ro: '← Înapoi',
     ru: '← Назад',
+    ku: '← Vegerîn',
   },
   next: {
     de: 'Weiter ←',
@@ -416,6 +452,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Dalej ←',
     ro: 'Următor ←',
     ru: 'Далее ←',
+    ku: 'Pêşde ←',
   },
   toQuiz: {
     ar: '🎯 إلى الاختبار ←',
@@ -427,6 +464,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: '🎯 La quiz ←',
     ru: '🎯 К тесту ←',
     de: '🎯 Zum Quiz ←',
+    ku: '🎯 Ji bo testê ←',
   },
   xpPerPhrase: {
     de: '+10 XP pro Ausdruck',
@@ -438,6 +476,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '+10 XP za wyrażenie',
     ro: '+10 XP pe expresie',
     ru: '+10 XP за фразу',
+    ku: '+10 XP ji bo her birêzê',
   },
 
   // Quiz
@@ -451,6 +490,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Quiz',
     ro: 'Quiz',
     ru: 'Тест',
+    ku: 'Test',
   },
   inGerman: {
     de: 'Auf Deutsch',
@@ -462,6 +502,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Po niemiecku',
     ro: 'În germană',
     ru: 'На немецком',
+    ku: 'Bi Almanî',
   },
   whatDoesItMean: {
     de: 'Was bedeutet das?',
@@ -473,6 +514,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Co to oznacza?',
     ro: 'Ce înseamnă asta?',
     ru: 'Что это значит?',
+    ku: 'Ev çi tê wateyê?',
   },
   correct: {
     de: '✓ Richtig!',
@@ -484,6 +526,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '✓ Poprawnie!',
     ro: '✓ Corect!',
     ru: '✓ Правильно!',
+    ku: '✓ Rast!',
   },
   incorrect: {
     de: '✗ Falsch!',
@@ -495,6 +538,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '✗ Błędnie!',
     ro: '✗ Incorect!',
     ru: '✗ Неправильно!',
+    ku: '✗ Xelet!',
   },
   correctAnswer: {
     de: 'Richtige Antwort:',
@@ -506,6 +550,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Poprawna odpowiedź:',
     ro: 'Răspuns corect:',
     ru: 'Правильный ответ:',
+    ku: 'Bersiva rast:',
   },
   yourResult: {
     de: 'Dein Ergebnis',
@@ -517,6 +562,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Twój wynik',
     ro: 'Rezultatul tău',
     ru: 'Твой результат',
+    ku: 'Encama te',
   },
   xpEarned: {
     de: 'XP verdient',
@@ -528,6 +574,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Zdobyte XP',
     ro: 'XP câștigate',
     ru: 'Заработано XP',
+    ku: 'XP qezenc kir',
   },
   keepLearning: {
     de: 'Weiterlernen',
@@ -539,6 +586,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Kontynuuj naukę',
     ro: 'Continuă să înveți',
     ru: 'Продолжай учиться',
+    ku: 'Hînbûnê bidomîne',
   },
   loading: {
     de: 'Laden...',
@@ -550,6 +598,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Ładowanie...',
     ro: 'Se încarcă...',
     ru: 'Загрузка...',
+    ku: 'Tê barkirin...',
   },
   lesson: {
     ar: 'الدرس',
@@ -561,6 +610,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'Lecție',
     ru: 'Урок',
     de: 'Lektion',
+    ku: 'Ders',
   },
   listen: {
     ar: 'استمع',
@@ -572,6 +622,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     ro: 'Ascultă',
     ru: 'Слушать',
     de: 'Anhören',
+    ku: 'Guh bide',
   },
 
   // Vocab mode toggle
@@ -585,6 +636,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '💬 Frazy',
     ro: '💬 Fraze',
     ru: '💬 Фразы',
+    ku: '💬 Birêz',
   },
   vocabWords: {
     de: '🔤 Wörter',
@@ -596,6 +648,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '🔤 Słowa',
     ro: '🔤 Cuvinte',
     ru: '🔤 Слова',
+    ku: '🔤 Peyv',
   },
 
   // Vocab
@@ -609,6 +662,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Fiszki słownikowe',
     ro: 'Fișe de vocabular',
     ru: 'Карточки слов',
+    ku: 'Kartên peyvan',
   },
   vocabSubtitle: {
     de: 'Antippen zum Drehen • Selbst bewerten',
@@ -620,6 +674,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Dotknij, by odwrócić • Oceń siebie',
     ro: 'Atinge pentru a întoarce • Evaluează-te',
     ru: 'Нажми для переворота • Оцени себя',
+    ku: 'Dest bide zivirandinê • Xwe bihesibîne',
   },
   tapToFlip: {
     de: 'Antippen für Übersetzung',
@@ -631,6 +686,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Dotknij, by zobaczyć tłumaczenie',
     ro: 'Atinge pentru a vedea traducerea',
     ru: 'Нажми, чтобы увидеть перевод',
+    ku: 'Dest bide wergerê bibînî',
   },
   again: {
     de: 'Nochmal',
@@ -642,6 +698,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Jeszcze raz',
     ro: 'Din nou',
     ru: 'Ещё раз',
+    ku: 'Dîsa',
   },
   good: {
     de: 'Gut',
@@ -653,6 +710,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Dobrze',
     ro: 'Bine',
     ru: 'Хорошо',
+    ku: 'Baş',
   },
   mastered: {
     de: 'Gemeistert',
@@ -664,6 +722,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Opanowane',
     ro: 'Stăpânit',
     ru: 'Освоено',
+    ku: 'Serkeftiye',
   },
   allMastered: {
     de: '🎉 Du hast alle Vokabeln gemeistert!',
@@ -675,6 +734,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '🎉 Opanowałeś całe słownictwo!',
     ro: '🎉 Ai stăpânit tot vocabularul!',
     ru: '🎉 Ты освоил всю лексику!',
+    ku: '🎉 Te hemû peyv fêr bûn!',
   },
   vocabDash: {
     de: 'Vokabeln wiederholen',
@@ -686,6 +746,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Powtórka słownictwa',
     ro: 'Recapitulare vocabular',
     ru: 'Повторение слов',
+    ku: 'Peyvan dubare bike',
   },
   masteredCount: {
     de: 'gemeistert',
@@ -697,6 +758,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'opanowane',
     ro: 'stăpânite',
     ru: 'освоено',
+    ku: 'serkeftiye',
   },
 
   // Report
@@ -710,6 +772,7 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: 'Raport postępów',
     ro: 'Raport de progres',
     ru: 'Отчёт о прогрессе',
+    ku: 'Raporta Pêşkevtinê',
   },
   printSave: {
     de: '🖨️ Drucken / Speichern',
@@ -721,20 +784,22 @@ export const ui: Record<string, Partial<Record<Language, string>>> = {
     pl: '🖨️ Drukuj / Zapisz',
     ro: '🖨️ Tipărire / Salvare',
     ru: '🖨️ Печать / Сохранить',
+    ku: '🖨️ Çap bike / Tomar bike',
   },
 };
 
 // Name von [sprache], angezeigt auf [in]-Sprache: nameInLang[sprache][in]
 export const langNames: Record<Language, Record<Language, string>> = {
-  de: { de: 'Deutsch',    ar: 'الألمانية',   uk: 'Німецька',    ru: 'Немецкий',   tr: 'Almanca',    pl: 'Niemecki',    ro: 'Germană',    es: 'Alemán',    en: 'German'    },
-  en: { de: 'Englisch',   ar: 'الإنجليزية',  uk: 'Англійська',  ru: 'Английский', tr: 'İngilizce',  pl: 'Angielski',   ro: 'Engleză',    es: 'Inglés',    en: 'English'   },
-  ar: { de: 'Arabisch',   ar: 'العربية',     uk: 'Арабська',    ru: 'Арабский',   tr: 'Arapça',     pl: 'Arabski',     ro: 'Arabă',      es: 'Árabe',     en: 'Arabic'    },
-  tr: { de: 'Türkisch',   ar: 'التركية',     uk: 'Турецька',    ru: 'Турецкий',   tr: 'Türkçe',     pl: 'Turecki',     ro: 'Turcă',      es: 'Turco',     en: 'Turkish'   },
-  uk: { de: 'Ukrainisch', ar: 'الأوكرانية',  uk: 'Українська',  ru: 'Украинский', tr: 'Ukraynaca',  pl: 'Ukraiński',   ro: 'Ucraineană', es: 'Ucraniano', en: 'Ukrainian' },
-  ru: { de: 'Russisch',   ar: 'الروسية',     uk: 'Російська',   ru: 'Русский',    tr: 'Rusça',      pl: 'Rosyjski',    ro: 'Rusă',       es: 'Ruso',      en: 'Russian'   },
-  pl: { de: 'Polnisch',   ar: 'البولندية',   uk: 'Польська',    ru: 'Польский',   tr: 'Lehçe',      pl: 'Polski',      ro: 'Poloneză',   es: 'Polaco',    en: 'Polish'    },
-  ro: { de: 'Rumänisch',  ar: 'الرومانية',   uk: 'Румунська',   ru: 'Румынский',  tr: 'Rumence',    pl: 'Rumuński',    ro: 'Română',     es: 'Rumano',    en: 'Romanian'  },
-  es: { de: 'Spanisch',   ar: 'الإسبانية',   uk: 'Іспанська',   ru: 'Испанский',  tr: 'İspanyolca', pl: 'Hiszpański',  ro: 'Spaniolă',   es: 'Español',   en: 'Spanish'   },
+  de: { de: 'Deutsch',    ar: 'الألمانية',   uk: 'Німецька',    ru: 'Немецкий',   tr: 'Almanca',    pl: 'Niemecki',    ro: 'Germană',    es: 'Alemán',    en: 'German',    ku: 'Almanî'    },
+  en: { de: 'Englisch',   ar: 'الإنجليزية',  uk: 'Англійська',  ru: 'Английский', tr: 'İngilizce',  pl: 'Angielski',   ro: 'Engleză',    es: 'Inglés',    en: 'English',   ku: 'Îngilîzî'  },
+  ar: { de: 'Arabisch',   ar: 'العربية',     uk: 'Арабська',    ru: 'Арабский',   tr: 'Arapça',     pl: 'Arabski',     ro: 'Arabă',      es: 'Árabe',     en: 'Arabic',    ku: 'Erebî'     },
+  tr: { de: 'Türkisch',   ar: 'التركية',     uk: 'Турецька',    ru: 'Турецкий',   tr: 'Türkçe',     pl: 'Turecki',     ro: 'Turcă',      es: 'Turco',     en: 'Turkish',   ku: 'Tirkî'     },
+  uk: { de: 'Ukrainisch', ar: 'الأوكرانية',  uk: 'Українська',  ru: 'Украинский', tr: 'Ukraynaca',  pl: 'Ukraiński',   ro: 'Ucraineană', es: 'Ucraniano', en: 'Ukrainian', ku: 'Ukraynî'   },
+  ru: { de: 'Russisch',   ar: 'الروسية',     uk: 'Російська',   ru: 'Русский',    tr: 'Rusça',      pl: 'Rosyjski',    ro: 'Rusă',       es: 'Ruso',      en: 'Russian',   ku: 'Rûsî'      },
+  pl: { de: 'Polnisch',   ar: 'البولندية',   uk: 'Польська',    ru: 'Польский',   tr: 'Lehçe',      pl: 'Polski',      ro: 'Poloneză',   es: 'Polaco',    en: 'Polish',    ku: 'Polonî'    },
+  ro: { de: 'Rumänisch',  ar: 'الرومانية',   uk: 'Румунська',   ru: 'Румынский',  tr: 'Rumence',    pl: 'Rumuński',    ro: 'Română',     es: 'Rumano',    en: 'Romanian',  ku: 'Romanî'    },
+  es: { de: 'Spanisch',   ar: 'الإسبانية',   uk: 'Іспанська',   ru: 'Испанский',  tr: 'İspanyolca', pl: 'Hiszpański',  ro: 'Spaniolă',   es: 'Español',   en: 'Spanish',   ku: 'Spanî'     },
+  ku: { de: 'Kurdisch',   ar: 'الكردية',     uk: 'Курдська',    ru: 'Курдский',   tr: 'Kürtçe',     pl: 'Kurdyjski',   ro: 'Kurdă',      es: 'Kurdo',     en: 'Kurdish',   ku: 'Kurdî'     },
 };
 
 export function t(key: string, lang: Language, ...args: string[]): string {

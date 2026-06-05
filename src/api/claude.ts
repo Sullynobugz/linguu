@@ -1,6 +1,5 @@
 import type { Language, ApiUsage } from '../types';
 
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY as string;
 const MODEL = 'claude-sonnet-4-20250514';
 const INPUT_COST_PER_MTOK = 3;
 const OUTPUT_COST_PER_MTOK = 15;
@@ -16,6 +15,7 @@ const LANG_NAMES: Record<Language, string> = {
   pl: 'Polish',
   ro: 'Romanian',
   ru: 'Russian',
+  ku: 'Kurdish (Kurmanji)',
 };
 
 function calcCostEur(inputTokens: number, outputTokens: number): number {
@@ -38,14 +38,9 @@ async function streamRequest(
   onChunk: (text: string) => void,
   onDone: (usage: ApiUsage) => void
 ): Promise<void> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch('/api/claude', {
     method: 'POST',
-    headers: {
-      'x-api-key': API_KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       model: MODEL,
       max_tokens: maxTokens,
@@ -123,14 +118,9 @@ export async function getEncouragingMessage(
     ? `Give a warm, short (2 sentences) congratulations message in ${LANG_NAMES[language]} for someone who just got a perfect quiz score (${score}/${total}) in their German language learning app. Make it feel personal and motivating.`
     : `Give a warm, short (2 sentences) encouraging message in ${LANG_NAMES[language]} for someone who scored ${score}/${total} on their German quiz. Acknowledge the effort and motivate them to keep going. Be kind, not patronizing.`;
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch('/api/claude', {
     method: 'POST',
-    headers: {
-      'x-api-key': API_KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-      'content-type': 'application/json',
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ model: MODEL, max_tokens: 150, messages: [{ role: 'user', content: prompt }] }),
   });
 

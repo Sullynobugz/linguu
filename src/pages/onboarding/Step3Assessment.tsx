@@ -1,288 +1,457 @@
-import { useState } from 'react';
+'use client'
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Volume2, VolumeX, Clock, ChevronRight } from 'lucide-react';
 import { useProgress } from '../../store/ProgressContext';
 import { OnboardingLayout } from './OnboardingLayout';
 import { t } from '../../i18n';
+import { ttsSpeak } from '../../api/openaiAudio';
 import type { Level, Language } from '../../types';
 
-// Questions where the OPTIONS must be in the user's native language
-interface TranslationQuestion {
+// ── Fragen-Typen ─────────────────────────────────────────────────────────────
+
+interface AudioQuestion {
   id: number;
-  type: 'translation';
-  questionDE: string;
-  // Options per language — correct is always index 0 before shuffle
-  optionsByLang: Record<Language, string[]>;
-  correct: 0; // always first before shuffle
-  level: 'A1' | 'A2' | 'B1';
+  type: 'audio';
+  // Deutscher Satz, der via TTS abgespielt wird — bleibt verdeckt bis zur Antwort
+  audioText: string;
+  questionByLang: Record<Language, string>;
+  optionsByLang: Record<Language, string[]>; // correct always index 0 before shuffle
+  level: 'A1' | 'A2' | 'B1' | 'B2';
 }
 
-// Questions where the options are fixed German text (grammar / register)
-interface GermanQuestion {
+interface ChoiceQuestion {
   id: number;
-  type: 'german';
+  type: 'choice';
   questionDE: string;
-  // Hint shown below question in native language
   hintByLang: Record<Language, string>;
   options: string[];
   correct: number;
-  level: 'A1' | 'A2' | 'B1';
+  level: 'A1' | 'A2' | 'B1' | 'B2';
 }
 
-// B1 question: the phrase to translate comes from native language → German
-interface TranslateToGermanQuestion {
-  id: number;
-  type: 'toGerman';
-  // The source phrase in all languages
-  phraseByLang: Record<Language, string>;
-  questionDE: string; // "Wie sagt man das auf Deutsch?"
-  options: string[]; // always German options
-  correct: number;
-  level: 'B1';
-}
+type RawQuestion = AudioQuestion | ChoiceQuestion;
 
-type Question = TranslationQuestion | GermanQuestion | TranslateToGermanQuestion;
+// ── Fragenkatalog (15 Fragen: 5× A1, 5× A2, 5× B1) ─────────────────────────
 
-const rawQuestions: Question[] = [
+const QUESTIONS: RawQuestion[] = [
+  // A1 — Audio
   {
-    id: 1,
-    type: 'translation',
-    questionDE: 'Was bedeutet "Guten Morgen"?',
-    optionsByLang: {
-      ar: ['صباح الخير', 'مساء الخير', 'تصبح على خير', 'ظهر الخير'],
-      uk: ['Доброго ранку', 'Доброго вечора', 'На добраніч', 'Доброго дня'],
-      es: ['Buenos días', 'Buenas noches', 'Buenas noches', 'Buenas tardes'],
-      en: ['Good morning', 'Good evening', 'Good night', 'Good afternoon'],
-      de: ['Guten Morgen', 'Guten Abend', 'Gute Nacht', 'Guten Mittag'],
-      tr: ['Günaydın', 'İyi akşamlar', 'İyi geceler', 'İyi öğleden sonralar'],
-      pl: ['Dzień dobry (rano)', 'Dobry wieczór', 'Dobranoc', 'Dzień dobry (po południu)'],
-      ro: ['Bună dimineața', 'Bună seara', 'Noapte bună', 'Bună ziua'],
-      ru: ['Доброе утро', 'Добрый вечер', 'Спокойной ночи', 'Добрый день'],
+    id: 1, type: 'audio', level: 'A1',
+    audioText: 'Guten Morgen, wie geht es Ihnen?',
+    questionByLang: {
+      ar: 'ماذا سمعت؟', uk: 'Що ви почули?', es: '¿Qué escuchaste?', en: 'What did you hear?',
+      de: 'Was haben Sie gehört?', tr: 'Ne duydunuz?', pl: 'Co usłyszałeś?', ro: 'Ce ai auzit?', ru: 'Что вы услышали?',
     },
-    correct: 0,
-    level: 'A1',
+    optionsByLang: {
+      ar: ['صباح الخير، كيف حالك؟', 'مساء الخير، هل أنت بخير؟', 'إلى اللقاء، أراك غداً', 'شكراً جزيلاً'],
+      uk: ['Доброго ранку, як справи?', 'Доброго вечора, ти гаразд?', 'До побачення, до завтра', 'Дуже дякую'],
+      es: ['Buenos días, ¿cómo estás?', 'Buenas noches, ¿estás bien?', 'Hasta luego, nos vemos mañana', 'Muchas gracias'],
+      en: ['Good morning, how are you?', 'Good evening, are you okay?', 'Goodbye, see you tomorrow', 'Thank you very much'],
+      de: ['Guten Morgen, wie geht es Ihnen?', 'Guten Abend, geht es Ihnen gut?', 'Auf Wiedersehen, bis morgen', 'Vielen Dank'],
+      tr: ['Günaydın, nasılsınız?', 'İyi akşamlar, iyi misiniz?', 'Görüşürüz, yarın görüşürüz', 'Çok teşekkür ederim'],
+      pl: ['Dzień dobry, jak się pan/pani miewa?', 'Dobry wieczór, dobrze?', 'Do widzenia, do jutra', 'Bardzo dziękuję'],
+      ro: ['Bună dimineața, cum vă simțiți?', 'Bună seara, ești bine?', 'La revedere, pe mâine', 'Mulțumesc mult'],
+      ru: ['Доброе утро, как вы?', 'Добрый вечер, вы в порядке?', 'До свидания, до завтра', 'Большое спасибо'],
+    },
   },
   {
-    id: 2,
-    type: 'german',
-    questionDE: 'Ergänze: "Ich ___ aus Spanien."',
+    id: 2, type: 'audio', level: 'A1',
+    audioText: 'Bitte zeigen Sie mir Ihren Ausweis.',
+    questionByLang: {
+      ar: 'ماذا طُلب منك؟', uk: 'Що від вас попросили?', es: '¿Qué te pidieron?', en: 'What were you asked to do?',
+      de: 'Was wurde von Ihnen verlangt?', tr: 'Sizden ne istendi?', pl: 'O co poproszono?', ro: 'Ce ți s-a cerut?', ru: 'О чём вас попросили?',
+    },
+    optionsByLang: {
+      ar: ['أرِ بطاقة هويتك من فضلك', 'اجلس من فضلك', 'انتظر هنا من فضلك', 'أملأ هذا النموذج من فضلك'],
+      uk: ['Будь ласка, покажіть ваше посвідчення', 'Будь ласка, сядьте', 'Будь ласка, зачекайте тут', 'Будь ласка, заповніть цей бланк'],
+      es: ['Muestre su documento de identidad', 'Siéntese, por favor', 'Espere aquí, por favor', 'Rellene este formulario'],
+      en: ['Show your ID, please', 'Please sit down', 'Wait here, please', 'Fill in this form, please'],
+      de: ['Zeigen Sie Ihren Ausweis', 'Setzen Sie sich bitte', 'Warten Sie hier bitte', 'Füllen Sie dieses Formular aus'],
+      tr: ['Kimliğinizi gösterin lütfen', 'Lütfen oturun', 'Burada bekleyin lütfen', 'Bu formu doldurun lütfen'],
+      pl: ['Pokaż dowód tożsamości', 'Proszę usiąść', 'Proszę czekać tutaj', 'Proszę wypełnić formularz'],
+      ro: ['Arătați-vă actul de identitate', 'Vă rog să stați jos', 'Așteptați aici, vă rog', 'Completați acest formular'],
+      ru: ['Покажите ваше удостоверение', 'Пожалуйста, присядьте', 'Подождите здесь, пожалуйста', 'Заполните эту форму'],
+    },
+  },
+  {
+    id: 3, type: 'audio', level: 'A1',
+    audioText: 'Das Büro ist heute geschlossen.',
+    questionByLang: {
+      ar: 'ماذا سمعت عن المكتب؟', uk: 'Що ви почули про офіс?', es: '¿Qué escuchaste sobre la oficina?', en: 'What did you hear about the office?',
+      de: 'Was haben Sie über das Büro gehört?', tr: 'Ofis hakkında ne duydunuz?', pl: 'Co usłyszałeś o biurze?', ro: 'Ce ai auzit despre birou?', ru: 'Что вы услышали об офисе?',
+    },
+    optionsByLang: {
+      ar: ['المكتب مغلق اليوم', 'المكتب مفتوح غداً', 'المكتب مشغول جداً', 'المكتب في الطابق الثاني'],
+      uk: ['Офіс сьогодні закритий', 'Офіс відкритий завтра', 'Офіс дуже зайнятий', 'Офіс на другому поверсі'],
+      es: ['La oficina está cerrada hoy', 'La oficina abre mañana', 'La oficina está muy ocupada', 'La oficina está en el segundo piso'],
+      en: ['The office is closed today', 'The office opens tomorrow', 'The office is very busy', 'The office is on the second floor'],
+      de: ['Das Büro ist heute geschlossen', 'Das Büro öffnet morgen', 'Das Büro ist sehr beschäftigt', 'Das Büro ist im zweiten Stock'],
+      tr: ['Ofis bugün kapalı', 'Ofis yarın açık', 'Ofis çok meşgul', 'Ofis ikinci katta'],
+      pl: ['Biuro jest dziś zamknięte', 'Biuro jutro otwarte', 'Biuro jest bardzo zajęte', 'Biuro jest na drugim piętrze'],
+      ro: ['Biroul este închis azi', 'Biroul deschide mâine', 'Biroul este foarte ocupat', 'Biroul este la etajul doi'],
+      ru: ['Офис сегодня закрыт', 'Офис открыт завтра', 'Офис очень занят', 'Офис на втором этаже'],
+    },
+  },
+  // A1 — Choice
+  {
+    id: 4, type: 'choice', level: 'A1',
+    questionDE: 'Ergänze: "Ich ___ aus der Ukraine."',
     hintByLang: {
-      ar: 'اختر الفعل الصحيح',
-      uk: 'Обери правильне дієслово',
-      es: 'Elige el verbo correcto',
-      en: 'Choose the correct verb',
-      de: 'Wähle das richtige Verb',
-      tr: 'Doğru fiili seçin',
-      pl: 'Wybierz właściwy czasownik',
-      ro: 'Alege verbul corect',
-      ru: 'Выбери правильный глагол',
+      ar: 'اختر الفعل الصحيح', uk: 'Обери правильне дієслово', es: 'Elige el verbo correcto', en: 'Choose the correct verb',
+      de: 'Wähle das richtige Verb', tr: 'Doğru fiili seçin', pl: 'Wybierz właściwy czasownik', ro: 'Alege verbul corect', ru: 'Выберите правильный глагол',
     },
     options: ['habe', 'ist', 'bin', 'sind'],
     correct: 2,
-    level: 'A1',
   },
   {
-    id: 3,
-    type: 'translation',
-    questionDE: 'Was bedeutet "Ich hätte gerne einen Termin"?',
-    optionsByLang: {
-      ar: ['أريد تحديد موعد', 'لدي موعد', 'فاتني موعدي', 'هل يمكنك إلغاء موعدي؟'],
-      uk: ['Я б хотів записатися', 'У мене є зустріч', 'Я пропустив зустріч', 'Можете скасувати зустріч?'],
-      es: ['Me gustaría concertar una cita', 'Tengo una cita', 'Perdí mi cita', '¿Puede cancelar mi cita?'],
-      en: ['I would like to make an appointment', 'I have an appointment', 'I missed my appointment', 'Can you cancel my appointment?'],
-      de: ['Ich möchte einen Termin vereinbaren', 'Ich habe einen Termin', 'Ich habe meinen Termin verpasst', 'Können Sie meinen Termin absagen?'],
-      tr: ['Randevu almak istiyorum', 'Randevum var', 'Randevumu kaçırdım', 'Randevumu iptal edebilir misiniz?'],
-      pl: ['Chciałbym umówić wizytę', 'Mam wizytę', 'Przegapiłem wizytę', 'Czy może Pan odwołać wizytę?'],
-      ro: ['Aș dori să fac o programare', 'Am o programare', 'Am ratat programarea', 'Poate anula programarea?'],
-      ru: ['Я бы хотел записаться', 'У меня есть встреча', 'Я пропустил встречу', 'Можете отменить встречу?'],
-    },
-    correct: 0,
-    level: 'A2',
-  },
-  {
-    id: 4,
-    type: 'german',
-    questionDE: 'Welche Aussage ist formell (formal)?',
+    id: 5, type: 'choice', level: 'A1',
+    questionDE: 'Was bedeutet "Entschuldigung"?',
     hintByLang: {
-      ar: 'أي جملة رسمية مناسبة للمكتب؟',
-      uk: 'Яка фраза підходить для офіційного спілкування?',
-      es: '¿Cuál es la frase formal, adecuada para una oficina?',
-      en: 'Which phrase is formal, suitable for an office?',
-      de: 'Welche Aussage ist für ein Büro angemessen?',
-      tr: 'Hangi cümle resmi ve ofis için uygun?',
-      pl: 'Które zdanie jest formalne, odpowiednie do biura?',
-      ro: 'Care frază este formală, potrivită pentru birou?',
-      ru: 'Какая фраза формальная, подходящая для офиса?',
+      ar: 'هذه كلمة مهمة جداً في المكاتب', uk: 'Це дуже важливе слово в установах', es: 'Es una palabra muy importante en oficinas', en: 'This is a very important word in offices',
+      de: 'Das ist ein sehr wichtiges Wort', tr: 'Bu ofislerde çok önemli bir kelime', pl: 'To bardzo ważne słowo w urzędach', ro: 'Este un cuvânt foarte important în birouri', ru: 'Это очень важное слово в учреждениях',
     },
-    options: [
-      'Hey, wie geht\'s?',
-      'Guten Tag, wie kann ich Ihnen helfen?',
-      'Tschüss, bis später!',
-      'Na, alles klar?',
-    ],
-    correct: 1,
-    level: 'A2',
+    options: ['Danke', 'Tschüss', 'Entschuldigung / Excuse me', 'Bitte'],
+    correct: 2,
+  },
+  // A2 — Audio
+  {
+    id: 6, type: 'audio', level: 'A2',
+    audioText: 'Ich hätte gerne einen Termin beim Arzt.',
+    questionByLang: {
+      ar: 'ماذا أراد الشخص؟', uk: 'Чого хотіла людина?', es: '¿Qué quería la persona?', en: 'What did the person want?',
+      de: 'Was wollte die Person?', tr: 'Kişi ne istedi?', pl: 'Czego chciała osoba?', ro: 'Ce a vrut persoana?', ru: 'Чего хотел человек?',
+    },
+    optionsByLang: {
+      ar: ['موعد عند الطبيب', 'وصفة طبية', 'المغادرة المبكرة', 'حجز غرفة في المستشفى'],
+      uk: ['Запис до лікаря', 'Рецепт', 'Раннє виписання', 'Бронювання палати в лікарні'],
+      es: ['Una cita con el médico', 'Una receta médica', 'El alta temprana', 'Reservar una habitación en el hospital'],
+      en: ['An appointment with the doctor', 'A prescription', 'Early discharge', 'Book a hospital room'],
+      de: ['Einen Termin beim Arzt', 'Ein Rezept', 'Frühzeitige Entlassung', 'Ein Krankenhausbett buchen'],
+      tr: ['Doktor randevusu', 'Reçete', 'Erken taburculuk', 'Hastane odası rezervasyonu'],
+      pl: ['Wizyta u lekarza', 'Receptę', 'Wczesne wypisanie', 'Rezerwacja pokoju szpitalnego'],
+      ro: ['O programare la medic', 'O rețetă', 'Externare timpurie', 'Rezervare cameră spital'],
+      ru: ['Запись к врачу', 'Рецепт', 'Ранняя выписка', 'Бронирование палаты'],
+    },
   },
   {
-    id: 5,
-    type: 'toGerman',
-    phraseByLang: {
-      ar: '"هل يمكنك تكرار ذلك بشكل أبطأ من فضلك؟"',
-      uk: '"Чи могли б ви повторити це повільніше, будь ласка?"',
-      es: '"¿Podría repetir eso más despacio, por favor?"',
-      en: '"Could you please repeat that more slowly?"',
-      de: '"Könnten Sie das bitte langsamer wiederholen?"',
-      tr: '"Lütfen bunu daha yavaş tekrar edebilir misiniz?"',
-      pl: '"Czy mógłby Pan to powtórzyć wolniej?"',
-      ro: '"Ați putea repeta asta mai rar, vă rog?"',
-      ru: '"Не могли бы вы повторить это помедленнее, пожалуйста?"',
+    id: 7, type: 'audio', level: 'A2',
+    audioText: 'Können Sie das bitte langsamer wiederholen?',
+    questionByLang: {
+      ar: 'ماذا طلب الشخص؟', uk: 'Про що попросила людина?', es: '¿Qué pidió la persona?', en: 'What did the person ask for?',
+      de: 'Worum bat die Person?', tr: 'Kişi ne istedi?', pl: 'O co poprosił?', ro: 'Ce a cerut persoana?', ru: 'О чём попросил человек?',
     },
-    questionDE: 'Wie sagt man das auf Deutsch?',
+    optionsByLang: {
+      ar: ['تكرار الشيء بشكل أبطأ', 'الكتابة أكثر', 'التحدث بصوت أعلى', 'إيقاف الاجتماع'],
+      uk: ['Повторити повільніше', 'Написати більше', 'Говорити голосніше', 'Зупинити зустріч'],
+      es: ['Repetir más despacio', 'Escribir más', 'Hablar más alto', 'Detener la reunión'],
+      en: ['Repeat more slowly', 'Write more', 'Speak louder', 'Stop the meeting'],
+      de: ['Langsamer wiederholen', 'Mehr aufschreiben', 'Lauter sprechen', 'Die Besprechung stoppen'],
+      tr: ['Daha yavaş tekrarlamak', 'Daha fazla yazmak', 'Daha yüksek sesle konuşmak', 'Toplantıyı durdurmak'],
+      pl: ['Powtórzyć wolniej', 'Więcej pisać', 'Mówić głośniej', 'Zatrzymać spotkanie'],
+      ro: ['Repetați mai rar', 'Să scrie mai mult', 'Vorbiți mai tare', 'Opriți ședința'],
+      ru: ['Повторить медленнее', 'Писать больше', 'Говорить громче', 'Остановить встречу'],
+    },
+  },
+  {
+    id: 8, type: 'audio', level: 'A2',
+    audioText: 'Die Unterlagen müssen bis Freitag eingereicht werden.',
+    questionByLang: {
+      ar: 'ما الموعد النهائي لتقديم الوثائق؟', uk: 'Коли потрібно подати документи?', es: '¿Cuál es el plazo para presentar los documentos?', en: 'What is the deadline for submitting documents?',
+      de: 'Bis wann müssen die Unterlagen eingereicht werden?', tr: 'Belgeler ne zamana kadar teslim edilmeli?', pl: 'Kiedy należy złożyć dokumenty?', ro: 'Când trebuie depuse documentele?', ru: 'Когда нужно сдать документы?',
+    },
+    optionsByLang: {
+      ar: ['حتى يوم الجمعة', 'حتى يوم الاثنين', 'في أي وقت', 'في الأسبوع القادم'],
+      uk: ["До п'ятниці", 'До понеділка', 'У будь-який час', 'Наступного тижня'],
+      es: ['Hasta el viernes', 'Hasta el lunes', 'En cualquier momento', 'La semana que viene'],
+      en: ['By Friday', 'By Monday', 'At any time', 'Next week'],
+      de: ['Bis Freitag', 'Bis Montag', 'Zu jeder Zeit', 'Nächste Woche'],
+      tr: ['Cuma\'ya kadar', 'Pazartesi\'ye kadar', 'Herhangi bir zamanda', 'Gelecek hafta'],
+      pl: ['Do piątku', 'Do poniedziałku', 'W dowolnym czasie', 'W przyszłym tygodniu'],
+      ro: ['Până vineri', 'Până luni', 'Oricând', 'Săptămâna viitoare'],
+      ru: ['До пятницы', 'До понедельника', 'В любое время', 'На следующей неделе'],
+    },
+  },
+  // A2 — Choice
+  {
+    id: 9, type: 'choice', level: 'A2',
+    questionDE: 'Welcher Satz ist formell (für Behörden geeignet)?',
+    hintByLang: {
+      ar: 'أي جملة مناسبة للمكاتب الرسمية؟', uk: 'Яка фраза підходить для офіційних установ?', es: '¿Qué frase es adecuada para organismos oficiales?', en: 'Which phrase is suitable for official agencies?',
+      de: 'Welcher Satz ist für Ämter geeignet?', tr: 'Hangi cümle resmi kurumlar için uygundur?', pl: 'Które zdanie jest odpowiednie dla urzędów?', ro: 'Care frază este potrivită pentru instituții oficiale?', ru: 'Какая фраза подходит для официальных учреждений?',
+    },
     options: [
-      'Können Sie das bitte schneller wiederholen?',
-      'Können Sie bitte lauter sprechen?',
-      'Könnten Sie das bitte langsamer wiederholen?',
-      'Können Sie das bitte aufschreiben?',
+      'Ich würde gerne einen Termin vereinbaren.',
+      'Hey, ich brauch nen Termin!',
+      'Können wir uns mal treffen?',
+      'Wann habt ihr Zeit für mich?',
     ],
-    correct: 2,
-    level: 'B1',
+    correct: 0,
+  },
+  {
+    id: 10, type: 'choice', level: 'A2',
+    questionDE: 'Was bedeutet "Bescheid geben"?',
+    hintByLang: {
+      ar: 'تعبير شائع في المكاتب والإدارات', uk: 'Поширений вираз в установах', es: 'Expresión común en oficinas', en: 'A common phrase in offices and administrations',
+      de: 'Ein häufiger Ausdruck in Ämtern', tr: 'Ofislerde yaygın bir ifade', pl: 'Popularne wyrażenie w urzędach', ro: 'Expresie comună în birouri', ru: 'Распространённое выражение в учреждениях',
+    },
+    options: [
+      'Jemanden informieren',
+      'Eine Entscheidung ablehnen',
+      'Einen Brief schreiben',
+      'Einen Fehler machen',
+    ],
+    correct: 0,
+  },
+  // B1 — Audio
+  {
+    id: 11, type: 'audio', level: 'B1',
+    audioText: 'Aufgrund fehlender Unterlagen kann Ihr Antrag derzeit nicht bearbeitet werden.',
+    questionByLang: {
+      ar: 'ما المشكلة مع الطلب؟', uk: 'Яка проблема із заявою?', es: '¿Cuál es el problema con la solicitud?', en: 'What is the problem with the application?',
+      de: 'Was ist das Problem mit dem Antrag?', tr: 'Başvuruyla ilgili sorun nedir?', pl: 'Jaki jest problem z wnioskiem?', ro: 'Care este problema cu cererea?', ru: 'В чём проблема с заявлением?',
+    },
+    optionsByLang: {
+      ar: ['التقديم لا يمكن معالجته بسبب نقص المستندات', 'تم قبول الطلب بنجاح', 'الطلب في المراجعة', 'الطلب مرفوض بسبب الخطأ'],
+      uk: ['Заяву не можна обробити через відсутність документів', 'Заяву успішно прийнято', 'Заява на розгляді', 'Заяву відхилено через помилку'],
+      es: ['La solicitud no puede tramitarse por falta de documentos', 'La solicitud fue aceptada con éxito', 'La solicitud está en revisión', 'La solicitud fue rechazada por un error'],
+      en: ['The application cannot be processed due to missing documents', 'The application was accepted successfully', 'The application is under review', 'The application was rejected due to an error'],
+      de: ['Der Antrag kann wegen fehlender Unterlagen nicht bearbeitet werden', 'Der Antrag wurde erfolgreich angenommen', 'Der Antrag wird geprüft', 'Der Antrag wurde wegen eines Fehlers abgelehnt'],
+      tr: ['Eksik belgeler nedeniyle başvuru işlenemiyor', 'Başvuru başarıyla kabul edildi', 'Başvuru inceleniyor', 'Başvuru hata nedeniyle reddedildi'],
+      pl: ['Wniosek nie może być przetworzony z powodu brakujących dokumentów', 'Wniosek został pomyślnie przyjęty', 'Wniosek jest w trakcie rozpatrywania', 'Wniosek odrzucony z powodu błędu'],
+      ro: ['Cererea nu poate fi procesată din cauza documentelor lipsă', 'Cererea a fost acceptată cu succes', 'Cererea este în curs de analiză', 'Cererea a fost respinsă din cauza unei erori'],
+      ru: ['Заявление не может быть обработано из-за отсутствия документов', 'Заявление успешно принято', 'Заявление на рассмотрении', 'Заявление отклонено из-за ошибки'],
+    },
+  },
+  {
+    id: 12, type: 'audio', level: 'B1',
+    audioText: 'Sie haben das Recht, gegen diesen Bescheid innerhalb von vier Wochen Widerspruch einzulegen.',
+    questionByLang: {
+      ar: 'ما الذي يمكن للشخص فعله؟', uk: 'Що може зробити людина?', es: '¿Qué puede hacer la persona?', en: 'What can the person do?',
+      de: 'Was kann die Person tun?', tr: 'Kişi ne yapabilir?', pl: 'Co może zrobić ta osoba?', ro: 'Ce poate face persoana?', ru: 'Что может сделать человек?',
+    },
+    optionsByLang: {
+      ar: ['تقديم اعتراض على القرار خلال أربعة أسابيع', 'دفع الغرامة فوراً', 'قبول القرار دون اعتراض', 'التقدم لإعادة التقييم في غضون سنة'],
+      uk: ['Подати заперечення на рішення протягом чотирьох тижнів', 'Негайно оплатити штраф', 'Прийняти рішення без заперечення', 'Подати на перегляд протягом року'],
+      es: ['Presentar un recurso contra la resolución en cuatro semanas', 'Pagar la multa inmediatamente', 'Aceptar la resolución sin recurso', 'Solicitar revisión en un año'],
+      en: ['File an objection against the decision within four weeks', 'Pay the fine immediately', 'Accept the decision without objection', 'Apply for review within a year'],
+      de: ['Widerspruch gegen den Bescheid innerhalb von vier Wochen einlegen', 'Sofort eine Strafe zahlen', 'Den Bescheid ohne Widerspruch akzeptieren', 'Innerhalb eines Jahres eine Überprüfung beantragen'],
+      tr: ['Dört hafta içinde karara itiraz etmek', 'Cezayı hemen ödemek', 'Kararı itiraz etmeden kabul etmek', 'Bir yıl içinde yeniden değerlendirme talep etmek'],
+      pl: ['Złożyć odwołanie od decyzji w ciągu czterech tygodni', 'Natychmiast zapłacić karę', 'Zaakceptować decyzję bez sprzeciwu', 'Złożyć wniosek o kontrolę w ciągu roku'],
+      ro: ['Depune o contestație împotriva deciziei în patru săptămâni', 'Plătiți amenda imediat', 'Acceptați decizia fără contestație', 'Solicitați revizuire în decurs de un an'],
+      ru: ['Подать возражение против решения в течение четырёх недель', 'Немедленно оплатить штраф', 'Принять решение без возражений', 'Подать на пересмотр в течение года'],
+    },
+  },
+  {
+    id: 13, type: 'audio', level: 'B1',
+    audioText: 'Für die Beantragung der Aufenthaltserlaubnis benötigen Sie einen gültigen Reisepass und eine aktuelle Meldebescheinigung.',
+    questionByLang: {
+      ar: 'ماذا تحتاج للحصول على تصريح الإقامة؟', uk: 'Що потрібно для отримання дозволу на проживання?', es: '¿Qué se necesita para el permiso de residencia?', en: 'What do you need for the residence permit?',
+      de: 'Was braucht man für die Aufenthaltserlaubnis?', tr: 'Oturma izni için ne gerekli?', pl: 'Co potrzeba do pozwolenia na pobyt?', ro: 'Ce trebuie pentru permisul de ședere?', ru: 'Что нужно для разрешения на проживание?',
+    },
+    optionsByLang: {
+      ar: ['جواز سفر ساري وشهادة تسجيل حديثة', 'عقد عمل وكشف حساب بنكي', 'شهادة ميلاد وشهادة مدرسية', 'تأمين صحي وعقد إيجار'],
+      uk: ['Дійсний паспорт та актуальна довідка про реєстрацію', 'Трудовий договір та банківська виписка', 'Свідоцтво про народження та шкільний атестат', 'Медична страховка та договір оренди'],
+      es: ['Pasaporte válido y certificado de empadronamiento actualizado', 'Contrato de trabajo y extracto bancario', 'Partida de nacimiento y diploma escolar', 'Seguro médico y contrato de alquiler'],
+      en: ['Valid passport and current registration certificate', 'Employment contract and bank statement', 'Birth certificate and school diploma', 'Health insurance and rental contract'],
+      de: ['Gültiger Reisepass und aktuelle Meldebescheinigung', 'Arbeitsvertrag und Kontoauszug', 'Geburtsurkunde und Schulzeugnis', 'Krankenversicherung und Mietvertrag'],
+      tr: ['Geçerli pasaport ve güncel ikamet belgesi', 'İş sözleşmesi ve banka ekstresi', 'Doğum belgesi ve okul diploması', 'Sağlık sigortası ve kira sözleşmesi'],
+      pl: ['Ważny paszport i aktualne zaświadczenie o zameldowaniu', 'Umowa o pracę i wyciąg bankowy', 'Akt urodzenia i świadectwo szkolne', 'Ubezpieczenie zdrowotne i umowa najmu'],
+      ro: ['Pașaport valabil și adeverință de domiciliu actuală', 'Contract de muncă și extras de cont bancar', 'Certificat de naștere și diplomă școlară', 'Asigurare medicală și contract de închiriere'],
+      ru: ['Действительный паспорт и актуальная справка о регистрации', 'Трудовой договор и банковская выписка', 'Свидетельство о рождении и школьный диплом', 'Медицинская страховка и договор аренды'],
+    },
+  },
+  // B1 — Choice
+  {
+    id: 14, type: 'choice', level: 'B1',
+    questionDE: 'Welche Formulierung ist korrekt?',
+    hintByLang: {
+      ar: 'اختر الجملة الصحيحة نحوياً', uk: 'Обери граматично правильне речення', es: 'Elige la oración gramaticalmente correcta', en: 'Choose the grammatically correct sentence',
+      de: 'Wähle den grammatisch korrekten Satz', tr: 'Dilbilgisi açısından doğru cümleyi seçin', pl: 'Wybierz gramatycznie poprawne zdanie', ro: 'Alegeți propoziția corectă din punct de vedere gramatical', ru: 'Выберите грамматически правильное предложение',
+    },
+    options: [
+      'Ich habe gestern beim Jobcenter angerufen.',
+      'Ich angerufen habe gestern beim Jobcenter.',
+      'Gestern ich habe beim Jobcenter angerufen.',
+      'Beim Jobcenter angerufen ich habe gestern.',
+    ],
+    correct: 0,
+  },
+  {
+    id: 15, type: 'choice', level: 'B1',
+    questionDE: 'Was bedeutet "etw. beantragen"?',
+    hintByLang: {
+      ar: 'مصطلح إداري مهم جداً', uk: 'Важливий адміністративний термін', es: 'Término administrativo muy importante', en: 'A very important administrative term',
+      de: 'Ein sehr wichtiger Verwaltungsbegriff', tr: 'Çok önemli bir idari terim', pl: 'Bardzo ważny termin administracyjny', ro: 'Un termen administrativ foarte important', ru: 'Очень важный административный термин',
+    },
+    options: [
+      'Offiziell um etwas bitten (z.B. Aufenthaltserlaubnis)',
+      'Etwas ablehnen oder verweigern',
+      'Etwas bezahlen oder überweisen',
+      'Etwas unterschreiben und bestätigen',
+    ],
+    correct: 0,
   },
 ];
 
-// Shuffle options but track where the correct answer ends up
-function shuffleWithCorrect(options: string[], correctIdx: number): { options: string[]; correct: number } {
+// ── Hilfsfunktionen ──────────────────────────────────────────────────────────
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleWithCorrect(options: string[], correctIdx: number) {
   const pairs = options.map((o, i) => ({ o, isCorrect: i === correctIdx }));
   for (let i = pairs.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
   }
-  return {
-    options: pairs.map(p => p.o),
-    correct: pairs.findIndex(p => p.isCorrect),
-  };
+  return { options: pairs.map(p => p.o), correct: pairs.findIndex(p => p.isCorrect) };
 }
 
-// Build display questions for the given language
 interface DisplayQuestion {
   id: number;
-  questionLine1: string; // German question
-  questionLine2?: string; // native hint/phrase
+  type: 'audio' | 'choice';
+  level: 'A1' | 'A2' | 'B1' | 'B2';
+  audioText?: string;  // für type=audio: wird via TTS gespielt, text versteckt
+  questionLine: string;
+  hintLine?: string;
   options: string[];
   correct: number;
-  level: 'A1' | 'A2' | 'B1';
 }
 
-function buildQuestions(lang: Language): DisplayQuestion[] {
-  return rawQuestions.map(q => {
-    if (q.type === 'translation') {
-      const shuffled = shuffleWithCorrect(q.optionsByLang[lang], q.correct);
+function buildDisplayQuestions(lang: Language): DisplayQuestion[] {
+  return shuffle(QUESTIONS).map(q => {
+    if (q.type === 'audio') {
+      const { options, correct } = shuffleWithCorrect(q.optionsByLang[lang] ?? q.optionsByLang['en'], 0);
       return {
-        id: q.id,
-        questionLine1: q.questionDE,
-        options: shuffled.options,
-        correct: shuffled.correct,
-        level: q.level,
+        id: q.id, type: 'audio' as const, level: q.level,
+        audioText: q.audioText,
+        questionLine: q.questionByLang[lang] ?? q.questionByLang['en'],
+        options, correct,
+      };
+    } else {
+      const { options, correct } = shuffleWithCorrect(q.options, q.correct);
+      return {
+        id: q.id, type: 'choice' as const, level: q.level,
+        questionLine: q.questionDE,
+        hintLine: q.hintByLang[lang] ?? q.hintByLang['en'],
+        options, correct,
       };
     }
-    if (q.type === 'german') {
-      const shuffled = shuffleWithCorrect(q.options, q.correct);
-      return {
-        id: q.id,
-        questionLine1: q.questionDE,
-        questionLine2: q.hintByLang[lang],
-        options: shuffled.options,
-        correct: shuffled.correct,
-        level: q.level,
-      };
-    }
-    // toGerman
-    const shuffled = shuffleWithCorrect(q.options, q.correct);
-    return {
-      id: q.id,
-      questionLine1: q.phraseByLang[lang],
-      questionLine2: q.questionDE,
-      options: shuffled.options,
-      correct: shuffled.correct,
-      level: q.level,
-    };
   });
 }
 
-const resultMessages: Record<Level, Partial<Record<Language, { title: string; text: string }>>> = {
-  A1: {
-    de: { title: '🌱 Niveau A1', text: 'Super! Wir starten von Anfang an und bauen gemeinsam eine starke Grundlage im Deutschen.' },
-    ar: { title: '🌱 المستوى A1', text: 'ممتاز! سنبدأ من البداية معاً ونبني أساساً قوياً باللغة الألمانية.' },
-    uk: { title: '🌱 Рівень A1', text: 'Чудово! Ми почнемо з основ і разом побудуємо міцну базу з німецької.' },
-    es: { title: '🌱 Nivel A1', text: '¡Genial! Empezaremos desde el principio y construiremos juntos una base sólida en alemán.' },
-    en: { title: '🌱 Level A1', text: 'Great! We\'ll start from the beginning and build a strong German foundation together.' },
-    tr: { title: '🌱 A1 Seviyesi', text: 'Harika! Başlangıçtan başlayıp birlikte güçlü bir Almanca temeli oluşturacağız.' },
-    pl: { title: '🌱 Poziom A1', text: 'Świetnie! Zaczniemy od początku i razem zbudujemy solidną podstawę w języku niemieckim.' },
-    ro: { title: '🌱 Nivelul A1', text: 'Grozav! Vom începe de la zero și vom construi împreună o bază solidă în germană.' },
-    ru: { title: '🌱 Уровень A1', text: 'Отлично! Начнём с самого начала и вместе построим прочную основу в немецком.' },
-  },
-  A2: {
-    de: { title: '📈 Niveau A2', text: 'Du hast eine gute Grundlage! Wir erweitern dein Wissen und deinen praktischen Wortschatz.' },
-    ar: { title: '📈 المستوى A2', text: 'لديك أساس جيد! سنبني على معرفتك ونوسّع مفرداتك العملية.' },
-    uk: { title: '📈 Рівень A2', text: 'У тебе хороша база! Ми розширимо твій практичний словник.' },
-    es: { title: '📈 Nivel A2', text: '¡Tienes una buena base! Construiremos sobre tus conocimientos.' },
-    en: { title: '📈 Level A2', text: 'You have a good foundation! We\'ll build on your knowledge.' },
-    tr: { title: '📈 A2 Seviyesi', text: 'İyi bir temeliniz var! Bilginizi genişletip pratik kelime dağarcığınızı büyüteceğiz.' },
-    pl: { title: '📈 Poziom A2', text: 'Masz dobrą podstawę! Rozbudujemy Twoją wiedzę i praktyczne słownictwo.' },
-    ro: { title: '📈 Nivelul A2', text: 'Ai o bază bună! Vom construi pe cunoștințele tale și vom extinde vocabularul practic.' },
-    ru: { title: '📈 Уровень A2', text: 'У тебя хорошая база! Расширим твои знания и практическую лексику.' },
-  },
-  B1: {
-    de: { title: '🚀 Niveau B1', text: 'Ausgezeichnetes Niveau! Wir fordern dich mit komplexeren Gesprächen heraus.' },
-    ar: { title: '🚀 المستوى B1', text: 'مستوى رائع! سنتحدى قدراتك بمحادثات أكثر تعقيداً.' },
-    uk: { title: '🚀 Рівень B1', text: 'Відмінний рівень! Складніші розмови тебе чекають.' },
-    es: { title: '🚀 Nivel B1', text: '¡Nivel excelente! Te desafiaremos con conversaciones más complejas.' },
-    en: { title: '🚀 Level B1', text: 'Excellent level! We\'ll challenge you with more complex conversations.' },
-    tr: { title: '🚀 B1 Seviyesi', text: 'Harika bir seviye! Daha karmaşık konuşmalarla sizi zorlayacağız.' },
-    pl: { title: '🚀 Poziom B1', text: 'Doskonały poziom! Będziemy Cię wyzywać bardziej złożonymi rozmowami.' },
-    ro: { title: '🚀 Nivelul B1', text: 'Nivel excelent! Te vom provoca cu conversații mai complexe.' },
-    ru: { title: '🚀 Уровень B1', text: 'Отличный уровень! Будем вызывать тебя более сложными разговорами.' },
-  },
-  B2: {
-    de: { title: '⭐ Niveau B2', text: 'Sehr fortgeschrittenes Niveau!' },
-    ar: { title: '⭐ المستوى B2', text: 'مستوى متقدم جداً!' },
-    uk: { title: '⭐ Рівень B2', text: 'Дуже просунутий рівень!' },
-    es: { title: '⭐ Nivel B2', text: '¡Nivel muy avanzado!' },
-    en: { title: '⭐ Level B2', text: 'Very advanced level!' },
-    tr: { title: '⭐ B2 Seviyesi', text: 'Çok ileri düzey!' },
-    pl: { title: '⭐ Poziom B2', text: 'Bardzo zaawansowany poziom!' },
-    ro: { title: '⭐ Nivelul B2', text: 'Nivel foarte avansat!' },
-    ru: { title: '⭐ Уровень B2', text: 'Очень продвинутый уровень!' },
-  },
-};
-
-function computeLevel(questions: DisplayQuestion[], answers: number[]): Level {
+function computeLevel(qs: DisplayQuestion[], answers: (number | null)[]): Level {
   let a1 = 0, a2 = 0, b1 = 0;
-  questions.forEach((q, i) => {
+  qs.forEach((q, i) => {
     if (answers[i] === q.correct) {
       if (q.level === 'A1') a1++;
       else if (q.level === 'A2') a2++;
       else if (q.level === 'B1') b1++;
     }
   });
-  if (b1 >= 1 && a2 >= 1 && a1 >= 1) return 'B1';
-  if (a2 >= 1 && a1 >= 1) return 'A2';
+  const total = a1 + a2 + b1;
+  if (total >= 11 && b1 >= 3) return 'B2';
+  if (total >= 7 && b1 >= 2) return 'B1';
+  if (total >= 4 && a2 >= 1) return 'A2';
   return 'A1';
 }
 
-const levelColors: Record<Level, string> = {
+const TIMER_SECS = 25;
+
+// ── Timer-Ring (SVG) ─────────────────────────────────────────────────────────
+
+function TimerRing({ remaining, total }: { remaining: number; total: number }) {
+  const r = 22;
+  const circ = 2 * Math.PI * r;
+  const pct = remaining / total;
+  const dash = pct * circ;
+  const color = remaining <= 5 ? '#ef4444' : remaining <= 10 ? '#f59e0b' : '#10b981';
+
+  return (
+    <div className="relative flex items-center justify-center w-14 h-14">
+      <svg className="absolute" width={56} height={56} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={28} cy={28} r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={3} />
+        <circle cx={28} cy={28} r={r} fill="none" stroke={color} strokeWidth={3}
+          strokeDasharray={`${dash} ${circ}`}
+          style={{ transition: 'stroke-dasharray 0.9s linear, stroke 0.3s' }} />
+      </svg>
+      <span className="text-sm font-bold font-mono relative z-10" style={{ color }}>
+        {remaining}
+      </span>
+    </div>
+  );
+}
+
+// ── Ergebnis-Screen ──────────────────────────────────────────────────────────
+
+const LEVEL_COLORS: Record<string, string> = {
   A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#f59e0b',
 };
 
-const targetLangNameDE: Partial<Record<Language, string>> = {
-  de: 'Deutsch', en: 'Englisch', tr: 'Türkisch', ar: 'Arabisch',
-  es: 'Spanisch', uk: 'Ukrainisch', ru: 'Russisch', pl: 'Polnisch', ro: 'Rumänisch',
+const RESULT_MSG: Record<string, Partial<Record<Language, { title: string; text: string }>>> = {
+  A1: {
+    en: { title: 'Level A1 — Beginner', text: 'Great start! We\'ll build a strong foundation in German together.' },
+    ar: { title: 'المستوى A1 — مبتدئ', text: 'بداية رائعة! سنبني أساساً قوياً معاً في اللغة الألمانية.' },
+    uk: { title: 'Рівень A1 — Початківець', text: 'Чудовий початок! Разом побудуємо міцну основу в німецькій.' },
+    es: { title: 'Nivel A1 — Principiante', text: '¡Buen comienzo! Juntos construiremos una base sólida en alemán.' },
+    tr: { title: 'A1 Seviyesi — Başlangıç', text: 'Harika bir başlangıç! Birlikte Almancada güçlü bir temel oluşturacağız.' },
+    de: { title: 'Niveau A1 — Anfänger', text: 'Guter Start! Wir bauen gemeinsam eine starke Grundlage.' },
+    ru: { title: 'Уровень A1 — Начинающий', text: 'Хорошее начало! Вместе построим прочную основу в немецком.' },
+    pl: { title: 'Poziom A1 — Początkujący', text: 'Dobry start! Razem zbudujemy solidną podstawę w języku niemieckim.' },
+    ro: { title: 'Nivelul A1 — Începător', text: 'Start bun! Împreună vom construi o bază solidă în germană.' },
+  },
+  A2: {
+    en: { title: 'Level A2 — Elementary', text: 'Good foundation! We\'ll expand your practical vocabulary.' },
+    ar: { title: 'المستوى A2 — مبتدئ متقدم', text: 'أساس جيد! سنوسّع مفرداتك العملية.' },
+    uk: { title: 'Рівень A2 — Елементарний', text: 'Гарна основа! Розширимо практичний словник.' },
+    es: { title: 'Nivel A2 — Elemental', text: '¡Buena base! Ampliaremos tu vocabulario práctico.' },
+    tr: { title: 'A2 Seviyesi — Temel', text: 'İyi bir temel! Pratik kelime dağarcığını genişleteceğiz.' },
+    de: { title: 'Niveau A2 — Grundkenntnisse', text: 'Gute Grundlage! Wir erweitern deinen praktischen Wortschatz.' },
+    ru: { title: 'Уровень A2 — Элементарный', text: 'Хорошая основа! Расширим практическую лексику.' },
+    pl: { title: 'Poziom A2 — Podstawowy', text: 'Dobra podstawa! Rozbudujemy praktyczne słownictwo.' },
+    ro: { title: 'Nivelul A2 — Elementar', text: 'Bază bună! Vom extinde vocabularul practic.' },
+  },
+  B1: {
+    en: { title: 'Level B1 — Intermediate', text: 'Impressive! We\'ll challenge you with more complex conversations.' },
+    ar: { title: 'المستوى B1 — متوسط', text: 'مثير للإعجاب! سنتحداك بمحادثات أكثر تعقيداً.' },
+    uk: { title: 'Рівень B1 — Середній', text: 'Вражає! Складніші розмови чекають.' },
+    es: { title: 'Nivel B1 — Intermedio', text: '¡Impresionante! Te desafiaremos con conversaciones más complejas.' },
+    tr: { title: 'B1 Seviyesi — Orta', text: 'Etkileyici! Daha karmaşık konuşmalarla sizi zorlayacağız.' },
+    de: { title: 'Niveau B1 — Mittelstufe', text: 'Beeindruckend! Wir fordern dich mit komplexeren Gesprächen heraus.' },
+    ru: { title: 'Уровень B1 — Средний', text: 'Впечатляет! Вас ждут более сложные разговоры.' },
+    pl: { title: 'Poziom B1 — Średnio zaawansowany', text: 'Imponujące! Będziemy wyzywać bardziej złożonymi rozmowami.' },
+    ro: { title: 'Nivelul B1 — Intermediar', text: 'Impresionant! Te vom provoca cu conversații mai complexe.' },
+  },
+  B2: {
+    en: { title: 'Level B2 — Advanced', text: 'Excellent! You have strong German skills. We\'ll fine-tune the details.' },
+    ar: { title: 'المستوى B2 — متقدم', text: 'ممتاز! مهاراتك في اللغة الألمانية قوية. سنصقل التفاصيل.' },
+    uk: { title: 'Рівень B2 — Просунутий', text: 'Відмінно! У вас сильні навички. Відшліфуємо деталі.' },
+    es: { title: 'Nivel B2 — Avanzado', text: '¡Excelente! Tu alemán es muy bueno. Puliremos los detalles.' },
+    tr: { title: 'B2 Seviyesi — İleri', text: 'Mükemmel! Almanca becerileriniz çok güçlü.' },
+    de: { title: 'Niveau B2 — Fortgeschritten', text: 'Ausgezeichnet! Sehr starkes Deutsch. Wir feilen an den Details.' },
+    ru: { title: 'Уровень B2 — Продвинутый', text: 'Отлично! Очень сильный немецкий. Доработаем детали.' },
+    pl: { title: 'Poziom B2 — Zaawansowany', text: 'Doskonale! Bardzo dobry poziom. Doszlifujemy szczegóły.' },
+    ro: { title: 'Nivelul B2 — Avansat', text: 'Excelent! Germana ta este foarte bună. Vom perfecționa detaliile.' },
+  },
 };
 
-const selfAssessLevels: { level: Level; label: string; desc: string }[] = [
-  { level: 'A1', label: 'A1 — Anfänger',        desc: 'Ich kenne kaum Wörter oder Grundphrasen.' },
-  { level: 'A2', label: 'A2 — Grundkenntnisse', desc: 'Ich verstehe einfache Sätze und kann mich in vertrauten Situationen verständigen.' },
-  { level: 'B1', label: 'B1 — Mittelstufe',     desc: 'Ich kann mich in den meisten Alltagssituationen ausdrücken.' },
-  { level: 'B2', label: 'B2 — Fortgeschritten', desc: 'Ich kommuniziere fließend und verstehe komplexe Texte.' },
+// ── Selbst-Einschätzung für Deutsche ─────────────────────────────────────────
+
+const SELF_LEVELS = [
+  { level: 'A1' as Level, label: 'A1 — Anfänger', desc: 'Ich kenne kaum Grundphrasen.' },
+  { level: 'A2' as Level, label: 'A2 — Grundkenntnisse', desc: 'Einfache Sätze, bekannte Situationen.' },
+  { level: 'B1' as Level, label: 'B1 — Mittelstufe', desc: 'Die meisten Alltagssituationen.' },
+  { level: 'B2' as Level, label: 'B2 — Fortgeschritten', desc: 'Fließend, komplexe Texte.' },
 ];
+
+// ── Haupt-Komponente ─────────────────────────────────────────────────────────
 
 export function Step3Assessment() {
   const navigate = useNavigate();
@@ -290,76 +459,162 @@ export function Step3Assessment() {
   const lang = (progress.language ?? 'en') as Language;
   const isGerman = lang === 'de';
 
-  // Build questions once per render, keyed to language
-  const [questions] = useState<DisplayQuestion[]>(() => buildQuestions(lang));
-
+  const [questions] = useState<DisplayQuestion[]>(() => buildDisplayQuestions(lang));
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [result, setResult] = useState<Level>('A1');
+  const [revealed, setRevealed] = useState(false);
+  const [remaining, setRemaining] = useState(TIMER_SECS);
+  const [timedOut, setTimedOut] = useState(false);
+  const [result, setResult] = useState<Level | null>(null);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioError, setAudioError] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startTimeRef = useRef<number>(Date.now());
+  const sessionId = useRef<string>(`session_${Date.now()}_${Math.random().toString(36).slice(2)}`);
 
   const question = questions[current];
 
+  // ── Audio abspielen ────────────────────────────────────────────
+  const playAudio = useCallback(async () => {
+    if (!question.audioText) return;
+    setAudioLoading(true);
+    setAudioError(false);
+    try {
+      const audio = await ttsSpeak(question.audioText, 0.85);
+      audioRef.current = audio;
+      await audio.play();
+    } catch {
+      setAudioError(true);
+    } finally {
+      setAudioLoading(false);
+    }
+  }, [question]);
+
+  // Auto-play wenn neue Frage geladen
+  useEffect(() => {
+    if (question.type === 'audio' && !selected && !timedOut) {
+      setAudioError(false);
+      playAudio();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  // ── Timer ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (selected !== null || timedOut || result !== null) return;
+    setRemaining(TIMER_SECS);
+    timerRef.current = setInterval(() => {
+      setRemaining(r => {
+        if (r <= 1) {
+          clearInterval(timerRef.current!);
+          setTimedOut(true);
+          setRevealed(true);
+          return 0;
+        }
+        return r - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current, result]);
+
+  // ── Antwort auswählen ──────────────────────────────────────────
   const handleSelect = (idx: number) => {
-    if (selected !== null) return;
+    if (selected !== null || timedOut) return;
+    clearInterval(timerRef.current!);
     setSelected(idx);
+    setRevealed(true);
 
     setTimeout(() => {
-      const newAnswers = [...answers, idx];
-      setAnswers(newAnswers);
-      if (current < questions.length - 1) {
-        setCurrent(c => c + 1);
-        setSelected(null);
-      } else {
-        const level = computeLevel(questions, newAnswers);
-        setResult(level);
-        setShowResult(true);
-      }
-    }, 700);
+      advance(idx);
+    }, 900);
   };
 
-  // Für deutsche Muttersprachler: einfache Selbsteinschätzung statt Quiz
+  const handleTimeout = () => {
+    const newAnswers = [...answers, null];
+    if (current < questions.length - 1) {
+      setAnswers(newAnswers);
+      setCurrent(c => c + 1);
+      setSelected(null);
+      setTimedOut(false);
+      setRevealed(false);
+    } else {
+      finalise(newAnswers);
+    }
+  };
+
+  const advance = (chosenIdx: number) => {
+    const newAnswers = [...answers, chosenIdx];
+    if (current < questions.length - 1) {
+      setAnswers(newAnswers);
+      setCurrent(c => c + 1);
+      setSelected(null);
+      setTimedOut(false);
+      setRevealed(false);
+    } else {
+      finalise(newAnswers);
+    }
+  };
+
+  const finalise = (finalAnswers: (number | null)[]) => {
+    const level = computeLevel(questions, finalAnswers);
+    const score = finalAnswers.filter((a, i) => a === questions[i].correct).length;
+    setAnswers(finalAnswers);
+    setResult(level);
+    // Ergebnis sichern (fire-and-forget)
+    const duration = Math.round((Date.now() - startTimeRef.current) / 1000);
+    fetch('/api/assessment/save', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: sessionId.current,
+        level,
+        score,
+        total: questions.length,
+        duration,
+        answers: finalAnswers.map((a, i) => ({
+          questionId: questions[i].id,
+          chosen: a,
+          correct: questions[i].correct,
+          ok: a === questions[i].correct,
+        })),
+      }),
+    }).catch(() => { /* ignorieren */ });
+    // Rate-Limit: nächster Test frühestens in 4 Stunden
+    try { localStorage.setItem('linguu_last_assessment', String(Date.now())); } catch { /* */ }
+  };
+
+  // ── Selbst-Einschätzung für Deutsche ──────────────────────────
   if (isGerman) {
-    const targetName = targetLangNameDE[progress.targetLanguage as Language] ?? progress.targetLanguage ?? 'der Zielsprache';
     return (
       <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
-
         <div className="text-center mb-8">
-          <h1
-            className="text-3xl sm:text-4xl font-bold mb-2"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
-          >
-            Dein {targetName}-Niveau?
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2"
+            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            Dein Sprachniveau?
           </h1>
-          <p className="text-base mt-1" style={{ color: '#8b8fa8' }}>
-            Wähle dein aktuelles Sprachniveau — wir passen die Inhalte darauf an.
+          <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+            Wir passen die Inhalte auf dein Niveau an.
           </p>
         </div>
         <div className="flex flex-col gap-3">
-          {selfAssessLevels.map(({ level, label, desc }) => (
-            <button
-              key={level}
+          {SELF_LEVELS.map(({ level, label, desc }) => (
+            <button key={level}
               onClick={() => { completeOnboarding(level); navigate('/'); }}
               className="flex items-center gap-5 p-5 rounded-2xl text-left transition-all duration-200"
-              style={{
-                background: 'rgba(26,29,39,0.8)',
-                border: `2px solid ${levelColors[level]}30`,
-                cursor: 'pointer',
-              }}
+              style={{ background: 'rgba(26,29,39,0.8)', border: `2px solid ${LEVEL_COLORS[level]}30` }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = levelColors[level];
-                (e.currentTarget as HTMLElement).style.background = `${levelColors[level]}12`;
+                (e.currentTarget as HTMLElement).style.borderColor = LEVEL_COLORS[level];
+                (e.currentTarget as HTMLElement).style.background = `${LEVEL_COLORS[level]}12`;
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = `${levelColors[level]}30`;
+                (e.currentTarget as HTMLElement).style.borderColor = `${LEVEL_COLORS[level]}30`;
                 (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
-              }}
-            >
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
-                style={{ background: `${levelColors[level]}20`, color: levelColors[level], border: `2px solid ${levelColors[level]}50` }}
-              >
+              }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
+                style={{ background: `${LEVEL_COLORS[level]}20`, color: LEVEL_COLORS[level], border: `2px solid ${LEVEL_COLORS[level]}50` }}>
                 {level}
               </div>
               <div className="flex-1">
@@ -373,34 +628,25 @@ export function Step3Assessment() {
     );
   }
 
-  if (showResult) {
-    const msg = resultMessages[result][lang] ?? resultMessages[result]['en']!;
+  // ── Ergebnis-Screen ────────────────────────────────────────────
+  if (result !== null) {
+    const score = answers.filter((a, i) => a === questions[i].correct).length;
+    const msg = RESULT_MSG[result]?.[lang] ?? RESULT_MSG[result]?.['en']!;
+    const color = LEVEL_COLORS[result];
     return (
-      <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
+      <OnboardingLayout step={4} total={4} onBack={() => {}}>
         <div className="text-center animate-fade-in-up">
-          <div
-            className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 text-4xl"
-            style={{ background: `${levelColors[result]}20`, border: `3px solid ${levelColors[result]}` }}
-          >
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 text-4xl"
+            style={{ background: `${color}20`, border: `3px solid ${color}` }}>
             🎉
           </div>
-          <h1
-            className="text-4xl font-bold mb-3"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-          >
-            {msg.title}
-          </h1>
-          <p
-            className="text-lg mb-8 max-w-md mx-auto"
-            style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-          >
-            {msg.text}
-          </p>
-          <div
-            className="inline-flex items-center px-6 py-3 rounded-full mb-8 text-2xl font-bold"
-            style={{ background: `${levelColors[result]}15`, border: `2px solid ${levelColors[result]}`, color: levelColors[result] }}
-          >
-            {result}
+          <h1 className="text-4xl font-bold mb-3"
+            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>{msg.title}</h1>
+          <p className="text-lg mb-4 max-w-md mx-auto" style={{ color: '#8b8fa8' }}>{msg.text}</p>
+          <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full mb-8 font-bold"
+            style={{ background: `${color}15`, border: `2px solid ${color}`, color }}>
+            <span className="text-2xl">{result}</span>
+            <span className="text-sm font-mono">{score}/{questions.length}</span>
           </div>
           <br />
           <button
@@ -408,8 +654,7 @@ export function Step3Assessment() {
             className="px-10 py-4 rounded-2xl text-lg font-semibold transition-all duration-200"
             style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
-            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-          >
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}>
             {t('startNow', lang)}
           </button>
         </div>
@@ -417,66 +662,89 @@ export function Step3Assessment() {
     );
   }
 
+  // ── Quiz-Screen ────────────────────────────────────────────────
+  const isDone = selected !== null || timedOut;
+  const isAudio = question.type === 'audio';
+
   return (
     <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
-      <div className="text-center mb-6">
-        <h1
-          className="text-3xl sm:text-4xl font-bold mb-1"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-        >
-          {t('whereAreYou', lang)}
-        </h1>
-        <p className="text-sm mt-1" style={{ color: 'rgba(139,143,168,0.6)' }}>
-          {t('assessmentHint', lang)}
-        </p>
+      {/* Header: Fortschritt + Timer */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-1.5">
+          {questions.map((_, i) => (
+            <div key={i} className="rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? 20 : 7, height: 7,
+                background: i < current
+                  ? answers[i] === questions[i].correct ? '#10b981' : '#ef4444'
+                  : i === current ? '#f59e0b' : 'rgba(255,255,255,0.15)',
+              }} />
+          ))}
+        </div>
+        {!isDone
+          ? <TimerRing remaining={remaining} total={TIMER_SECS} />
+          : <div className="w-14 h-14 flex items-center justify-center">
+              <Clock size={18} style={{ color: 'var(--muted)' }} />
+            </div>
+        }
       </div>
 
-      {/* Progress dots */}
-      <div className="flex justify-center gap-2 mb-6">
-        {questions.map((_, i) => (
-          <div
-            key={i}
-            className="rounded-full transition-all duration-300"
-            style={{
-              width: i === current ? 24 : 8,
-              height: 8,
-              background: i < current ? '#f59e0b' : i === current ? '#f59e0b' : 'rgba(255,255,255,0.15)',
-            }}
-          />
-        ))}
-      </div>
+      <div className="rounded-2xl p-6 mb-4"
+        style={{ background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.08)' }}>
 
-      <div
-        className="rounded-2xl p-8 mb-6"
-        style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
-      >
-        <p className="text-xs mb-3 font-semibold uppercase tracking-widest" style={{ color: '#f59e0b', opacity: 0.8 }}>
-          {t('questionOf', lang, String(current + 1), String(questions.length))}
+        {/* Level-Badge */}
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-bold uppercase tracking-widest"
+            style={{ color: LEVEL_COLORS[question.level], opacity: 0.9 }}>
+            {question.level} · {t('questionOf', lang, String(current + 1), String(questions.length))}
+          </span>
+          {isAudio && (
+            <button onClick={playAudio} disabled={audioLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-opacity"
+              style={{ background: audioError ? 'rgba(239,68,68,0.15)' : 'rgba(99,102,241,0.15)',
+                       color: audioError ? '#ef4444' : '#6366f1',
+                       border: `1px solid ${audioError ? '#ef444440' : '#6366f140'}` }}>
+              {audioLoading
+                ? <span className="animate-pulse">…</span>
+                : audioError
+                  ? <><VolumeX size={12} /> Fehler</>
+                  : <><Volume2 size={12} /> Nochmal</>}
+            </button>
+          )}
+        </div>
+
+        {/* Frage */}
+        <p className="text-lg font-semibold mb-1" style={{ color: '#f0ede8' }}>
+          {question.questionLine}
         </p>
-
-        {/* Main question line */}
-        <p
-          className="text-xl font-semibold mb-1"
-          style={{ color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-        >
-          {question.questionLine1}
-        </p>
-
-        {/* Optional second line (hint or German sub-question) */}
-        {question.questionLine2 && (
-          <p className="text-sm mb-6" style={{ color: '#8b8fa8' }}>
-            {question.questionLine2}
-          </p>
+        {question.hintLine && (
+          <p className="text-sm mb-4" style={{ color: '#8b8fa8' }}>{question.hintLine}</p>
         )}
-        {!question.questionLine2 && <div className="mb-6" />}
 
-        <div className="grid grid-cols-1 gap-3">
+        {/* Audio-Text: versteckt bis zur Antwort */}
+        {isAudio && (
+          <div className="rounded-lg px-4 py-3 mb-4 text-sm transition-all duration-500"
+            style={{
+              background: 'rgba(99,102,241,0.08)',
+              border: '1px solid rgba(99,102,241,0.2)',
+              color: revealed ? '#a5b4fc' : 'transparent',
+              filter: revealed ? 'none' : 'blur(6px)',
+              userSelect: 'none',
+            }}>
+            {question.audioText}
+          </div>
+        )}
+
+        {!isAudio && !question.hintLine && <div className="mb-4" />}
+
+        {/* Antwort-Buttons */}
+        <div className="grid grid-cols-1 gap-2.5 mt-2">
           {question.options.map((option, idx) => {
             let bg = 'rgba(255,255,255,0.04)';
             let border = 'rgba(255,255,255,0.1)';
             let color = '#f0ede8';
 
-            if (selected !== null) {
+            if (isDone) {
               if (idx === question.correct) {
                 bg = 'rgba(16,185,129,0.15)'; border = '#10b981'; color = '#10b981';
               } else if (idx === selected && selected !== question.correct) {
@@ -485,30 +753,25 @@ export function Step3Assessment() {
             }
 
             return (
-              <button
-                key={idx}
+              <button key={idx}
                 onClick={() => handleSelect(idx)}
-                disabled={selected !== null}
-                className="text-left px-5 py-4 rounded-xl transition-all duration-200 text-sm font-medium"
-                style={{ background: bg, border: `1px solid ${border}`, color, cursor: selected !== null ? 'default' : 'pointer' }}
-                dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                disabled={isDone}
+                className="text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                style={{ background: bg, border: `1px solid ${border}`, color, cursor: isDone ? 'default' : 'pointer' }}
                 onMouseEnter={e => {
-                  if (selected === null) {
+                  if (!isDone) {
                     (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.5)';
                     (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.08)';
                   }
                 }}
                 onMouseLeave={e => {
-                  if (selected === null) {
+                  if (!isDone) {
                     (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)';
                     (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
                   }
-                }}
-              >
-                <span
-                  className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold mr-3"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: 'inherit', flexShrink: 0 }}
-                >
+                }}>
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2.5"
+                  style={{ background: 'rgba(255,255,255,0.08)', color: 'inherit', flexShrink: 0 }}>
                   {String.fromCharCode(65 + idx)}
                 </span>
                 {option}
@@ -517,6 +780,23 @@ export function Step3Assessment() {
           })}
         </div>
       </div>
+
+      {/* Timeout-Meldung + Weiter */}
+      {timedOut && (
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl animate-fade-in-up"
+          style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)' }}>
+          <p className="text-sm" style={{ color: '#fca5a5' }}>
+            ⏱ Zeit abgelaufen — die richtige Antwort ist <strong style={{ color: '#10b981' }}>
+              {String.fromCharCode(65 + question.correct)}
+            </strong>
+          </p>
+          <button onClick={handleTimeout}
+            className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold"
+            style={{ background: 'rgba(239,68,68,0.2)', color: '#fca5a5' }}>
+            Weiter <ChevronRight size={14} />
+          </button>
+        </div>
+      )}
     </OnboardingLayout>
   );
 }
