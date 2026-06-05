@@ -43,7 +43,7 @@ Vollwertiges Produkt, läuft lokal. Auf Next.js migriert (API-Keys sicher server
 **Vor Go-Live:** Backend-Proxy nötig (API-Keys in serverseitige Next.js-Route-Handler, ohne VITE_-Prefix). Nie mit diesen Keys deployen wie sie sind.
 
 ## Nächste Schritte
-1. **Deployment** — Coolify (Hetzner) → linguu.techstag.de, API-Keys in serverseitige Route Handler migrieren
+1. **Deployment** — Coolify (Hetzner) → linguu.techstag.de (API-Keys sind bereits serverseitig ✅)
 2. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
 3. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
 4. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
