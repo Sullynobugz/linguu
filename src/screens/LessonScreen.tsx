@@ -248,7 +248,7 @@ export function LessonScreen() {
 
       {/* Main content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="w-full max-w-2xl mx-auto py-6">
+        <div className="w-full max-w-4xl mx-auto py-6">
 
           {/* Karte + Nav-Buttons in einer Zeile — Buttons dehnen sich auf Kartenhöhe */}
           <div className="flex items-stretch mb-4">
@@ -260,10 +260,10 @@ export function LessonScreen() {
               className="flex-shrink-0 flex flex-col items-center justify-center gap-1 transition-all duration-200"
               style={{
                 width: 56,
-                borderRadius: '0 20px 20px 0',
+                borderRadius: '20px 0 0 20px',
                 background: 'rgba(26,29,39,0.92)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderLeft: 'none',
+                borderRight: 'none',
                 color: isFirst ? 'rgba(240,237,232,0.1)' : '#f0ede8',
                 backdropFilter: 'blur(12px)',
                 cursor: isFirst ? 'default' : 'pointer',
@@ -323,10 +323,10 @@ export function LessonScreen() {
               className="flex-shrink-0 flex flex-col items-center justify-center gap-1"
               style={{
                 width: 56,
-                borderRadius: '20px 0 0 20px',
+                borderRadius: '0 20px 20px 0',
                 background: isLast ? 'rgba(245,158,11,0.18)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
                 border: isLast ? '1px solid rgba(245,158,11,0.5)' : 'none',
-                borderRight: 'none',
+                borderLeft: 'none',
                 color: isLast ? '#f59e0b' : '#0f1117',
                 backdropFilter: 'blur(12px)',
                 boxShadow: isLast ? '4px 0 16px rgba(245,158,11,0.15)' : '-4px 0 16px rgba(245,158,11,0.25)',
