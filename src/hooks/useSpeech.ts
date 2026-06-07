@@ -73,12 +73,27 @@ function normStr(s: string, lang?: string): string {
   return n;
 }
 
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) => {
+    const row = new Array(n + 1).fill(0);
+    row[0] = i;
+    return row;
+  });
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[m][n];
+}
+
 function scorePronunciation(expected: string, heard: string, lang?: string): RecognitionResult {
-  const expWords = normStr(expected, lang).split(/\s+/);
-  const heardWords = normStr(heard, lang).split(/\s+/);
+  const expWords = normStr(expected, lang).split(/\s+/).filter(Boolean);
+  const heardWords = normStr(heard, lang).split(/\s+/).filter(Boolean);
+  if (expWords.length === 0) return { transcript: heard, score: 0, status: 'try_again' };
   let matches = 0;
   for (const w of expWords) {
-    if (heardWords.some(h => h === w || h.includes(w) || w.includes(h))) matches++;
+    if (heardWords.some(h => h === w || (w.length >= 5 && levenshtein(h, w) <= 1))) matches++;
   }
   const score = Math.round((matches / expWords.length) * 100);
   const status: PronunciationStatus =
@@ -94,6 +109,8 @@ export function useListen() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
   const listen = useCallback(async (
     expectedPhrase: string,
@@ -104,6 +121,22 @@ export function useListen() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Web Audio API für Echtzeit-Pegelanalyse
+      try {
+        const ctx = new AudioContext();
+        // Nach await getUserMedia ist der AudioContext oft im suspended state → resume() nötig
+        if (ctx.state === 'suspended') await ctx.resume();
+        const src = ctx.createMediaStreamSource(stream);
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.6;
+        src.connect(analyser);
+        audioCtxRef.current = ctx;
+        analyserRef.current = analyser;
+      } catch {
+        // Web Audio API nicht verfügbar — Waveform nutzt Sinus-Simulation
+      }
 
       // Pick best supported format
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
@@ -123,6 +156,9 @@ export function useListen() {
 
       recorder.onstop = async () => {
         stream.getTracks().forEach(t => t.stop());
+        audioCtxRef.current?.close().catch(() => {});
+        audioCtxRef.current = null;
+        analyserRef.current = null;
         setListening(false);
         setProcessing(true);
 
@@ -158,5 +194,5 @@ export function useListen() {
 
   const reset = useCallback(() => setResult(null), []);
 
-  return { listen, stop, reset, listening, processing, result };
+  return { listen, stop, reset, listening, processing, result, analyserRef };
 }
