@@ -40,10 +40,23 @@ Vollwertiges Produkt, live auf linguu.techstag.de. Auf Next.js migriert (API-Key
 ## ⚠️ Deployment-Notiz
 `vite.config.ts` und Vite-tsconfigs wurden entfernt (waren Überbleibsel). nixpacks erkennt das Projekt jetzt sauber als Next.js. API-Keys sind serverseitig (keine VITE_-Prefix-Keys mehr).
 
+## ⚠️ Waveform-Implementierung
+`src/components/AudioControls.tsx` — Waveform nutzt **reines CSS** (`@keyframes lbar`), kein JS/rAF/AudioContext. 5 Balken mit unterschiedlichen `animation-duration`-Werten (0.28s–0.50s) und gestaffelten Delays. Wird nur als Prop `active: boolean` gesteuert — `analyserRef` nicht mehr nötig. Falls jemand die Web-Audio-API wieder einbauen möchte: `useSpeech.ts` hat den Setup-Code noch drin (AudioContext + AnalyserNode), wird nur nicht mehr von Waveform gelesen.
+
+## ⚠️ LessonScreen Nav-Buttons
+`src/screens/LessonScreen.tsx` — Zurück/Weiter-Buttons sind **keine absolut-positionierten Elemente** mehr. Sie sind Flex-Geschwister des Content-Bereichs in einem `flex items-stretch`-Container. Nicht auf `absolute` zurückstellen — sie würden dann nicht mehr an die Karte andocken.
+
 ## Nächste Schritte
-1. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
-2. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
+1. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
+2. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig noch nicht genug hervorgehoben
 3. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
 
 ## Differenzierung
 Nicht Duolingo-Klon — fokussiert auf konkrete Behörden-/Alltagssituationen die Einwanderer tatsächlich brauchen. Spracherkennung via Whisper erlaubt echtes Sprechen üben.
+
+## Entwicklungslog
+| Datum | Was & Warum |
+|-------|-------------|
+| 2026-06-07 | Waveform auf pure CSS umgestellt — JS/rAF-Ansatz war unzuverlässig (AudioContext suspended state, barRefs-Timing). CSS-Animation ist browserübergreifend garantiert. |
+| 2026-06-07 | LessonScreen Nav-Buttons von absolute auf flex-row — docken jetzt direkt an die Content-Karte an statt am Screen-Rand zu floaten |
+| 2026-06-07 | UI-Overhaul: größere Icons (56×56px Bubbles), Hover-Animationen auf Topic/Action-Cards, Wegweiser-Pfeile, OnboardingLayout Step-Dots vergrößert |
