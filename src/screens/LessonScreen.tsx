@@ -174,10 +174,10 @@ export function LessonScreen() {
       >
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-sm transition-all"
-          style={{ color: '#8b8fa8' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+          className="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1.5 rounded-lg"
+          style={{ color: '#8b8fa8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f0ede8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#8b8fa8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)'; }}
         >
           ← <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
@@ -212,15 +212,15 @@ export function LessonScreen() {
         />
       </div>
 
-      {/* Phrase dots */}
+      {/* Phrase dots + counter */}
       <div className="flex justify-center gap-1.5 pt-5 px-6">
         {topic.phrases.map((_, i) => (
           <button
             key={i}
             onClick={() => handlePhraseView(i)}
-            className="rounded-full transition-all duration-200"
+            className="rounded-full transition-all duration-200 cursor-pointer"
             style={{
-              width: i === currentIdx ? 20 : 8,
+              width: i === currentIdx ? 24 : 8,
               height: 8,
               background: i < currentIdx || progress.seenPhrases.includes(topic.phrases[i].id)
                 ? '#f59e0b' : i === currentIdx ? '#f59e0b' : 'rgba(255,255,255,0.15)',
@@ -228,191 +228,208 @@ export function LessonScreen() {
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-2" style={{ color: '#8b8fa8' }}>
-        {t('phrasesOf', lang, String(currentIdx + 1), String(totalPhrases))} · {seenCount} {t('seen', lang)}
-      </p>
+      <div className="flex items-center justify-center gap-3 mt-2.5">
+        <p className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
+          {currentIdx + 1} / {totalPhrases}
+        </p>
+        <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+        <p className="text-xs" style={{ color: '#8b8fa8' }}>
+          {seenCount} {t('seen', lang)}
+        </p>
+        {isLast && (
+          <>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+            <p className="text-xs font-semibold" style={{ color: '#f59e0b', opacity: 0.8 }}>
+              🎯 {lang === 'de' ? 'Dann: Quiz' : 'Next: Quiz →'}
+            </p>
+          </>
+        )}
+      </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col justify-center py-6 relative">
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full max-w-2xl mx-auto py-6">
 
-        {/* Back button — linker Rand */}
-        <button
-          onClick={handlePrev}
-          disabled={isFirst}
-          className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
-          style={{
-            width: 108,
-            height: 180,
-            borderRadius: '0 24px 24px 0',
-            background: 'rgba(26,29,39,0.92)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderLeft: 'none',
-            color: isFirst ? 'rgba(240,237,232,0.1)' : '#f0ede8',
-            backdropFilter: 'blur(12px)',
-            cursor: isFirst ? 'default' : 'pointer',
-            boxShadow: isFirst ? 'none' : '4px 0 20px rgba(0,0,0,0.3)',
-          }}
-        >
-          <span style={{ fontSize: 26 }}>←</span>
-          <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
-            {t('back', lang).replace(/←\s*/g, '')}
-          </span>
-          {lang !== 'de' && (
-            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
-              {t('back', 'de').replace(/←\s*/g, '')}
-            </span>
-          )}
-        </button>
+          {/* Karte + Nav-Buttons in einer Zeile — Buttons dehnen sich auf Kartenhöhe */}
+          <div className="flex items-stretch mb-4">
 
-        {/* Next / Quiz button — rechter Rand */}
-        <button
-          onClick={handleNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 transition-all duration-200 z-10"
-          style={{
-            width: 108,
-            height: 180,
-            borderRadius: '24px 0 0 24px',
-            background: isLast ? 'rgba(245,158,11,0.18)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
-            border: isLast ? '1px solid rgba(245,158,11,0.5)' : 'none',
-            borderRight: 'none',
-            color: isLast ? '#f59e0b' : '#0f1117',
-            backdropFilter: 'blur(12px)',
-            boxShadow: isLast ? '4px 0 20px rgba(245,158,11,0.15)' : '-4px 0 20px rgba(245,158,11,0.25)',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
-          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-        >
-          <span style={{ fontSize: isLast ? 22 : 26 }}>{isLast ? '🎯' : '→'}</span>
-          <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
-            {isLast
-              ? t('toQuiz', lang).replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
-              : t('next', lang).replace(/\s*←/g, '')}
-          </span>
-          {lang !== 'de' && (
-            <span style={{ fontSize: 10, opacity: 0.45, lineHeight: 1.2, textAlign: 'center', maxWidth: 88 }}>
-              {isLast
-                ? t('toQuiz', 'de').replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
-                : t('next', 'de').replace(/\s*←/g, '')}
-            </span>
-          )}
-        </button>
-
-        <div className="flex flex-col items-center px-[112px]">
-        <div className="w-full max-w-2xl">
-
-          {/* Lernphrase — large, central */}
-          <div
-            className="rounded-3xl p-8 mb-4 text-center animate-fade-in-up"
-            style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.6 }}>
-              {learnLangLabel}
-            </p>
-
-            <h1
-              className="mb-3 leading-tight"
-              style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: 700 }}
-            >
-              {getLearnPhrase(phrase)}
-            </h1>
-
-            {/* Phonetics nur wenn Lernsprache Deutsch ist */}
-            {targetLang === 'de' && (
-              <>
-                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.6 }}>
-                  {phoneticsLabel[lang] ?? 'Aussprache'}
-                </p>
-                <p className="text-base font-mono mb-5" style={{ color: 'rgba(240,237,232,0.45)' }}>
-                  [{phrase.phonetics}]
-                </p>
-              </>
-            )}
-
-            {/* ── AUDIO CONTROLS ── */}
-            <AudioControls
-              germanPhrase={getLearnPhrase(phrase)}
-              nativeTranslation={getNativeTranslation(phrase)}
-              lang={lang}
-              targetLang={targetLang}
-              learnLangLabel={learnLangLabel}
-            />
-          </div>
-
-          {/* Übersetzung in Muttersprache */}
-          <div
-            className="rounded-2xl p-5 mb-4 flex items-center gap-4"
-            style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}
-          >
-            <span className="text-2xl">💬</span>
-            <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className="flex-1">
-              <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.7 }}>
-                {translationLabel[lang] ?? langNames[lang]?.[lang] ?? 'Übersetzung'}
-              </p>
-              <p className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
-                {getNativeTranslation(phrase)}
-              </p>
-            </div>
-          </div>
-
-          {/* Beispielsatz */}
-          <div
-            className="rounded-2xl p-5 mb-4"
-            style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.7 }}>
-              <BilingualText native={t('example', lang)} de={t('example', 'de')} lang={lang} />
-            </p>
-            <div className="flex items-start gap-3">
-              <div className="flex-1">
-                <p className="text-base font-semibold mb-1.5" style={{ color: '#f0ede8' }}>
-                  {targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE)}
-                </p>
-                <p className="text-sm" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-                  {lang === 'de' ? phrase.exampleDE : getT(phrase.exampleTranslations, lang)}
-                </p>
-              </div>
-              <button
-                onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addOpenAiCost(u.costEur))}
-                className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b' }}
-              >
-                ▶
-              </button>
-            </div>
-          </div>
-
-          {/* AI Explanation */}
-          <div className="mb-5">
+            {/* Back button */}
             <button
-              onClick={handleExplain}
-              className="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              onClick={handlePrev}
+              disabled={isFirst}
+              className="flex-shrink-0 flex flex-col items-center justify-center gap-1 transition-all duration-200"
               style={{
-                background: showExplanation ? 'rgba(245,158,11,0.12)' : 'rgba(26,29,39,0.6)',
-                border: showExplanation ? '1px solid rgba(245,158,11,0.4)' : '1px solid rgba(255,255,255,0.08)',
-                color: showExplanation ? '#f59e0b' : '#8b8fa8',
+                width: 56,
+                borderRadius: '0 20px 20px 0',
+                background: 'rgba(26,29,39,0.92)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderLeft: 'none',
+                color: isFirst ? 'rgba(240,237,232,0.1)' : '#f0ede8',
+                backdropFilter: 'blur(12px)',
+                cursor: isFirst ? 'default' : 'pointer',
+                boxShadow: isFirst ? 'none' : '4px 0 16px rgba(0,0,0,0.3)',
               }}
             >
-              <BilingualText native={t('explain', lang)} de={t('explain', 'de')} lang={lang} />
-              {explanationLoading && <span className="animate-pulse">...</span>}
+              <span style={{ fontSize: 20 }}>←</span>
+              <span style={{ fontSize: 10, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 48 }}>
+                {t('back', lang).replace(/←\s*/g, '')}
+              </span>
+              {lang !== 'de' && (
+                <span style={{ fontSize: 8, opacity: 0.4, lineHeight: 1.2, textAlign: 'center', maxWidth: 48 }}>
+                  {t('back', 'de').replace(/←\s*/g, '')}
+                </span>
+              )}
             </button>
 
-            {showExplanation && explanation && (
-              <div
-                className="mt-3 p-4 rounded-xl text-sm animate-fade-in-up"
-                style={{
-                  background: 'rgba(245,158,11,0.07)',
-                  border: '1px solid rgba(245,158,11,0.2)',
-                  color: '#d4cfc8',
-                  lineHeight: 1.7,
-                  direction: lang === 'ar' ? 'rtl' : 'ltr',
-                }}
+            {/* Lernphrase — large, central */}
+            <div
+              className="flex-1 rounded-3xl p-8 text-center animate-fade-in-up"
+              style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.6 }}>
+                {learnLangLabel}
+              </p>
+
+              <h1
+                className="mb-3 leading-tight"
+                style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(24px, 5vw, 40px)', fontWeight: 700 }}
               >
-                {explanation}
-              </div>
-            )}
+                {getLearnPhrase(phrase)}
+              </h1>
+
+              {targetLang === 'de' && (
+                <>
+                  <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.6 }}>
+                    {phoneticsLabel[lang] ?? 'Aussprache'}
+                  </p>
+                  <p className="text-base font-mono mb-5" style={{ color: 'rgba(240,237,232,0.45)' }}>
+                    [{phrase.phonetics}]
+                  </p>
+                </>
+              )}
+
+              <AudioControls
+                germanPhrase={getLearnPhrase(phrase)}
+                nativeTranslation={getNativeTranslation(phrase)}
+                lang={lang}
+                targetLang={targetLang}
+                learnLangLabel={learnLangLabel}
+              />
+            </div>
+
+            {/* Next / Quiz button */}
+            <button
+              onClick={handleNext}
+              className="flex-shrink-0 flex flex-col items-center justify-center gap-1"
+              style={{
+                width: 56,
+                borderRadius: '20px 0 0 20px',
+                background: isLast ? 'rgba(245,158,11,0.18)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
+                border: isLast ? '1px solid rgba(245,158,11,0.5)' : 'none',
+                borderRight: 'none',
+                color: isLast ? '#f59e0b' : '#0f1117',
+                backdropFilter: 'blur(12px)',
+                boxShadow: isLast ? '4px 0 16px rgba(245,158,11,0.15)' : '-4px 0 16px rgba(245,158,11,0.25)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              <span style={{ fontSize: isLast ? 18 : 20 }}>{isLast ? '🎯' : '→'}</span>
+              <span style={{ fontSize: 10, fontWeight: 600, lineHeight: 1.2, textAlign: 'center', maxWidth: 48 }}>
+                {isLast
+                  ? t('toQuiz', lang).replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
+                  : t('next', lang).replace(/\s*←/g, '')}
+              </span>
+              {lang !== 'de' && (
+                <span style={{ fontSize: 8, opacity: 0.4, lineHeight: 1.2, textAlign: 'center', maxWidth: 48 }}>
+                  {isLast
+                    ? t('toQuiz', 'de').replace(/[←→🎯]\s*/g, '').replace(/\s*[←→]/g, '').trim()
+                    : t('next', 'de').replace(/\s*←/g, '')}
+                </span>
+              )}
+            </button>
+
           </div>
 
-        </div>
+          {/* Secondary content */}
+          <div className="px-4">
+
+            {/* Übersetzung in Muttersprache */}
+            <div
+              className="rounded-2xl p-5 mb-4 flex items-center gap-4"
+              style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}
+            >
+              <span className="text-2xl">💬</span>
+              <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className="flex-1">
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.7 }}>
+                  {translationLabel[lang] ?? langNames[lang]?.[lang] ?? 'Übersetzung'}
+                </p>
+                <p className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
+                  {getNativeTranslation(phrase)}
+                </p>
+              </div>
+            </div>
+
+            {/* Beispielsatz */}
+            <div
+              className="rounded-2xl p-5 mb-4"
+              style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.7 }}>
+                <BilingualText native={t('example', lang)} de={t('example', 'de')} lang={lang} />
+              </p>
+              <div className="flex items-start gap-3">
+                <div className="flex-1">
+                  <p className="text-base font-semibold mb-1.5" style={{ color: '#f0ede8' }}>
+                    {targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE)}
+                  </p>
+                  <p className="text-sm" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+                    {lang === 'de' ? phrase.exampleDE : getT(phrase.exampleTranslations, lang)}
+                  </p>
+                </div>
+                <button
+                  onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addOpenAiCost(u.costEur))}
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                  style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b' }}
+                >
+                  ▶
+                </button>
+              </div>
+            </div>
+
+            {/* AI Explanation */}
+            <div className="mb-5">
+              <button
+                onClick={handleExplain}
+                className="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                style={{
+                  background: showExplanation ? 'rgba(245,158,11,0.12)' : 'rgba(26,29,39,0.6)',
+                  border: showExplanation ? '1px solid rgba(245,158,11,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                  color: showExplanation ? '#f59e0b' : '#8b8fa8',
+                }}
+              >
+                <BilingualText native={t('explain', lang)} de={t('explain', 'de')} lang={lang} />
+                {explanationLoading && <span className="animate-pulse">...</span>}
+              </button>
+
+              {showExplanation && explanation && (
+                <div
+                  className="mt-3 p-4 rounded-xl text-sm animate-fade-in-up"
+                  style={{
+                    background: 'rgba(245,158,11,0.07)',
+                    border: '1px solid rgba(245,158,11,0.2)',
+                    color: '#d4cfc8',
+                    lineHeight: 1.7,
+                    direction: lang === 'ar' ? 'rtl' : 'ltr',
+                  }}
+                >
+                  {explanation}
+                </div>
+              )}
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
