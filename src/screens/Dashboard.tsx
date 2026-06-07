@@ -69,7 +69,19 @@ export function Dashboard() {
   const [widInput, setWidInput] = useState('');
 
   useEffect(() => {
-    setWidCodeState(getWidCode());
+    // Auto-fill WID-Code from URL param ?wid=WID-XXXXX (gesetzt von WID-App)
+    const params = new URLSearchParams(window.location.search)
+    const urlWid = params.get('wid')
+    if (urlWid && urlWid.length >= 4) {
+      saveWidCode(urlWid)
+      setWidCodeState(urlWid.trim().toUpperCase())
+      // URL-Param entfernen ohne Reload
+      const url = new URL(window.location.href)
+      url.searchParams.delete('wid')
+      window.history.replaceState({}, '', url.toString())
+    } else {
+      setWidCodeState(getWidCode())
+    }
   }, []);
 
   const { min, max } = getXpForLevel(progress.level);
