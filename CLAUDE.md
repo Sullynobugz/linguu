@@ -23,7 +23,7 @@ npm run dev   # http://localhost:3001 (Next.js)
 ```
 
 ## Aktueller Stand
-Vollwertiges Produkt, läuft lokal. Auf Next.js migriert (API-Keys sicher serverseitig). Nicht deployed.
+Vollwertiges Produkt, live auf linguu.techstag.de. Auf Next.js migriert (API-Keys sicher serverseitig). Coolify-Webhook aktiv.
 
 - **8 Themen**: Jobcenter, Arzt, Wohnung, Alltag, Behörden, Notfälle, Schule & Kinder, Freizeit & Integration
 - **~400 Phrasen** (~67 pro Thema, `src/data/content.ts`, 4844 Zeilen)
@@ -37,16 +37,13 @@ Vollwertiges Produkt, läuft lokal. Auf Next.js migriert (API-Keys sicher server
 - XP/Level/Streak/Badges, Einbürgerungs-Checkliste (StAG 2024), Behörden-Report (druckbar)
 - Kein Backend — alles localStorage
 
-## ⚠️ Sicherheitsnotiz — API Keys
-`VITE_ANTHROPIC_API_KEY` und `VITE_OPENAI_API_KEY` liegen im Browser-Bundle (durch `VITE_`-Prefix).
-**Für Demo:** Kein Problem — Demo wird lokal gezeigt, kein öffentlicher Zugriff.
-**Vor Go-Live:** Backend-Proxy nötig (API-Keys in serverseitige Next.js-Route-Handler, ohne VITE_-Prefix). Nie mit diesen Keys deployen wie sie sind.
+## ⚠️ Deployment-Notiz
+`vite.config.ts` und Vite-tsconfigs wurden entfernt (waren Überbleibsel). nixpacks erkennt das Projekt jetzt sauber als Next.js. API-Keys sind serverseitig (keine VITE_-Prefix-Keys mehr).
 
 ## Nächste Schritte
-1. **Deployment** — Coolify (Hetzner) → linguu.techstag.de (API-Keys sind bereits serverseitig ✅)
-2. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
-3. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
-4. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
+1. **Sprechen-Flow prominenter** — Whisper/Mikrofon ist der USP, aber UI-mäßig versteckt
+2. **Quiz: Muttersprachen-Audio** — nach falscher Antwort native Übersetzung vorlesen (`AudioControls` unterstützt das bereits)
+3. **Pitch-Kontext**: Bastian pitcht die App seiner eigenen Weiterbildungseinrichtung als kostenloses Angebot im Austausch gegen eine Anstellung — persönliche Story ist der stärkste Pitch-Moment
 
 ## Differenzierung
 Nicht Duolingo-Klon — fokussiert auf konkrete Behörden-/Alltagssituationen die Einwanderer tatsächlich brauchen. Spracherkennung via Whisper erlaubt echtes Sprechen üben.
