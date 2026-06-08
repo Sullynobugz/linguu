@@ -22,7 +22,7 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ background: 'linear-gradient(135deg, #0f1117 0%, #131620 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' }}
     >
       {/* Top row */}
       <div className="flex items-center justify-between pt-8 px-6 pb-2">
@@ -31,9 +31,9 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
             <button
               onClick={onBack}
               className="flex items-center gap-1.5 text-sm transition-all px-3 py-1.5 rounded-lg"
-              style={{ color: '#8b8fa8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+              style={{ color: '#64748b', background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#0f172a')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
             >
               {t('back', lang)}
             </button>
@@ -43,11 +43,11 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+            style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)' }}
           >
             🇩🇪
           </div>
-          <span className="text-2xl font-bold" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+          <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
             Linguu
           </span>
         </div>
@@ -57,7 +57,7 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
 
       {/* Progress indicator */}
       <div className="flex flex-col items-center mb-10">
-        <p className="text-xs font-semibold mb-4" style={{ color: 'rgba(245,158,11,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        <p className="text-xs font-semibold mb-4" style={{ color: 'rgba(79,70,229,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Schritt {step} von {total}
         </p>
         <div className="flex items-center gap-2">
@@ -68,17 +68,17 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
                   className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300"
                   style={
                     s < step
-                      ? { background: '#f59e0b', color: '#0f1117' }
+                      ? { background: '#4f46e5', color: '#f8fafc' }
                       : s === step
-                      ? { background: 'transparent', border: '2.5px solid #f59e0b', color: '#f59e0b', boxShadow: '0 0 16px rgba(245,158,11,0.45)' }
-                      : { background: 'transparent', border: '2px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.25)' }
+                      ? { background: 'transparent', border: '2.5px solid #4f46e5', color: '#4f46e5', boxShadow: '0 0 16px rgba(79,70,229,0.45)' }
+                      : { background: 'transparent', border: '2px solid rgba(0,0,0,0.08)', color: 'rgba(0,0,0,0.15)' }
                   }
                 >
                   {s < step ? '✓' : s}
                 </div>
                 <span
                   className="text-xs font-medium text-center max-w-16"
-                  style={{ color: s === step ? '#f0ede8' : s < step ? 'rgba(245,158,11,0.7)' : 'rgba(255,255,255,0.2)', lineHeight: 1.3 }}
+                  style={{ color: s === step ? '#0f172a' : s < step ? 'rgba(79,70,229,0.7)' : 'rgba(0,0,0,0.12)', lineHeight: 1.3 }}
                 >
                   {stepLabels[s - 1]}
                 </span>
@@ -86,7 +86,7 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
               {s < total && (
                 <div
                   className="w-10 h-0.5 rounded mb-5 transition-all duration-500"
-                  style={{ background: s < step ? '#f59e0b' : 'rgba(255,255,255,0.1)' }}
+                  style={{ background: s < step ? '#4f46e5' : 'rgba(0,0,0,0.07)' }}
                 />
               )}
             </React.Fragment>

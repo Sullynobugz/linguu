@@ -139,23 +139,23 @@ export function QuizScreen() {
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center px-6"
-        style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}
+        style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}
       >
         <div className="w-full max-w-lg text-center animate-fade-in-up">
           <div className="text-6xl mb-4">{isPerfect ? '🏆' : score >= 60 ? '🌟' : '💪'}</div>
           <h1
             className="text-3xl font-bold mb-2"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}
           >
             <BilingualText native={t('yourResult', lang)} de={t('yourResult', 'de')} lang={lang} />
           </h1>
 
           <div className="flex justify-center gap-8 mb-6 mt-6">
             <div className="text-center">
-              <div className="text-4xl font-bold" style={{ color: '#f59e0b' }}>
+              <div className="text-4xl font-bold" style={{ color: '#4f46e5' }}>
                 {correct}/{questions.length}
               </div>
-              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+              <div className="text-sm mt-1" style={{ color: '#64748b' }}>
                 <BilingualText native={t('correct', lang)} de={t('correct', 'de')} lang={lang} />
               </div>
             </div>
@@ -163,31 +163,31 @@ export function QuizScreen() {
               <div className="text-4xl font-bold" style={{ color: '#10b981' }}>
                 +{xpEarned}
               </div>
-              <div className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+              <div className="text-sm mt-1" style={{ color: '#64748b' }}>
                 <BilingualText native={t('xpEarned', lang)} de={t('xpEarned', 'de')} lang={lang} />
               </div>
             </div>
           </div>
 
-          <div className="w-full h-3 rounded-full mb-6" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="w-full h-3 rounded-full mb-6" style={{ background: 'rgba(0,0,0,0.06)' }}>
             <div
               className="h-full rounded-full transition-all duration-1000"
               style={{
                 width: `${score}%`,
-                background: score === 100 ? '#f59e0b' : score >= 60 ? '#10b981' : '#ef4444',
+                background: score === 100 ? '#4f46e5' : score >= 60 ? '#10b981' : '#ef4444',
               }}
             />
           </div>
 
           {/* AI encouragement in native language */}
           {loadingMsg ? (
-            <p className="text-sm mb-6" style={{ color: '#8b8fa8' }}>{t('loading', lang)}</p>
+            <p className="text-sm mb-6" style={{ color: '#64748b' }}>{t('loading', lang)}</p>
           ) : encouragement ? (
             <div
               className="p-4 rounded-xl mb-6 text-sm"
               style={{
-                background: 'rgba(245,158,11,0.08)',
-                border: '1px solid rgba(245,158,11,0.2)',
+                background: 'rgba(79,70,229,0.08)',
+                border: '1px solid rgba(79,70,229,0.2)',
                 color: '#d4cfc8',
                 lineHeight: 1.7,
                 direction: lang === 'ar' ? 'rtl' : 'ltr',
@@ -201,7 +201,7 @@ export function QuizScreen() {
             <button
               onClick={() => navigate('/')}
               className="flex-1 py-3.5 rounded-xl font-semibold text-sm transition-all"
-              style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)', color: '#f0ede8' }}
+              style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.06)', color: '#0f172a' }}
             >
               <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
             </button>
@@ -217,7 +217,7 @@ export function QuizScreen() {
                 navigate(nextTopic ? `/lesson/${nextTopic.id}` : '/');
               }}
               className="flex-1 py-3.5 rounded-xl font-semibold text-sm transition-all"
-              style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
+              style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#f8fafc' }}
               onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
               onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             >
@@ -231,34 +231,34 @@ export function QuizScreen() {
 
   // ---- QUESTION SCREEN ----
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}>
       {/* Header */}
       <div
         className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(15,17,23,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'rgba(248,250,252,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
       >
         <button
           onClick={() => navigate(`/lesson/${topicId}`)}
           className="text-sm transition-all flex flex-col items-start"
-          style={{ color: '#8b8fa8' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+          style={{ color: '#64748b' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#0f172a')}
+          onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
         >
           ← <BilingualText native={t('lesson', lang)} de={t('lesson', 'de')} lang={lang} />
         </button>
-        <span style={{ color: '#8b8fa8', fontSize: 14 }} className="flex flex-col items-center">
+        <span style={{ color: '#64748b', fontSize: 14 }} className="flex flex-col items-center">
           <span>{topic.icon} {nativeTitle}</span>
           {lang !== 'de' && (
             <span style={{ fontSize: 10, opacity: 0.4 }}>{t('quiz', 'de')}: {topic.titleDE}</span>
           )}
         </span>
-        <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
+        <span className="text-sm font-semibold" style={{ color: '#4f46e5' }}>
           {currentIdx + 1}/{questions.length}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      <div className="w-full h-1" style={{ background: 'rgba(0,0,0,0.05)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
@@ -273,35 +273,35 @@ export function QuizScreen() {
           {/* German phrase card */}
           <div
             className="rounded-2xl p-8 mb-6 text-center"
-            style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.06)' }}
           >
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#8b8fa8' }}>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#64748b' }}>
               {learnLangLabel}
             </p>
-            <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
               {question.learnPhrase}
             </h2>
             {/* Play button — hear the phrase */}
             <button
               onClick={() => speak(question.learnPhrase, 0.9, u => addOpenAiCost(u.costEur))}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all"
-              style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.2)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.12)')}
+              style={{ background: 'rgba(79,70,229,0.12)', border: '1px solid rgba(79,70,229,0.3)', color: '#4f46e5' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.2)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.12)')}
             >
               🔊 <BilingualText native={t('listen', lang)} de={t('listen', 'de')} lang={lang} />
             </button>
           </div>
 
-          <p className="text-sm text-center mb-4" style={{ color: '#8b8fa8' }}>
+          <p className="text-sm text-center mb-4" style={{ color: '#64748b' }}>
             <BilingualText native={t('whatDoesItMean', lang)} de={t('whatDoesItMean', 'de')} lang={lang} />
           </p>
 
           <div className="grid grid-cols-1 gap-3">
             {question.options.map((option, idx) => {
-              let bg = 'rgba(26,29,39,0.8)';
-              let border = 'rgba(255,255,255,0.08)';
-              let color = '#f0ede8';
+              let bg = 'rgba(255,255,255,0.9)';
+              let border = 'rgba(0,0,0,0.06)';
+              let color = '#0f172a';
               let icon = '';
 
               if (selected !== null) {
@@ -322,20 +322,20 @@ export function QuizScreen() {
                   dir={lang === 'ar' ? 'rtl' : 'ltr'}
                   onMouseEnter={e => {
                     if (selected === null) {
-                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.4)';
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.08)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.4)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(79,70,229,0.08)';
                     }
                   }}
                   onMouseLeave={e => {
                     if (selected === null) {
-                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.06)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.9)';
                     }
                   }}
                 >
                   <span
                     className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{ background: 'rgba(255,255,255,0.08)' }}
+                    style={{ background: 'rgba(0,0,0,0.06)' }}
                   >
                     {icon || String.fromCharCode(65 + idx)}
                   </span>

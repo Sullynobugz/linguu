@@ -140,7 +140,7 @@ export function Step2Path() {
       <div className="text-center mb-8">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+          style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
         >
           {t('choosePath', lang)}
         </h1>
@@ -150,8 +150,8 @@ export function Step2Path() {
         {paths.map(path => {
           const selected = progress.path === path.id;
           const isEinbuergerung = path.id === 'einbuergerung';
-          const accent = isEinbuergerung ? '#6366f1' : '#f59e0b';
-          const accentAlpha = isEinbuergerung ? 'rgba(99,102,241,0.35)' : 'rgba(245,158,11,0.35)';
+          const accent = isEinbuergerung ? '#6366f1' : '#4f46e5';
+          const accentAlpha = isEinbuergerung ? 'rgba(99,102,241,0.35)' : 'rgba(79,70,229,0.35)';
           return (
             <button
               key={path.id}
@@ -159,13 +159,13 @@ export function Step2Path() {
               className="onboarding-row flex items-center gap-5 p-5 rounded-2xl text-left"
               style={{
                 background: selected
-                  ? isEinbuergerung ? 'rgba(99,102,241,0.15)' : 'rgba(245,158,11,0.12)'
-                  : 'rgba(26,29,39,0.8)',
+                  ? isEinbuergerung ? 'rgba(99,102,241,0.15)' : 'rgba(79,70,229,0.12)'
+                  : 'rgba(255,255,255,0.9)',
                 border: selected
                   ? `2px solid ${accent}`
                   : isEinbuergerung
                   ? '2px solid rgba(99,102,241,0.25)'
-                  : '2px solid rgba(255,255,255,0.08)',
+                  : '2px solid rgba(0,0,0,0.06)',
                 cursor: 'pointer',
               }}
               onMouseEnter={e => {
@@ -176,27 +176,27 @@ export function Step2Path() {
               }}
               onMouseLeave={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = isEinbuergerung ? 'rgba(99,102,241,0.25)' : 'rgba(255,255,255,0.08)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+                  (e.currentTarget as HTMLElement).style.borderColor = isEinbuergerung ? 'rgba(99,102,241,0.25)' : 'rgba(0,0,0,0.06)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.9)';
                 }
               }}
             >
               {/* Icon */}
               <div
                 className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
-                style={{ background: selected ? `${accent}20` : 'rgba(255,255,255,0.05)' }}
+                style={{ background: selected ? `${accent}20` : 'rgba(0,0,0,0.04)' }}
               >
                 {path.icon}
               </div>
 
               <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                <div className="text-xl font-bold" style={{ color: '#f0ede8' }}>
+                <div className="text-xl font-bold" style={{ color: '#0f172a' }}>
                   {path.titles[lang]}
                 </div>
                 <div className="text-sm mt-0.5" style={{ color: accent, opacity: 0.85 }}>
                   {path.titleDE}
                 </div>
-                <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                   {path.subtitles[lang]}
                 </p>
                 {isEinbuergerung && (

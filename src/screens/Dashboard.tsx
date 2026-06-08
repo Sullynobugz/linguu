@@ -14,7 +14,7 @@ const levelColors: Record<Level, string> = {
   A1: '#10b981',
   A2: '#3b82f6',
   B1: '#8b5cf6',
-  B2: '#f59e0b',
+  B2: '#4f46e5',
 };
 
 const levelBadgeLabels: Record<Level, string> = {
@@ -97,24 +97,24 @@ export function Dashboard() {
   const totalMins = Math.floor(progress.totalTimeMinutes % 60);
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}>
       {/* Top Bar */}
       <div
         className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(15,17,23,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'rgba(248,250,252,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
       >
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
-            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+            style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)' }}
           >
             🇩🇪
           </div>
           <div>
-            <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700, fontSize: 20 }}>
+            <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontWeight: 700, fontSize: 20 }}>
               Linguu
             </span>
-            <p className="text-[10px] leading-none" style={{ color: '#8b8fa8' }}>
+            <p className="text-[10px] leading-none" style={{ color: '#64748b' }}>
               WID · Linguu · JobMate
             </p>
           </div>
@@ -123,11 +123,11 @@ export function Dashboard() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span>🔥</span>
-            <span className="font-semibold text-sm" style={{ color: '#f0ede8' }}>{progress.streak}</span>
+            <span className="font-semibold text-sm" style={{ color: '#0f172a' }}>{progress.streak}</span>
           </div>
           <div
             className="px-3 py-1 rounded-full text-sm font-semibold"
-            style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}
+            style={{ background: 'rgba(79,70,229,0.15)', color: '#4f46e5', border: '1px solid rgba(79,70,229,0.3)' }}
           >
             ⚡ {progress.xp} XP
           </div>
@@ -173,9 +173,9 @@ export function Dashboard() {
         ) : showWidInput ? (
           <div
             className="rounded-xl px-4 py-3 mb-5 animate-fade-in-up"
-            style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.09)' }}
+            style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.06)' }}
           >
-            <p className="text-xs mb-2" style={{ color: '#8b8fa8' }}>
+            <p className="text-xs mb-2" style={{ color: '#64748b' }}>
               WID-Code eingeben, um Lernfortschritt an deinen Koordinator zu melden
             </p>
             <div className="flex gap-2">
@@ -193,7 +193,7 @@ export function Dashboard() {
                 placeholder="z. B. AB12CD"
                 maxLength={12}
                 className="flex-1 px-3 py-1.5 rounded-lg text-sm bg-transparent outline-none"
-                style={{ border: '1px solid rgba(255,255,255,0.12)', color: '#f0ede8' }}
+                style={{ border: '1px solid rgba(0,0,0,0.08)', color: '#0f172a' }}
                 autoFocus
               />
               <button
@@ -205,14 +205,14 @@ export function Dashboard() {
                   setWidInput('');
                 }}
                 className="px-3 py-1.5 rounded-lg text-sm font-semibold transition-all"
-                style={{ background: widInput.length >= 4 ? '#f59e0b' : 'rgba(255,255,255,0.08)', color: widInput.length >= 4 ? '#0f1117' : '#8b8fa8' }}
+                style={{ background: widInput.length >= 4 ? '#4f46e5' : 'rgba(0,0,0,0.06)', color: widInput.length >= 4 ? '#f8fafc' : '#64748b' }}
               >
                 OK
               </button>
               <button
                 onClick={() => { setShowWidInput(false); setWidInput(''); }}
                 className="px-2 py-1.5 rounded-lg text-sm"
-                style={{ color: '#8b8fa8' }}
+                style={{ color: '#64748b' }}
               >
                 ✕
               </button>
@@ -222,9 +222,9 @@ export function Dashboard() {
           <button
             onClick={() => setShowWidInput(true)}
             className="flex items-center gap-1.5 mb-4 text-xs transition-all"
-            style={{ color: 'rgba(139,143,168,0.4)' }}
+            style={{ color: 'rgba(100,116,139,0.4)' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(139,143,168,0.8)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(139,143,168,0.4)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(100,116,139,0.4)')}
           >
             <span>🔗</span>
             <span>WID-Code verknüpfen</span>
@@ -234,18 +234,18 @@ export function Dashboard() {
         {/* Progress Card */}
         <div
           className="rounded-2xl p-6 mb-8 animate-fade-in-up"
-          style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.07)' }}
+          style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.05)' }}
         >
           <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div>
-              <h2 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 22, fontWeight: 700, margin: 0 }}>
+              <h2 style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 22, fontWeight: 700, margin: 0 }}>
                 <BilingualText native={t('yourProgress', lang)} de={t('yourProgress', 'de')} lang={lang} />
               </h2>
-              <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+              <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                 {xpInLevel} / {xpNeeded} XP · {t('xpUntilLevel', lang)} {nextLevel ?? progress.level}
               </p>
             </div>
-            <div className="flex gap-3 text-sm" style={{ color: '#8b8fa8' }}>
+            <div className="flex gap-3 text-sm" style={{ color: '#64748b' }}>
               <span>📅 {progress.activeDays} {t('days', lang)}</span>
               <span>·</span>
               <span>⏱ {totalHours}h {totalMins}m</span>
@@ -264,14 +264,14 @@ export function Dashboard() {
                         ? { background: levelColors[lvl], color: '#fff', boxShadow: `0 0 16px ${levelColors[lvl]}60` }
                         : progress.xp >= getXpForLevel(lvl).min
                         ? { background: `${levelColors[lvl]}30`, color: levelColors[lvl], border: `2px solid ${levelColors[lvl]}` }
-                        : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.3)', border: '2px solid rgba(255,255,255,0.1)' }
+                        : { background: 'rgba(0,0,0,0.04)', color: 'rgba(0,0,0,0.2)', border: '2px solid rgba(0,0,0,0.07)' }
                     }
                   >
                     {lvl}
                   </div>
                 </div>
                 {idx < 3 && (
-                  <div className="flex-1 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <div className="flex-1 h-1 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
                     {progress.level === lvl && (
                       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, background: levelColors[lvl] }} />
                     )}
@@ -285,7 +285,7 @@ export function Dashboard() {
           </div>
 
           <ProgressBar value={progressPct} animated />
-          <p className="text-xs mt-2 text-right" style={{ color: '#8b8fa8' }}>
+          <p className="text-xs mt-2 text-right" style={{ color: '#64748b' }}>
             {Math.round(progressPct)}% {t('completed', lang)}
           </p>
         </div>
@@ -301,32 +301,32 @@ export function Dashboard() {
             <div
               className="action-card rounded-2xl p-5 mb-6 cursor-pointer animate-fade-in-up"
               style={{
-                background: 'linear-gradient(135deg, rgba(245,158,11,0.14), rgba(245,158,11,0.06))',
-                border: '1.5px solid rgba(245,158,11,0.35)',
+                background: 'linear-gradient(135deg, rgba(79,70,229,0.14), rgba(79,70,229,0.06))',
+                border: '1.5px solid rgba(79,70,229,0.35)',
               }}
               onClick={() => navigate(`/lesson/${suggested.id}`)}
             >
-              <p className="text-xs font-bold mb-3 flex items-center gap-1.5" style={{ color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <p className="text-xs font-bold mb-3 flex items-center gap-1.5" style={{ color: '#4f46e5', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 ⭐ <BilingualText native={t('todayRecommended', lang)} de={t('todayRecommended', 'de')} lang={lang} />
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shrink-0" style={{ background: 'rgba(245,158,11,0.12)' }}>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shrink-0" style={{ background: 'rgba(79,70,229,0.12)' }}>
                   {suggested.icon}
                 </div>
                 <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                  <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 20, fontWeight: 700, margin: 0 }}>
+                  <h3 style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 20, fontWeight: 700, margin: 0 }}>
                     {(topicTitles[lang] ?? topicTitles['en'])![suggested.id] ?? suggested.titleDE}
                   </h3>
-                  <p className="text-xs mt-0.5 mb-1" style={{ color: '#f59e0b', opacity: 0.7 }}>
+                  <p className="text-xs mt-0.5 mb-1" style={{ color: '#4f46e5', opacity: 0.7 }}>
                     {suggested.titleDE}
                   </p>
-                  <p className="text-sm" style={{ color: '#8b8fa8' }}>
+                  <p className="text-sm" style={{ color: '#64748b' }}>
                     {(topicSubtitles[lang] ?? topicSubtitles['en'])![suggested.id] ?? suggested.subtitleDE}
                   </p>
                 </div>
                 <div
                   className="flex flex-col items-center gap-1 px-5 py-3 rounded-xl font-bold text-sm shrink-0"
-                  style={{ background: '#f59e0b', color: '#0f1117', minWidth: 80 }}
+                  style={{ background: '#4f46e5', color: '#f8fafc', minWidth: 80 }}
                 >
                   <BilingualText native={t('start', lang)} de={t('start', 'de')} lang={lang} />
                   <span className="action-arrow text-base">→</span>
@@ -358,13 +358,13 @@ export function Dashboard() {
                   🃏
                 </div>
                 <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                  <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 18, fontWeight: 700, margin: 0 }}>
+                  <h3 style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 18, fontWeight: 700, margin: 0 }}>
                     {t('vocabTitle', lang)}
                   </h3>
-                  <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                  <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                     {masteredCount} / {total} {t('masteredCount', lang)}
                   </p>
-                  <div className="mt-2 h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <div className="mt-2 h-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
                     <div className="h-full rounded-full transition-all duration-700" style={{ width: `${total > 0 ? (masteredCount / total) * 100 : 0}%`, background: '#6366f1' }} />
                   </div>
                 </div>
@@ -398,10 +398,10 @@ export function Dashboard() {
                 🪪
               </div>
               <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                <h3 style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 18, fontWeight: 700, margin: 0 }}>
+                <h3 style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 18, fontWeight: 700, margin: 0 }}>
                   <BilingualText native={t('b1Goal', lang)} de={t('b1Goal', 'de')} lang={lang} />
                 </h3>
-                <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                   {t('einbuergerungWidgetSub', lang)}
                 </p>
               </div>
@@ -419,7 +419,7 @@ export function Dashboard() {
         {/* Topic Cards */}
         <div className="flex items-center gap-3 mb-5">
           <span className="text-2xl">📚</span>
-          <h2 className="text-xl font-bold" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+          <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
             <BilingualText native={t('yourTopics', lang)} de={t('yourTopics', 'de')} lang={lang} />
           </h2>
         </div>
@@ -436,21 +436,21 @@ export function Dashboard() {
                 key={topic.id}
                 className={`topic-card rounded-2xl p-5 animate-fade-in-up${unlocked ? ' unlocked' : ''}`}
                 style={{
-                  background: unlocked ? 'rgba(26,29,39,0.9)' : 'rgba(20,23,32,0.6)',
+                  background: unlocked ? 'rgba(255,255,255,0.97)' : 'rgba(20,23,32,0.6)',
                   border: completed
-                    ? '1.5px solid rgba(245,158,11,0.4)'
+                    ? '1.5px solid rgba(79,70,229,0.4)'
                     : unlocked
-                    ? '1.5px solid rgba(255,255,255,0.08)'
-                    : '1px solid rgba(255,255,255,0.04)',
+                    ? '1.5px solid rgba(0,0,0,0.06)'
+                    : '1px solid rgba(0,0,0,0.03)',
                   opacity: unlocked ? 1 : 0.55,
                   animationDelay: `${idx * 60}ms`,
                 }}
                 onClick={() => unlocked && navigate(`/lesson/${topic.id}`)}
                 onMouseEnter={e => {
-                  if (unlocked) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.4)';
+                  if (unlocked) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.4)';
                 }}
                 onMouseLeave={e => {
-                  if (unlocked) (e.currentTarget as HTMLElement).style.borderColor = completed ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.08)';
+                  if (unlocked) (e.currentTarget as HTMLElement).style.borderColor = completed ? 'rgba(79,70,229,0.4)' : 'rgba(0,0,0,0.06)';
                 }}
               >
                 {/* Header row: icon + status */}
@@ -459,26 +459,26 @@ export function Dashboard() {
                     className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0"
                     style={{
                       background: completed
-                        ? 'rgba(245,158,11,0.15)'
+                        ? 'rgba(79,70,229,0.15)'
                         : unlocked
-                        ? 'rgba(255,255,255,0.06)'
-                        : 'rgba(255,255,255,0.03)',
+                        ? 'rgba(0,0,0,0.05)'
+                        : 'rgba(0,0,0,0.03)',
                     }}
                   >
                     {!unlocked ? '🔒' : topic.icon}
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {completed ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full font-bold" style={{ background: 'rgba(245,158,11,0.18)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.35)' }}>
+                      <span className="text-xs px-2.5 py-1 rounded-full font-bold" style={{ background: 'rgba(79,70,229,0.18)', color: '#4f46e5', border: '1px solid rgba(79,70,229,0.35)' }}>
                         ✓ <BilingualText native={t('done', lang)} de={t('done', 'de')} lang={lang} />
                       </span>
                     ) : seenCount > 0 && unlocked ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: 'rgba(245,158,11,0.09)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.2)' }}>
+                      <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: 'rgba(79,70,229,0.09)', color: '#4f46e5', border: '1px solid rgba(79,70,229,0.2)' }}>
                         {seenCount}/{topic.phrases.length}
                       </span>
                     ) : null}
                     {quizScore !== undefined && (
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: '#8b8fa8' }}>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.05)', color: '#64748b' }}>
                         Quiz {quizScore}%
                       </span>
                     )}
@@ -488,16 +488,16 @@ export function Dashboard() {
                 {/* Title */}
                 <h3
                   className="font-bold mb-0.5"
-                  style={{ fontFamily: 'Fraunces, serif', color: unlocked ? '#f0ede8' : 'rgba(240,237,232,0.35)', fontSize: 17, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+                  style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: unlocked ? '#0f172a' : 'rgba(240,237,232,0.35)', fontSize: 17, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
                 >
                   {unlocked ? ((topicTitles[lang] ?? topicTitles['en'])![topic.id] ?? topic.titleDE) : topic.titleDE}
                 </h3>
                 {unlocked && (
-                  <p className="text-xs mb-1" style={{ color: '#f59e0b', opacity: 0.65 }}>
+                  <p className="text-xs mb-1" style={{ color: '#4f46e5', opacity: 0.65 }}>
                     {topic.titleDE}
                   </p>
                 )}
-                <p className="text-xs mb-4" style={{ color: unlocked ? '#8b8fa8' : 'rgba(139,143,168,0.35)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+                <p className="text-xs mb-4" style={{ color: unlocked ? '#64748b' : 'rgba(139,143,168,0.35)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
                   {unlocked
                     ? ((topicSubtitles[lang] ?? topicSubtitles['en'])![topic.id] ?? topic.subtitleDE)
                     : `${t('unlockedFrom', lang)} ${topic.requiredLevel}`}
@@ -513,9 +513,9 @@ export function Dashboard() {
                     <div
                       className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold"
                       style={{
-                        background: completed ? 'rgba(245,158,11,0.12)' : 'rgba(245,158,11,0.18)',
-                        color: '#f59e0b',
-                        border: '1px solid rgba(245,158,11,0.3)',
+                        background: completed ? 'rgba(79,70,229,0.12)' : 'rgba(79,70,229,0.18)',
+                        color: '#4f46e5',
+                        border: '1px solid rgba(79,70,229,0.3)',
                       }}
                     >
                       {completed ? '🔄' : '▶'}
@@ -537,7 +537,7 @@ export function Dashboard() {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-5">
             <span className="text-2xl">🏅</span>
-            <h2 className="text-xl font-bold" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
               <BilingualText native={t('badges', lang)} de={t('badges', 'de')} lang={lang} />
             </h2>
           </div>
@@ -549,8 +549,8 @@ export function Dashboard() {
                   key={badge.id}
                   className="rounded-xl p-4 text-center transition-all duration-200"
                   style={{
-                    background: earned ? 'rgba(245,158,11,0.1)' : 'rgba(26,29,39,0.5)',
-                    border: earned ? '1px solid rgba(245,158,11,0.35)' : '1px solid rgba(255,255,255,0.06)',
+                    background: earned ? 'rgba(79,70,229,0.1)' : 'rgba(248,250,252,0.8)',
+                    border: earned ? '1px solid rgba(79,70,229,0.35)' : '1px solid rgba(0,0,0,0.05)',
                     opacity: earned ? 1 : 0.5,
                   }}
                   title={badge.description[lang]}
@@ -558,11 +558,11 @@ export function Dashboard() {
                   <div className="text-3xl mb-2" style={{ filter: earned ? 'none' : 'grayscale(1)' }}>
                     {badge.icon}
                   </div>
-                  <p className="text-xs font-semibold" style={{ color: earned ? '#f59e0b' : '#8b8fa8' }}>
+                  <p className="text-xs font-semibold" style={{ color: earned ? '#4f46e5' : '#64748b' }}>
                     {badge.name[lang] ?? badge.name['en']}
                   </p>
                   {earned && (
-                    <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+                    <p className="text-xs mt-1" style={{ color: 'rgba(100,116,139,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
                       {badge.description[lang]}
                     </p>
                   )}
@@ -571,8 +571,8 @@ export function Dashboard() {
             })}
           </div>
           {nextBadge && (
-            <p className="text-xs mt-3 text-center" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-              {t('nextBadge', lang)} {nextBadge.icon} <strong style={{ color: '#f0ede8' }}>{nextBadge.name[lang] ?? nextBadge.name['en']}</strong> — {nextBadge.description[lang]}
+            <p className="text-xs mt-3 text-center" style={{ color: '#64748b', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+              {t('nextBadge', lang)} {nextBadge.icon} <strong style={{ color: '#0f172a' }}>{nextBadge.name[lang] ?? nextBadge.name['en']}</strong> — {nextBadge.description[lang]}
             </p>
           )}
         </div>
@@ -582,9 +582,9 @@ export function Dashboard() {
           <button
             onClick={() => navigate('/report')}
             className="inline-flex items-center gap-2 text-sm transition-all duration-200 px-5 py-2.5 rounded-xl font-medium"
-            style={{ color: '#8b8fa8', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f59e0b'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.3)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#8b8fa8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            style={{ color: '#64748b', border: '1px solid rgba(0,0,0,0.07)', background: 'rgba(0,0,0,0.03)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#4f46e5'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.3)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.07)'; }}
           >
             📊 <BilingualText native={t('reportLink', lang)} de={t('reportLink', 'de')} lang={lang} />
           </button>

@@ -63,7 +63,7 @@ const labels = {
   },
 };
 
-const statusColor = { perfect: '#10b981', good: '#f59e0b', try_again: '#ef4444' };
+const statusColor = { perfect: '#10b981', good: '#4f46e5', try_again: '#ef4444' };
 
 interface AudioControlsProps {
   germanPhrase: string;
@@ -132,9 +132,9 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
         disabled={ttsLoading && activeVoice === null}
         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all"
         style={{
-          background: speaking && activeVoice === 'de' ? 'rgba(245,158,11,0.2)' : 'rgba(245,158,11,0.12)',
-          border: '1px solid rgba(245,158,11,0.3)',
-          color: '#f59e0b',
+          background: speaking && activeVoice === 'de' ? 'rgba(79,70,229,0.2)' : 'rgba(79,70,229,0.12)',
+          border: '1px solid rgba(79,70,229,0.3)',
+          color: '#4f46e5',
           opacity: ttsLoading && activeVoice === null ? 0.7 : 1,
         }}
       >
@@ -158,9 +158,9 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
           disabled={ttsLoading && !deActive}
           className="flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200"
           style={{
-            background: deActive ? 'rgba(245,158,11,0.25)' : 'rgba(245,158,11,0.1)',
-            border: `2px solid ${deActive ? '#f59e0b' : 'rgba(245,158,11,0.35)'}`,
-            color: '#f59e0b',
+            background: deActive ? 'rgba(79,70,229,0.25)' : 'rgba(79,70,229,0.1)',
+            border: `2px solid ${deActive ? '#4f46e5' : 'rgba(79,70,229,0.35)'}`,
+            color: '#4f46e5',
             opacity: ttsLoading && !deActive ? 0.5 : 1,
           }}
         >
@@ -205,9 +205,9 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
           disabled={ttsLoading && !deActive}
           className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl font-medium text-sm transition-all"
           style={{
-            background: 'rgba(245,158,11,0.06)',
-            border: '1px solid rgba(245,158,11,0.2)',
-            color: 'rgba(245,158,11,0.75)',
+            background: 'rgba(79,70,229,0.06)',
+            border: '1px solid rgba(79,70,229,0.2)',
+            color: 'rgba(79,70,229,0.75)',
             opacity: ttsLoading && !deActive ? 0.5 : 1,
           }}
           title={labels.slow[lang] ?? labels.slow['en']}
@@ -222,9 +222,9 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
           disabled={processing}
           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-sm transition-all duration-200"
           style={{
-            background: listening ? 'rgba(239,68,68,0.15)' : processing ? 'rgba(139,143,168,0.1)' : 'rgba(255,255,255,0.06)',
-            border: `1.5px solid ${listening ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
-            color: listening ? '#ef4444' : processing ? '#8b8fa8' : '#8b8fa8',
+            background: listening ? 'rgba(239,68,68,0.15)' : processing ? 'rgba(139,143,168,0.1)' : 'rgba(0,0,0,0.05)',
+            border: `1.5px solid ${listening ? '#ef4444' : 'rgba(0,0,0,0.07)'}`,
+            color: listening ? '#ef4444' : processing ? '#64748b' : '#64748b',
           }}
         >
           {listening ? (
@@ -264,7 +264,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
               „{result.transcript}"
             </p>
           )}
-          <div className="mt-2 h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="mt-2 h-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
             <div
               className="h-full rounded-full transition-all duration-700"
               style={{ width: `${result.score}%`, background: statusColor[result.status] }}

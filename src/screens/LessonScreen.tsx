@@ -166,22 +166,22 @@ export function LessonScreen() {
   const nativeTopicTitle = (topicTitlesNative[lang] ?? topicTitlesNative['en'])![topicId ?? ''] ?? topic.titleDE;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}>
       {/* Header */}
       <div
         className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(15,17,23,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'rgba(248,250,252,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
       >
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1.5 rounded-lg"
-          style={{ color: '#8b8fa8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f0ede8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#8b8fa8'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)'; }}
+          style={{ color: '#64748b', background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#0f172a'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.12)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.06)'; }}
         >
           ← <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
-        <div className="flex items-center gap-2 text-sm" style={{ color: '#8b8fa8' }}>
+        <div className="flex items-center gap-2 text-sm" style={{ color: '#64748b' }}>
           <span>{topic.icon}</span>
           <span>{nativeTopicTitle}</span>
         </div>
@@ -190,9 +190,9 @@ export function LessonScreen() {
           onClick={() => setAutoPlay(v => !v)}
           className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-all"
           style={{
-            background: autoPlay ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.06)',
-            border: autoPlay ? '1px solid rgba(245,158,11,0.4)' : '1px solid rgba(255,255,255,0.1)',
-            color: autoPlay ? '#f59e0b' : '#8b8fa8',
+            background: autoPlay ? 'rgba(79,70,229,0.15)' : 'rgba(0,0,0,0.05)',
+            border: autoPlay ? '1px solid rgba(79,70,229,0.4)' : '1px solid rgba(0,0,0,0.07)',
+            color: autoPlay ? '#4f46e5' : '#64748b',
           }}
           title="Auto-play German phrase"
         >
@@ -202,12 +202,12 @@ export function LessonScreen() {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      <div className="w-full h-1" style={{ background: 'rgba(0,0,0,0.05)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
             width: `${((currentIdx + 1) / totalPhrases) * 100}%`,
-            background: 'linear-gradient(90deg, #f59e0b, #fcd34d)',
+            background: 'linear-gradient(90deg, #4f46e5, #a5b4fc)',
           }}
         />
       </div>
@@ -223,23 +223,23 @@ export function LessonScreen() {
               width: i === currentIdx ? 24 : 8,
               height: 8,
               background: i < currentIdx || progress.seenPhrases.includes(topic.phrases[i].id)
-                ? '#f59e0b' : i === currentIdx ? '#f59e0b' : 'rgba(255,255,255,0.15)',
+                ? '#4f46e5' : i === currentIdx ? '#4f46e5' : 'rgba(0,0,0,0.1)',
             }}
           />
         ))}
       </div>
       <div className="flex items-center justify-center gap-3 mt-2.5">
-        <p className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
+        <p className="text-sm font-semibold" style={{ color: '#4f46e5' }}>
           {currentIdx + 1} / {totalPhrases}
         </p>
-        <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
-        <p className="text-xs" style={{ color: '#8b8fa8' }}>
+        <span style={{ color: 'rgba(0,0,0,0.12)' }}>·</span>
+        <p className="text-xs" style={{ color: '#64748b' }}>
           {seenCount} {t('seen', lang)}
         </p>
         {isLast && (
           <>
-            <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
-            <p className="text-xs font-semibold" style={{ color: '#f59e0b', opacity: 0.8 }}>
+            <span style={{ color: 'rgba(0,0,0,0.12)' }}>·</span>
+            <p className="text-xs font-semibold" style={{ color: '#4f46e5', opacity: 0.8 }}>
               🎯 {lang === 'de' ? 'Dann: Quiz' : 'Next: Quiz →'}
             </p>
           </>
@@ -262,9 +262,9 @@ export function LessonScreen() {
                 width: 56,
                 borderRadius: '20px 0 0 20px',
                 background: 'rgba(26,29,39,0.92)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                border: '1px solid rgba(0,0,0,0.07)',
                 borderRight: 'none',
-                color: isFirst ? 'rgba(240,237,232,0.1)' : '#f0ede8',
+                color: isFirst ? 'rgba(240,237,232,0.1)' : '#0f172a',
                 backdropFilter: 'blur(12px)',
                 cursor: isFirst ? 'default' : 'pointer',
                 boxShadow: isFirst ? 'none' : '4px 0 16px rgba(0,0,0,0.3)',
@@ -284,22 +284,22 @@ export function LessonScreen() {
             {/* Lernphrase — large, central */}
             <div
               className="flex-1 rounded-3xl p-8 text-center animate-fade-in-up"
-              style={{ background: 'rgba(26,29,39,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.06)' }}
             >
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.6 }}>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#64748b', opacity: 0.6 }}>
                 {learnLangLabel}
               </p>
 
               <h1
                 className="mb-3 leading-tight"
-                style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(24px, 5vw, 40px)', fontWeight: 700 }}
+                style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 'clamp(24px, 5vw, 40px)', fontWeight: 700 }}
               >
                 {getLearnPhrase(phrase)}
               </h1>
 
               {targetLang === 'de' && (
                 <>
-                  <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.6 }}>
+                  <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#4f46e5', opacity: 0.6 }}>
                     {phoneticsLabel[lang] ?? 'Aussprache'}
                   </p>
                   <p className="text-base font-mono mb-5" style={{ color: 'rgba(240,237,232,0.45)' }}>
@@ -324,12 +324,12 @@ export function LessonScreen() {
               style={{
                 width: 56,
                 borderRadius: '0 20px 20px 0',
-                background: isLast ? 'rgba(245,158,11,0.18)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
-                border: isLast ? '1px solid rgba(245,158,11,0.5)' : 'none',
+                background: isLast ? 'rgba(79,70,229,0.18)' : 'linear-gradient(135deg, #4f46e5, #4338ca)',
+                border: isLast ? '1px solid rgba(79,70,229,0.5)' : 'none',
                 borderLeft: 'none',
-                color: isLast ? '#f59e0b' : '#0f1117',
+                color: isLast ? '#4f46e5' : '#f8fafc',
                 backdropFilter: 'blur(12px)',
-                boxShadow: isLast ? '4px 0 16px rgba(245,158,11,0.15)' : '-4px 0 16px rgba(245,158,11,0.25)',
+                boxShadow: isLast ? '4px 0 16px rgba(79,70,229,0.15)' : '-4px 0 16px rgba(79,70,229,0.25)',
                 cursor: 'pointer',
               }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
@@ -358,14 +358,14 @@ export function LessonScreen() {
             {/* Übersetzung in Muttersprache */}
             <div
               className="rounded-2xl p-5 mb-4 flex items-center gap-4"
-              style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}
+              style={{ background: 'rgba(79,70,229,0.08)', border: '1px solid rgba(79,70,229,0.2)' }}
             >
               <span className="text-2xl">💬</span>
               <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className="flex-1">
-                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', opacity: 0.7 }}>
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#4f46e5', opacity: 0.7 }}>
                   {translationLabel[lang] ?? langNames[lang]?.[lang] ?? 'Übersetzung'}
                 </p>
-                <p className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
+                <p className="text-xl font-semibold" style={{ color: '#0f172a' }}>
                   {getNativeTranslation(phrase)}
                 </p>
               </div>
@@ -374,24 +374,24 @@ export function LessonScreen() {
             {/* Beispielsatz */}
             <div
               className="rounded-2xl p-5 mb-4"
-              style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
+              style={{ background: 'rgba(248,250,252,0.8)', border: '1px solid rgba(0,0,0,0.05)' }}
             >
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#8b8fa8', opacity: 0.7 }}>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#64748b', opacity: 0.7 }}>
                 <BilingualText native={t('example', lang)} de={t('example', 'de')} lang={lang} />
               </p>
               <div className="flex items-start gap-3">
                 <div className="flex-1">
-                  <p className="text-base font-semibold mb-1.5" style={{ color: '#f0ede8' }}>
+                  <p className="text-base font-semibold mb-1.5" style={{ color: '#0f172a' }}>
                     {targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE)}
                   </p>
-                  <p className="text-sm" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+                  <p className="text-sm" style={{ color: '#64748b', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
                     {lang === 'de' ? phrase.exampleDE : getT(phrase.exampleTranslations, lang)}
                   </p>
                 </div>
                 <button
                   onClick={() => speak(targetLang === 'de' ? phrase.exampleDE : (getT(phrase.exampleTranslations, targetLang) || phrase.exampleDE), 0.8, u => addOpenAiCost(u.costEur))}
                   className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                  style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b' }}
+                  style={{ background: 'rgba(79,70,229,0.1)', border: '1px solid rgba(79,70,229,0.25)', color: '#4f46e5' }}
                 >
                   ▶
                 </button>
@@ -404,9 +404,9 @@ export function LessonScreen() {
                 onClick={handleExplain}
                 className="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2"
                 style={{
-                  background: showExplanation ? 'rgba(245,158,11,0.12)' : 'rgba(26,29,39,0.6)',
-                  border: showExplanation ? '1px solid rgba(245,158,11,0.4)' : '1px solid rgba(255,255,255,0.08)',
-                  color: showExplanation ? '#f59e0b' : '#8b8fa8',
+                  background: showExplanation ? 'rgba(79,70,229,0.12)' : 'rgba(26,29,39,0.6)',
+                  border: showExplanation ? '1px solid rgba(79,70,229,0.4)' : '1px solid rgba(0,0,0,0.06)',
+                  color: showExplanation ? '#4f46e5' : '#64748b',
                 }}
               >
                 <BilingualText native={t('explain', lang)} de={t('explain', 'de')} lang={lang} />
@@ -417,8 +417,8 @@ export function LessonScreen() {
                 <div
                   className="mt-3 p-4 rounded-xl text-sm animate-fade-in-up"
                   style={{
-                    background: 'rgba(245,158,11,0.07)',
-                    border: '1px solid rgba(245,158,11,0.2)',
+                    background: 'rgba(79,70,229,0.07)',
+                    border: '1px solid rgba(79,70,229,0.2)',
                     color: '#d4cfc8',
                     lineHeight: 1.7,
                     direction: lang === 'ar' ? 'rtl' : 'ltr',

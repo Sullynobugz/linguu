@@ -100,7 +100,7 @@ const typeLabel: Record<Word['type'], string> = {
 const typeColor: Record<Word['type'], string> = {
   nomen: '#818cf8',
   verb: '#10b981',
-  adjektiv: '#f59e0b',
+  adjektiv: '#4f46e5',
   ausdruck: '#f472b6',
 };
 
@@ -218,29 +218,29 @@ export function VocabScreen() {
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
-        style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}
+        style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}
       >
         <div className="text-6xl mb-6">🎉</div>
         <h1
           className="text-2xl font-bold mb-3"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
+          style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}
         >
           <BilingualText native={t('allMastered', lang)} de={t('allMastered', 'de')} lang={lang} />
         </h1>
-        <p className="text-sm mb-8" style={{ color: '#8b8fa8' }}>
+        <p className="text-sm mb-8" style={{ color: '#64748b' }}>
           {masteredCount} / {total} {t('masteredCount', lang)}
         </p>
         <button
           onClick={() => { if (mode === 'phrases') setPhraseIdx(0); else setWordIdx(0); }}
           className="px-8 py-3.5 rounded-xl font-semibold text-sm mb-3"
-          style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', color: '#f59e0b' }}
+          style={{ background: 'rgba(79,70,229,0.15)', border: '1px solid rgba(79,70,229,0.4)', color: '#4f46e5' }}
         >
           ↩ <BilingualText native={t('again', lang)} de={t('again', 'de')} lang={lang} />
         </button>
         <button
           onClick={() => navigate('/')}
           className="px-8 py-3.5 rounded-xl font-semibold text-sm"
-          style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
+          style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#f8fafc' }}
         >
           <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
@@ -255,25 +255,25 @@ export function VocabScreen() {
   const topicIcon = mode === 'phrases' ? (card as VocabCard).topicIcon : '📖';
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}>
       {/* Header */}
       <div
         className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(15,17,23,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'rgba(248,250,252,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
       >
         <button
           onClick={() => navigate('/')}
           className="text-sm transition-all"
-          style={{ color: '#8b8fa8' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+          style={{ color: '#64748b' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#0f172a')}
+          onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
         >
           ← <BilingualText native={t('overview', lang)} de={t('overview', 'de')} lang={lang} />
         </button>
-        <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700 }}>
+        <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontWeight: 700 }}>
           🃏 <BilingualText native={t('vocabTitle', lang)} de={t('vocabTitle', 'de')} lang={lang} />
         </span>
-        <span className="text-sm font-semibold" style={{ color: '#f59e0b' }}>
+        <span className="text-sm font-semibold" style={{ color: '#4f46e5' }}>
           {idx + 1} / {total}
         </span>
       </div>
@@ -286,9 +286,9 @@ export function VocabScreen() {
             onClick={() => { cancelAutoPlay(); stop(); setMode(m); }}
             className="flex-1 py-2 rounded-xl text-sm font-semibold transition-all"
             style={{
-              background: mode === m ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.05)',
-              border: `1px solid ${mode === m ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.08)'}`,
-              color: mode === m ? '#f59e0b' : '#8b8fa8',
+              background: mode === m ? 'rgba(79,70,229,0.18)' : 'rgba(0,0,0,0.04)',
+              border: `1px solid ${mode === m ? 'rgba(79,70,229,0.5)' : 'rgba(0,0,0,0.06)'}`,
+              color: mode === m ? '#4f46e5' : '#64748b',
             }}
           >
             <BilingualText
@@ -301,12 +301,12 @@ export function VocabScreen() {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-1 mt-3" style={{ background: 'rgba(255,255,255,0.06)' }}>
+      <div className="w-full h-1 mt-3" style={{ background: 'rgba(0,0,0,0.05)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
             width: `${(idx / total) * 100}%`,
-            background: 'linear-gradient(90deg, #f59e0b, #fcd34d)',
+            background: 'linear-gradient(90deg, #4f46e5, #a5b4fc)',
           }}
         />
       </div>
@@ -315,19 +315,19 @@ export function VocabScreen() {
       <div className="flex justify-center gap-6 pt-4 px-6">
         <div className="text-center">
           <div className="text-lg font-bold" style={{ color: '#10b981' }}>{masteredCount}</div>
-          <div className="text-xs" style={{ color: '#8b8fa8' }}>
+          <div className="text-xs" style={{ color: '#64748b' }}>
             <BilingualText native={t('masteredCount', lang)} de={t('masteredCount', 'de')} lang={lang} />
           </div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-bold" style={{ color: '#f59e0b' }}>{total - masteredCount}</div>
-          <div className="text-xs" style={{ color: '#8b8fa8' }}>
+          <div className="text-lg font-bold" style={{ color: '#4f46e5' }}>{total - masteredCount}</div>
+          <div className="text-xs" style={{ color: '#64748b' }}>
             <BilingualText native={t('again', lang)} de={t('again', 'de')} lang={lang} />
           </div>
         </div>
         <div className="text-center">
           <div className="text-lg">{topicIcon}</div>
-          <div className="text-xs" style={{ color: '#8b8fa8' }}>{masteryLabel}</div>
+          <div className="text-xs" style={{ color: '#64748b' }}>{masteryLabel}</div>
         </div>
       </div>
 
@@ -340,13 +340,13 @@ export function VocabScreen() {
             {/* Decorative stack cards behind */}
             <div style={{
               position: 'absolute', inset: 0, borderRadius: 24,
-              background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.05)',
+              background: 'rgba(248,250,252,0.8)', border: '1px solid rgba(0,0,0,0.04)',
               transform: 'translateY(10px) translateX(8px) rotate(2.5deg)',
               zIndex: 0,
             }} />
             <div style={{
               position: 'absolute', inset: 0, borderRadius: 24,
-              background: 'rgba(26,29,39,0.65)', border: '1px solid rgba(255,255,255,0.07)',
+              background: 'rgba(26,29,39,0.65)', border: '1px solid rgba(0,0,0,0.05)',
               transform: 'translateY(5px) translateX(4px) rotate(1.2deg)',
               zIndex: 1,
             }} />
@@ -395,7 +395,7 @@ export function VocabScreen() {
                     style={{
                       position: 'absolute', inset: 0,
                       backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-                      background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.1)',
+                      background: 'rgba(255,255,255,0.97)', border: '1px solid rgba(0,0,0,0.07)',
                       borderRadius: 24, padding: '28px 28px 24px',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                       textAlign: 'center', minHeight: 220,
@@ -416,7 +416,7 @@ export function VocabScreen() {
                     )}
                     <h2
                       className="mb-3 leading-tight"
-                      style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontSize: 'clamp(26px, 6vw, 40px)', fontWeight: 700 }}
+                      style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontSize: 'clamp(26px, 6vw, 40px)', fontWeight: 700 }}
                     >
                       {mode === 'phrases' ? card?.german : wcard?.german}
                     </h2>
@@ -428,7 +428,7 @@ export function VocabScreen() {
                     <button
                       onClick={handlePlayDE}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-1"
-                      style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b' }}
+                      style={{ background: 'rgba(79,70,229,0.12)', border: '1px solid rgba(79,70,229,0.3)', color: '#4f46e5' }}
                     >
                       🔊 {isGermanSpeaker ? (targetLangLabel[targetLang] ?? targetLang) : (langNames['de']?.[lang] ?? 'Auf Deutsch')}
                     </button>
@@ -453,7 +453,7 @@ export function VocabScreen() {
                       position: 'absolute', inset: 0,
                       backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
-                      background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(99,102,241,0.4)',
+                      background: 'rgba(255,255,255,0.97)', border: '1px solid rgba(99,102,241,0.4)',
                       borderRadius: 24, padding: '28px 28px 24px',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                       textAlign: 'center', minHeight: 220,
@@ -475,11 +475,11 @@ export function VocabScreen() {
                     {mode === 'phrases' && card && (
                       <div
                         className="w-full rounded-xl p-3 text-sm"
-                        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                        style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)' }}
                         dir={lang === 'ar' ? 'rtl' : 'ltr'}
                       >
-                        <p style={{ color: '#f0ede8', fontStyle: 'italic' }}>„{card.germanExample}"</p>
-                        <p className="mt-1" style={{ color: '#8b8fa8', fontSize: 12 }}>{card.nativeExample}</p>
+                        <p style={{ color: '#0f172a', fontStyle: 'italic' }}>„{card.germanExample}"</p>
+                        <p className="mt-1" style={{ color: '#64748b', fontSize: 12 }}>{card.nativeExample}</p>
                       </div>
                     )}
                   </div>
@@ -493,7 +493,7 @@ export function VocabScreen() {
             <div className="grid grid-cols-3 gap-3">
               {([
                 { level: 0 as const, icon: '🔄', labelNative: t('again', lang), labelDE: t('again', 'de'), color: '#ef4444', bg: 'rgba(239,68,68,0.14)', border: 'rgba(239,68,68,0.45)' },
-                { level: 1 as const, icon: '👍', labelNative: t('good', lang), labelDE: t('good', 'de'), color: '#f59e0b', bg: 'rgba(245,158,11,0.14)', border: 'rgba(245,158,11,0.45)' },
+                { level: 1 as const, icon: '👍', labelNative: t('good', lang), labelDE: t('good', 'de'), color: '#4f46e5', bg: 'rgba(79,70,229,0.14)', border: 'rgba(79,70,229,0.45)' },
                 { level: 2 as const, icon: '⭐', labelNative: t('mastered', lang), labelDE: t('mastered', 'de'), color: '#10b981', bg: 'rgba(16,185,129,0.14)', border: 'rgba(16,185,129,0.45)' },
               ]).map(({ level, icon, labelNative, labelDE, color, bg, border }) => (
                 <button

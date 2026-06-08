@@ -211,7 +211,7 @@ function getItemDesc(item: ChecklistItem, lang: Language): string {
   return item.descByLang[lang] ?? item.descByLang['en'] ?? '';
 }
 
-const levelColors = { A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#f59e0b' };
+const levelColors = { A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#4f46e5' };
 
 export function EinbuergerungChecklist() {
   const navigate = useNavigate();
@@ -269,24 +269,24 @@ export function EinbuergerungChecklist() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #0f1117 0%, #131620 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)' }}>
       {/* Header */}
       <div
         className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(15,17,23,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'rgba(248,250,252,0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
       >
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-sm transition-all"
-          style={{ color: '#8b8fa8' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+          style={{ color: '#64748b' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#0f172a')}
+          onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
         >
           {t('back', lang)}
         </button>
         <div className="flex items-center gap-2">
           <span className="text-xl">🪪</span>
-          <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700, fontSize: 18 }}>
+          <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontWeight: 700, fontSize: 18 }}>
             Einbürgerung
           </span>
         </div>
@@ -298,11 +298,11 @@ export function EinbuergerungChecklist() {
         <div className="text-center mb-8 animate-fade-in-up">
           <h1
             className="text-3xl font-bold mb-2"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
           >
             {headings[lang] ?? headings['en']}
           </h1>
-          <p style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+          <p style={{ color: '#64748b', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
             {subheadings[lang] ?? subheadings['en']}
           </p>
         </div>
@@ -320,7 +320,7 @@ export function EinbuergerungChecklist() {
               {progressPct}%
             </span>
           </div>
-          <div className="w-full h-2 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="w-full h-2 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
             <div
               className="h-full rounded-full transition-all duration-700"
               style={{ width: `${progressPct}%`, background: 'linear-gradient(90deg, #6366f1, #818cf8)' }}
@@ -339,7 +339,7 @@ export function EinbuergerungChecklist() {
               <p className="font-semibold text-sm" style={{ color: '#a78bfa' }}>
                 {t('b1Goal', lang)}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: '#8b8fa8' }}>
+              <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>
                 {(currentLevelLabel[lang] ?? currentLevelLabel['en'])}: {progress.level}
               </p>
             </div>
@@ -385,10 +385,10 @@ export function EinbuergerungChecklist() {
                   animationDelay: `${idx * 60}ms`,
                   background: effectivelyChecked
                     ? 'rgba(99,102,241,0.12)'
-                    : 'rgba(26,29,39,0.8)',
+                    : 'rgba(255,255,255,0.9)',
                   border: effectivelyChecked
                     ? '2px solid rgba(99,102,241,0.5)'
-                    : '2px solid rgba(255,255,255,0.07)',
+                    : '2px solid rgba(0,0,0,0.05)',
                   cursor: autoChecked ? 'default' : 'pointer',
                 }}
                 onMouseEnter={e => {
@@ -400,7 +400,7 @@ export function EinbuergerungChecklist() {
                   if (!autoChecked) {
                     (e.currentTarget as HTMLElement).style.borderColor = effectivelyChecked
                       ? 'rgba(99,102,241,0.5)'
-                      : 'rgba(255,255,255,0.07)';
+                      : 'rgba(0,0,0,0.05)';
                   }
                 }}
               >
@@ -408,7 +408,7 @@ export function EinbuergerungChecklist() {
                 <div
                   className="flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center mt-0.5 transition-all duration-200"
                   style={{
-                    borderColor: effectivelyChecked ? '#6366f1' : 'rgba(255,255,255,0.25)',
+                    borderColor: effectivelyChecked ? '#6366f1' : 'rgba(0,0,0,0.15)',
                     background: effectivelyChecked ? '#6366f1' : 'transparent',
                   }}
                 >
@@ -421,7 +421,7 @@ export function EinbuergerungChecklist() {
                 <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span>{item.icon}</span>
-                    <span className="font-semibold" style={{ color: effectivelyChecked ? '#a5b4fc' : '#f0ede8' }}>
+                    <span className="font-semibold" style={{ color: effectivelyChecked ? '#a5b4fc' : '#0f172a' }}>
                       {getItemTitle(item, lang)}
                     </span>
                     {isLangItem && (
@@ -433,10 +433,10 @@ export function EinbuergerungChecklist() {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+                  <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                     {getItemDesc(item, lang)}
                   </p>
-                  <p className="text-xs mt-1.5 italic" style={{ color: 'rgba(139,143,168,0.6)' }}>
+                  <p className="text-xs mt-1.5 italic" style={{ color: 'rgba(100,116,139,0.6)' }}>
                     {item.infoDE}
                   </p>
                 </div>
@@ -448,9 +448,9 @@ export function EinbuergerungChecklist() {
         {/* StAG 2024 Hinweis */}
         <div
           className="mt-8 rounded-xl p-4 text-center"
-          style={{ background: 'rgba(26,29,39,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: 'rgba(248,250,252,0.8)', border: '1px solid rgba(0,0,0,0.05)' }}
         >
-          <p className="text-xs" style={{ color: 'rgba(139,143,168,0.6)' }}>
+          <p className="text-xs" style={{ color: 'rgba(100,116,139,0.6)' }}>
             Staatsangehörigkeitsgesetz (StAG) — Reform Januar 2024 · Kein Rechtsanspruch
           </p>
         </div>

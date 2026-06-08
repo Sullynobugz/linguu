@@ -238,25 +238,25 @@ export function ReportView() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: '#0f1117' }}>
+    <div className="min-h-screen" style={{ background: '#f8fafc' }}>
       {/* Nav bar — hidden in print */}
       <div
         className="px-6 py-4 flex items-center justify-between print:hidden"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}
       >
         <button
           onClick={() => navigate('/')}
           className="text-sm transition-all"
-          style={{ color: '#8b8fa8' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f0ede8')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#8b8fa8')}
+          style={{ color: '#64748b' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#0f172a')}
+          onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
         >
           ← {t('overview', lang)}
         </button>
         <button
           onClick={() => window.print()}
           className="px-5 py-2 rounded-xl text-sm font-semibold transition-all"
-          style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
+          style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#f8fafc' }}
           onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
           onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
         >
@@ -266,48 +266,48 @@ export function ReportView() {
 
       <div className="max-w-2xl mx-auto px-6 py-10" id="report">
         {/* Header */}
-        <div className="text-center mb-8 pb-6" style={{ borderBottom: '2px solid rgba(245,158,11,0.4)' }}>
+        <div className="text-center mb-8 pb-6" style={{ borderBottom: '2px solid rgba(79,70,229,0.4)' }}>
           <div className="flex justify-center items-center gap-3 mb-3">
             <span className="text-3xl">🇩🇪</span>
-            <h1 className="text-3xl font-bold" style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            <h1 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
               Linguu
             </h1>
           </div>
           {/* Title in native language first */}
           <h2
             className="text-xl mb-1"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 600, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', fontWeight: 600, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
           >
             {t('reportTitle', lang)}
           </h2>
           {lang !== 'de' && (
-            <p className="text-sm" style={{ color: '#8b8fa8' }}>Linguu Fortschrittsbericht</p>
+            <p className="text-sm" style={{ color: '#64748b' }}>Linguu Fortschrittsbericht</p>
           )}
-          <p className="text-sm mt-2" style={{ color: '#8b8fa8' }}>
+          <p className="text-sm mt-2" style={{ color: '#64748b' }}>
             {lbl.created}: {today}
           </p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+          <p className="text-xs mt-1" style={{ color: 'rgba(100,116,139,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
             {lbl.user}: {lbl.anon}
           </p>
         </div>
 
         {/* Stats table */}
-        <div className="rounded-2xl overflow-hidden mb-8" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="rounded-2xl overflow-hidden mb-8" style={{ border: '1px solid rgba(0,0,0,0.07)' }}>
           {rows.map((row, idx) => (
             <div
               key={idx}
               className="flex justify-between items-center px-6 py-4"
               style={{
-                background: idx % 2 === 0 ? 'rgba(26,29,39,0.8)' : 'rgba(22,25,35,0.8)',
-                borderBottom: idx < rows.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                background: idx % 2 === 0 ? 'rgba(255,255,255,0.9)' : 'rgba(22,25,35,0.8)',
+                borderBottom: idx < rows.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
               }}
             >
-              <span className="text-sm" style={{ color: '#8b8fa8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+              <span className="text-sm" style={{ color: '#64748b', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
                 {row.label}
               </span>
               <span
                 className="font-semibold"
-                style={{ color: row.highlight ? '#f59e0b' : '#f0ede8', fontSize: row.highlight ? 20 : 14 }}
+                style={{ color: row.highlight ? '#4f46e5' : '#0f172a', fontSize: row.highlight ? 20 : 14 }}
               >
                 {row.value}
               </span>
@@ -319,7 +319,7 @@ export function ReportView() {
         <div className="mb-8">
           <h3
             className="text-base font-semibold mb-3"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
           >
             {lbl.topics}
           </h3>
@@ -335,24 +335,24 @@ export function ReportView() {
                   key={topic.id}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl"
                   style={{
-                    background: completed ? 'rgba(245,158,11,0.08)' : 'rgba(26,29,39,0.5)',
-                    border: completed ? '1px solid rgba(245,158,11,0.25)' : '1px solid rgba(255,255,255,0.06)',
+                    background: completed ? 'rgba(79,70,229,0.08)' : 'rgba(248,250,252,0.8)',
+                    border: completed ? '1px solid rgba(79,70,229,0.25)' : '1px solid rgba(0,0,0,0.05)',
                   }}
                 >
                   <span>{topic.icon}</span>
                   <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                    <span className="text-sm font-medium" style={{ color: '#f0ede8' }}>
+                    <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
                       {nativeTitle}
                     </span>
-                    <span className="text-xs ml-1" style={{ color: '#8b8fa8' }}>
+                    <span className="text-xs ml-1" style={{ color: '#64748b' }}>
                       · {topic.titleDE}
                     </span>
-                    <span className="text-xs ml-2" style={{ color: '#8b8fa8' }}>
+                    <span className="text-xs ml-2" style={{ color: '#64748b' }}>
                       ({seenCount}/{topic.phrases.length})
                     </span>
                   </div>
                   <span className="text-xs font-semibold" style={{
-                    color: completed ? '#f59e0b' : seenCount > 0 ? '#8b8fa8' : 'rgba(139,143,168,0.4)',
+                    color: completed ? '#4f46e5' : seenCount > 0 ? '#64748b' : 'rgba(100,116,139,0.4)',
                   }}>
                     {completed ? (score !== undefined ? `✓ ${score}%` : '✓') : seenCount > 0 ? lbl.inProgress : lbl.notStarted}
                   </span>
@@ -367,23 +367,23 @@ export function ReportView() {
           <div className="mb-8">
             <h3
               className="text-base font-semibold mb-2"
-              style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+              style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
             >
               {lbl.badges}
             </h3>
-            <p className="text-sm" style={{ color: '#8b8fa8' }}>
+            <p className="text-sm" style={{ color: '#64748b' }}>
               {progress.badges.length} / 8
             </p>
           </div>
         )}
 
         {/* Footer */}
-        <div className="text-center pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <p className="text-xs" style={{ color: 'rgba(139,143,168,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+        <div className="text-center pt-6" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+          <p className="text-xs" style={{ color: 'rgba(100,116,139,0.6)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
             {lbl.footer}
           </p>
           {lang !== 'de' && (
-            <p className="text-xs mt-1" style={{ color: 'rgba(139,143,168,0.4)' }}>
+            <p className="text-xs mt-1" style={{ color: 'rgba(100,116,139,0.4)' }}>
               Erstellt mit Linguu — Sprachen lernen für den Alltag
             </p>
           )}

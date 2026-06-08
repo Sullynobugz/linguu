@@ -373,12 +373,12 @@ function TimerRing({ remaining, total }: { remaining: number; total: number }) {
   const circ = 2 * Math.PI * r;
   const pct = remaining / total;
   const dash = pct * circ;
-  const color = remaining <= 5 ? '#ef4444' : remaining <= 10 ? '#f59e0b' : '#10b981';
+  const color = remaining <= 5 ? '#ef4444' : remaining <= 10 ? '#4f46e5' : '#10b981';
 
   return (
     <div className="relative flex items-center justify-center w-14 h-14">
       <svg className="absolute" width={56} height={56} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={28} cy={28} r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={3} />
+        <circle cx={28} cy={28} r={r} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth={3} />
         <circle cx={28} cy={28} r={r} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={`${dash} ${circ}`}
           style={{ transition: 'stroke-dasharray 0.9s linear, stroke 0.3s' }} />
@@ -393,7 +393,7 @@ function TimerRing({ remaining, total }: { remaining: number; total: number }) {
 // ── Ergebnis-Screen ──────────────────────────────────────────────────────────
 
 const LEVEL_COLORS: Record<string, string> = {
-  A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#f59e0b',
+  A1: '#10b981', A2: '#3b82f6', B1: '#8b5cf6', B2: '#4f46e5',
 };
 
 const RESULT_MSG: Record<string, Partial<Record<Language, { title: string; text: string }>>> = {
@@ -598,10 +598,10 @@ export function Step3Assessment() {
       <OnboardingLayout step={4} total={4} onBack={() => navigate('/onboarding/2')}>
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold mb-2"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
             Dein Sprachniveau?
           </h1>
-          <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
+          <p className="text-sm mt-1" style={{ color: '#64748b' }}>
             Wir passen die Inhalte auf dein Niveau an.
           </p>
         </div>
@@ -610,22 +610,22 @@ export function Step3Assessment() {
             <button key={level}
               onClick={() => { completeOnboarding(level); navigate('/'); }}
               className="flex items-center gap-5 p-5 rounded-2xl text-left transition-all duration-200"
-              style={{ background: 'rgba(26,29,39,0.8)', border: `2px solid ${LEVEL_COLORS[level]}30` }}
+              style={{ background: 'rgba(255,255,255,0.9)', border: `2px solid ${LEVEL_COLORS[level]}30` }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.borderColor = LEVEL_COLORS[level];
                 (e.currentTarget as HTMLElement).style.background = `${LEVEL_COLORS[level]}12`;
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLElement).style.borderColor = `${LEVEL_COLORS[level]}30`;
-                (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.9)';
               }}>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
                 style={{ background: `${LEVEL_COLORS[level]}20`, color: LEVEL_COLORS[level], border: `2px solid ${LEVEL_COLORS[level]}50` }}>
                 {level}
               </div>
               <div className="flex-1">
-                <div className="text-base font-semibold" style={{ color: '#f0ede8' }}>{label}</div>
-                <div className="text-sm mt-0.5" style={{ color: '#8b8fa8' }}>{desc}</div>
+                <div className="text-base font-semibold" style={{ color: '#0f172a' }}>{label}</div>
+                <div className="text-sm mt-0.5" style={{ color: '#64748b' }}>{desc}</div>
               </div>
             </button>
           ))}
@@ -647,8 +647,8 @@ export function Step3Assessment() {
             🎉
           </div>
           <h1 className="text-4xl font-bold mb-3"
-            style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}>{msg.title}</h1>
-          <p className="text-lg mb-4 max-w-md mx-auto" style={{ color: '#8b8fa8' }}>{msg.text}</p>
+            style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>{msg.title}</h1>
+          <p className="text-lg mb-4 max-w-md mx-auto" style={{ color: '#64748b' }}>{msg.text}</p>
           <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full mb-8 font-bold"
             style={{ background: `${color}15`, border: `2px solid ${color}`, color }}>
             <span className="text-2xl">{result}</span>
@@ -658,7 +658,7 @@ export function Step3Assessment() {
           <button
             onClick={() => { completeOnboarding(result); navigate('/'); }}
             className="px-10 py-4 rounded-2xl text-lg font-semibold transition-all duration-200"
-            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f1117' }}
+            style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', color: '#f8fafc' }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}>
             {t('startNow', lang)}
@@ -683,7 +683,7 @@ export function Step3Assessment() {
                 width: i === current ? 20 : 7, height: 7,
                 background: i < current
                   ? answers[i] === questions[i].correct ? '#10b981' : '#ef4444'
-                  : i === current ? '#f59e0b' : 'rgba(255,255,255,0.15)',
+                  : i === current ? '#4f46e5' : 'rgba(0,0,0,0.1)',
               }} />
           ))}
         </div>
@@ -696,7 +696,7 @@ export function Step3Assessment() {
       </div>
 
       <div className="rounded-2xl p-6 mb-4"
-        style={{ background: 'rgba(26,29,39,0.9)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        style={{ background: 'rgba(255,255,255,0.97)', border: '1px solid rgba(0,0,0,0.06)' }}>
 
         {/* Level-Badge */}
         <div className="flex items-center justify-between mb-3">
@@ -720,11 +720,11 @@ export function Step3Assessment() {
         </div>
 
         {/* Frage */}
-        <p className="text-lg font-semibold mb-1" style={{ color: '#f0ede8' }}>
+        <p className="text-lg font-semibold mb-1" style={{ color: '#0f172a' }}>
           {question.questionLine}
         </p>
         {question.hintLine && (
-          <p className="text-sm mb-4" style={{ color: '#8b8fa8' }}>{question.hintLine}</p>
+          <p className="text-sm mb-4" style={{ color: '#64748b' }}>{question.hintLine}</p>
         )}
 
         {/* Audio-Text: versteckt bis zur Antwort */}
@@ -746,9 +746,9 @@ export function Step3Assessment() {
         {/* Antwort-Buttons */}
         <div className="grid grid-cols-1 gap-2.5 mt-2">
           {question.options.map((option, idx) => {
-            let bg = 'rgba(255,255,255,0.04)';
-            let border = 'rgba(255,255,255,0.1)';
-            let color = '#f0ede8';
+            let bg = 'rgba(0,0,0,0.03)';
+            let border = 'rgba(0,0,0,0.07)';
+            let color = '#0f172a';
 
             if (isDone) {
               if (idx === question.correct) {
@@ -766,18 +766,18 @@ export function Step3Assessment() {
                 style={{ background: bg, border: `1px solid ${border}`, color, cursor: isDone ? 'default' : 'pointer' }}
                 onMouseEnter={e => {
                   if (!isDone) {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.5)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.08)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.5)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(79,70,229,0.08)';
                   }
                 }}
                 onMouseLeave={e => {
                   if (!isDone) {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.07)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(0,0,0,0.03)';
                   }
                 }}>
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2.5"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: 'inherit', flexShrink: 0 }}>
+                  style={{ background: 'rgba(0,0,0,0.06)', color: 'inherit', flexShrink: 0 }}>
                   {String.fromCharCode(65 + idx)}
                 </span>
                 {option}

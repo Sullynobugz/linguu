@@ -31,14 +31,14 @@ export function Step1Language() {
       <div className="text-center mb-8">
         <h1
           className="text-4xl sm:text-5xl font-bold mb-3"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8' }}
+          style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}
         >
           Linguu
         </h1>
-        <p className="text-base" style={{ color: '#8b8fa8' }}>
+        <p className="text-base" style={{ color: '#64748b' }}>
           Wähle deine Muttersprache · Choose your language
         </p>
-        <p className="text-sm mt-1" style={{ color: 'rgba(139,143,168,0.6)' }}>
+        <p className="text-sm mt-1" style={{ color: 'rgba(100,116,139,0.6)' }}>
           Выбери · Обери · Seçin · Wybierz · Alege · اختر · Elige
         </p>
       </div>
@@ -52,27 +52,27 @@ export function Step1Language() {
               onClick={() => handleSelect(lang.code)}
               className="group flex flex-col items-center gap-2 p-5 rounded-2xl transition-all duration-200 relative"
               style={{
-                background: selected ? 'rgba(245,158,11,0.15)' : 'rgba(26,29,39,0.8)',
-                border: selected ? '2px solid #f59e0b' : '2px solid rgba(255,255,255,0.08)',
+                background: selected ? 'rgba(79,70,229,0.15)' : 'rgba(255,255,255,0.9)',
+                border: selected ? '2px solid #4f46e5' : '2px solid rgba(0,0,0,0.06)',
                 cursor: 'pointer',
               }}
               onMouseEnter={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.4)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.07)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.4)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(79,70,229,0.07)';
                 }
               }}
               onMouseLeave={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.06)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.9)';
                 }
               }}
             >
               {lang.beta && (
                 <span
                   className="absolute top-2 right-2 text-xs font-bold px-1.5 py-0.5 rounded-full"
-                  style={{ background: 'rgba(139,143,168,0.25)', color: '#8b8fa8', fontSize: '9px', letterSpacing: '0.04em' }}
+                  style={{ background: 'rgba(100,116,139,0.2)', color: '#64748b', fontSize: '9px', letterSpacing: '0.04em' }}
                 >
                   BETA
                 </span>
@@ -82,13 +82,13 @@ export function Step1Language() {
                 <div
                   className="text-lg font-semibold"
                   style={{
-                    color: lang.beta ? '#8b8fa8' : '#f0ede8',
+                    color: lang.beta ? '#64748b' : '#0f172a',
                     direction: lang.code === 'ar' ? 'rtl' : 'ltr',
                   }}
                 >
                   {lang.native}
                 </div>
-                <div className="text-xs mt-0.5" style={{ color: '#8b8fa8' }}>
+                <div className="text-xs mt-0.5" style={{ color: '#64748b' }}>
                   {lang.subtitle}
                 </div>
               </div>

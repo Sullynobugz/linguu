@@ -133,10 +133,10 @@ function Panel({ lang, onLangChange, side, toLang }: PanelProps) {
           onChange={e => onLangChange(e.target.value as Language)}
           style={{
             flex: 1,
-            background: 'rgba(255,255,255,0.07)',
-            border: '1px solid rgba(255,255,255,0.12)',
+            background: 'rgba(0,0,0,0.05)',
+            border: '1px solid rgba(0,0,0,0.08)',
             borderRadius: 8,
-            color: '#f0ede8',
+            color: '#0f172a',
             fontSize: 13,
             padding: '6px 8px',
             cursor: 'pointer',
@@ -144,7 +144,7 @@ function Panel({ lang, onLangChange, side, toLang }: PanelProps) {
           }}
         >
           {LANGS.map(l => (
-            <option key={l.code} value={l.code} style={{ background: '#1a1d27' }}>
+            <option key={l.code} value={l.code} style={{ background: '#ffffff' }}>
               {l.flag} {l.label}
             </option>
           ))}
@@ -177,10 +177,10 @@ function Panel({ lang, onLangChange, side, toLang }: PanelProps) {
           <p style={{ fontSize: 12, color: '#ef4444', margin: 0 }}>● Aufnahme läuft…</p>
         )}
         {side.processing && !side.transcript && (
-          <p style={{ fontSize: 12, color: '#8b8fa8', margin: 0 }}>Erkenne Sprache…</p>
+          <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>Erkenne Sprache…</p>
         )}
         {!side.transcript && !side.listening && !side.processing && (
-          <p style={{ fontSize: 12, color: 'rgba(139,143,168,0.4)', margin: 0, textAlign: 'center' }}>
+          <p style={{ fontSize: 12, color: 'rgba(100,116,139,0.4)', margin: 0, textAlign: 'center' }}>
             🎤 Tippen zum Aufnehmen
           </p>
         )}
@@ -287,7 +287,7 @@ export function FloatingTranslator() {
           zIndex: 1000,
           width: 'min(360px, calc(100vw - 24px))',
           background: '#12151f',
-          border: '1px solid rgba(255,255,255,0.1)',
+          border: '1px solid rgba(0,0,0,0.07)',
           borderRadius: 16,
           boxShadow: '0 8px 40px rgba(0,0,0,0.7)',
           overflow: 'hidden',
@@ -300,11 +300,11 @@ export function FloatingTranslator() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 16px',
-            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            borderBottom: '1px solid rgba(0,0,0,0.05)',
             background: 'rgba(99,102,241,0.08)',
           }}
         >
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#f0ede8' }}>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#0f172a' }}>
             🌐 Simultanübersetzer
           </span>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -312,10 +312,10 @@ export function FloatingTranslator() {
               onClick={() => setVoiceOutput(v => !v)}
               title={voiceOutput ? 'Sprachausgabe deaktivieren' : 'Sprachausgabe aktivieren'}
               style={{
-                background: voiceOutput ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.07)',
-                border: voiceOutput ? '1px solid rgba(99,102,241,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                background: voiceOutput ? 'rgba(99,102,241,0.3)' : 'rgba(0,0,0,0.05)',
+                border: voiceOutput ? '1px solid rgba(99,102,241,0.5)' : '1px solid rgba(0,0,0,0.07)',
                 borderRadius: 8,
-                color: voiceOutput ? '#818cf8' : '#8b8fa8',
+                color: voiceOutput ? '#818cf8' : '#64748b',
                 fontSize: 16,
                 width: 32,
                 height: 32,
@@ -330,10 +330,10 @@ export function FloatingTranslator() {
             <button
               onClick={() => setOpen(false)}
               style={{
-                background: 'rgba(255,255,255,0.07)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(0,0,0,0.05)',
+                border: '1px solid rgba(0,0,0,0.07)',
                 borderRadius: 8,
-                color: '#8b8fa8',
+                color: '#64748b',
                 fontSize: 14,
                 width: 32,
                 height: 32,
@@ -352,7 +352,7 @@ export function FloatingTranslator() {
         <Panel lang={langA} onLangChange={setLangA} side={sideA} toLang={langB} />
 
         {/* Divider */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '0 16px' }} />
+        <div style={{ height: 1, background: 'rgba(0,0,0,0.05)', margin: '0 16px' }} />
 
         {/* Person B */}
         <Panel lang={langB} onLangChange={setLangB} side={sideB} toLang={langA} />

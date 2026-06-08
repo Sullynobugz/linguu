@@ -58,7 +58,7 @@ export function Step2Target() {
       <div className="text-center mb-8">
         <h1
           className="text-3xl sm:text-4xl font-bold mb-1"
-          style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', direction: uiLang === 'ar' ? 'rtl' : 'ltr' }}
+          style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a', direction: uiLang === 'ar' ? 'rtl' : 'ltr' }}
         >
           {label[uiLang] ?? label['en']}
         </h1>
@@ -74,50 +74,50 @@ export function Step2Target() {
               onClick={() => handleSelect(lang.code)}
               className="onboarding-row flex items-center gap-5 p-5 rounded-2xl text-left"
               style={{
-                background: selected ? 'rgba(245,158,11,0.12)' : 'rgba(26,29,39,0.8)',
-                border: selected ? '2px solid #f59e0b' : isRecommended ? '2px solid rgba(245,158,11,0.3)' : '2px solid rgba(255,255,255,0.08)',
+                background: selected ? 'rgba(79,70,229,0.12)' : 'rgba(255,255,255,0.9)',
+                border: selected ? '2px solid #4f46e5' : isRecommended ? '2px solid rgba(79,70,229,0.3)' : '2px solid rgba(0,0,0,0.06)',
                 cursor: 'pointer',
               }}
               onMouseEnter={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,158,11,0.4)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.07)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(79,70,229,0.4)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(79,70,229,0.07)';
                 }
               }}
               onMouseLeave={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = isRecommended ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.08)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
+                  (e.currentTarget as HTMLElement).style.borderColor = isRecommended ? 'rgba(79,70,229,0.3)' : 'rgba(0,0,0,0.06)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.9)';
                 }
               }}
             >
               <span className="text-5xl flex-shrink-0">{lang.flag}</span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <div className="text-xl font-bold" style={{ color: '#f0ede8' }}>
+                  <div className="text-xl font-bold" style={{ color: '#0f172a' }}>
                     {lang.native}
                   </div>
                   {isRecommended && (
                     <span
                       className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                      style={{ background: 'rgba(245,158,11,0.2)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.4)' }}
+                      style={{ background: 'rgba(79,70,229,0.2)', color: '#4f46e5', border: '1px solid rgba(79,70,229,0.4)' }}
                     >
                       ★ Empfohlen
                     </span>
                   )}
                 </div>
                 {nameInLang[lang.code]?.[uiLang] && nameInLang[lang.code][uiLang] !== lang.native && (
-                  <div className="text-sm mt-0.5" style={{ color: '#8b8fa8' }}>
+                  <div className="text-sm mt-0.5" style={{ color: '#64748b' }}>
                     {nameInLang[lang.code][uiLang]}
                   </div>
                 )}
               </div>
               {selected ? (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b', color: '#0f1117', fontSize: 16, fontWeight: 700 }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#4f46e5', color: '#f8fafc', fontSize: 16, fontWeight: 700 }}>
                   ✓
                 </div>
               ) : (
-                <span className="row-arrow text-2xl flex-shrink-0" style={{ color: 'rgba(245,158,11,0.6)' }}>→</span>
+                <span className="row-arrow text-2xl flex-shrink-0" style={{ color: 'rgba(79,70,229,0.6)' }}>→</span>
               )}
             </button>
           );
