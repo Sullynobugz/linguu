@@ -6,6 +6,7 @@ import { useProgress } from '../../store/ProgressContext';
 import { OnboardingLayout } from './OnboardingLayout';
 import { t } from '../../i18n';
 import { ttsSpeak } from '../../api/openaiAudio';
+import { getWidCode, trackAssessment } from '../../lib/widTracking';
 import type { Level, Language } from '../../types';
 
 // ── Fragen-Typen ─────────────────────────────────────────────────────────────
@@ -563,25 +564,30 @@ export function Step3Assessment() {
     const score = finalAnswers.filter((a, i) => a === questions[i].correct).length;
     setAnswers(finalAnswers);
     setResult(level);
-    // Ergebnis sichern (fire-and-forget)
     const duration = Math.round((Date.now() - startTimeRef.current) / 1000);
-    fetch('/api/assessment/save', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: sessionId.current,
-        level,
-        score,
-        total: questions.length,
-        duration,
-        answers: finalAnswers.map((a, i) => ({
-          questionId: questions[i].id,
-          chosen: a,
-          correct: questions[i].correct,
-          ok: a === questions[i].correct,
-        })),
-      }),
-    }).catch(() => { /* ignorieren */ });
+    const assessment = {
+      sessionId: sessionId.current,
+      level,
+      score,
+      total: questions.length,
+      durationSec: duration,
+      answers: finalAnswers.map((a, i) => ({
+        questionId: questions[i].id,
+        chosen: a,
+        correct: questions[i].correct,
+        ok: a === questions[i].correct,
+      })),
+    };
+
+    if (getWidCode()) {
+      void trackAssessment(assessment);
+    } else {
+      fetch('/api/assessment/save', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...assessment, duration }),
+      }).catch(() => { /* ignorieren */ });
+    }
     // Rate-Limit: nächster Test frühestens in 4 Stunden
     try { localStorage.setItem('linguu_last_assessment', String(Date.now())); } catch { /* */ }
   };

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ProgressProvider, useProgress } from './store/ProgressContext';
 import { Step1Language } from './screens/onboarding/Step1Language';
 import { Step2Target } from './screens/onboarding/Step2Target';
@@ -15,6 +16,22 @@ import { XpPopAnimation } from './components/XpPopAnimation';
 import { FloatingTranslator } from './components/FloatingTranslator';
 import { MuteButton } from './components/MuteButton';
 import { AudioProvider } from './store/AudioContext';
+import { setWidCode } from './lib/widTracking';
+
+function WidCodeFromUrl() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const wid = params.get('wid');
+    if (!wid) return;
+
+    setWidCode(wid);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('wid');
+    window.history.replaceState({}, '', url.toString());
+  }, []);
+
+  return null;
+}
 
 function AppRoutes() {
   const { progress } = useProgress();
@@ -55,6 +72,7 @@ function App() {
     <BrowserRouter>
       <AudioProvider>
         <ProgressProvider>
+          <WidCodeFromUrl />
           <AppRoutes />
           <ApiCostIndicator />
           <XpPopAnimation />
