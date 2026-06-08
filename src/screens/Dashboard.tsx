@@ -436,13 +436,13 @@ export function Dashboard() {
                 key={topic.id}
                 className={`topic-card rounded-2xl p-5 animate-fade-in-up${unlocked ? ' unlocked' : ''}`}
                 style={{
-                  background: unlocked ? 'rgba(255,255,255,0.97)' : 'rgba(20,23,32,0.6)',
+                  background: unlocked ? '#ffffff' : 'rgba(0,0,0,0.025)',
                   border: completed
                     ? '1.5px solid rgba(79,70,229,0.4)'
                     : unlocked
-                    ? '1.5px solid rgba(0,0,0,0.06)'
-                    : '1px solid rgba(0,0,0,0.03)',
-                  opacity: unlocked ? 1 : 0.55,
+                    ? '1.5px solid rgba(0,0,0,0.07)'
+                    : '1px solid rgba(0,0,0,0.04)',
+                  opacity: unlocked ? 1 : 0.5,
                   animationDelay: `${idx * 60}ms`,
                 }}
                 onClick={() => unlocked && navigate(`/lesson/${topic.id}`)}
@@ -488,7 +488,7 @@ export function Dashboard() {
                 {/* Title */}
                 <h3
                   className="font-bold mb-0.5"
-                  style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: unlocked ? '#0f172a' : 'rgba(240,237,232,0.35)', fontSize: 17, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
+                  style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: unlocked ? '#0f172a' : 'rgba(0,0,0,0.2)', fontSize: 17, direction: lang === 'ar' ? 'rtl' : 'ltr' }}
                 >
                   {unlocked ? ((topicTitles[lang] ?? topicTitles['en'])![topic.id] ?? topic.titleDE) : topic.titleDE}
                 </h3>
@@ -497,7 +497,7 @@ export function Dashboard() {
                     {topic.titleDE}
                   </p>
                 )}
-                <p className="text-xs mb-4" style={{ color: unlocked ? '#64748b' : 'rgba(139,143,168,0.35)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+                <p className="text-xs mb-4" style={{ color: unlocked ? '#64748b' : 'rgba(0,0,0,0.15)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
                   {unlocked
                     ? ((topicSubtitles[lang] ?? topicSubtitles['en'])![topic.id] ?? topic.subtitleDE)
                     : `${t('unlockedFrom', lang)} ${topic.requiredLevel}`}
