@@ -110,9 +110,14 @@ export function Dashboard() {
           >
             🇩🇪
           </div>
-          <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700, fontSize: 20 }}>
-            Linguu
-          </span>
+          <div>
+            <span style={{ fontFamily: 'Fraunces, serif', color: '#f0ede8', fontWeight: 700, fontSize: 20 }}>
+              Linguu
+            </span>
+            <p className="text-[10px] leading-none" style={{ color: '#8b8fa8' }}>
+              WID · Linguu · JobMate
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -149,10 +154,10 @@ export function Dashboard() {
             <div className="flex items-center gap-2">
               <span style={{ color: '#10b981', fontSize: 14 }}>🔗</span>
               <span className="text-sm font-semibold" style={{ color: '#10b981' }}>
-                WID-Code: {widCode}
+                WID-Programm verknüpft: {widCode}
               </span>
               <span className="text-xs" style={{ color: 'rgba(16,185,129,0.6)' }}>
-                · Fortschritt wird geteilt
+                · Lektionen, Quiz und Assessment fließen ins Reporting
               </span>
             </div>
             <button
