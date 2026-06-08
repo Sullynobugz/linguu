@@ -56,30 +56,36 @@ export function OnboardingLayout({ step, total = 3, children, onBack }: Onboardi
       </div>
 
       {/* Progress indicator */}
-      <div className="flex justify-center mb-10">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col items-center mb-10">
+        <p className="text-xs font-semibold mb-4" style={{ color: 'rgba(245,158,11,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          Schritt {step} von {total}
+        </p>
+        <div className="flex items-center gap-2">
           {steps.map(s => (
             <React.Fragment key={s}>
-              <div className="flex flex-col items-center gap-1">
+              <div className="flex flex-col items-center gap-2">
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300"
                   style={
                     s < step
                       ? { background: '#f59e0b', color: '#0f1117' }
                       : s === step
-                      ? { background: 'transparent', border: '2px solid #f59e0b', color: '#f59e0b', boxShadow: '0 0 12px rgba(245,158,11,0.4)' }
-                      : { background: 'transparent', border: '2px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.3)' }
+                      ? { background: 'transparent', border: '2.5px solid #f59e0b', color: '#f59e0b', boxShadow: '0 0 16px rgba(245,158,11,0.45)' }
+                      : { background: 'transparent', border: '2px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.25)' }
                   }
                 >
                   {s < step ? '✓' : s}
                 </div>
-                <span className="text-xs hidden sm:block" style={{ color: s <= step ? '#8b8fa8' : 'rgba(255,255,255,0.2)' }}>
+                <span
+                  className="text-xs font-medium text-center max-w-16"
+                  style={{ color: s === step ? '#f0ede8' : s < step ? 'rgba(245,158,11,0.7)' : 'rgba(255,255,255,0.2)', lineHeight: 1.3 }}
+                >
                   {stepLabels[s - 1]}
                 </span>
               </div>
               {s < total && (
                 <div
-                  className="w-8 h-0.5 rounded transition-all duration-500"
+                  className="w-10 h-0.5 rounded mb-5 transition-all duration-500"
                   style={{ background: s < step ? '#f59e0b' : 'rgba(255,255,255,0.1)' }}
                 />
               )}

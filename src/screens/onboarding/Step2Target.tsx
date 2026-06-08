@@ -72,7 +72,7 @@ export function Step2Target() {
             <button
               key={lang.code}
               onClick={() => handleSelect(lang.code)}
-              className="flex items-center gap-5 p-5 rounded-2xl text-left transition-all duration-200"
+              className="onboarding-row flex items-center gap-5 p-5 rounded-2xl text-left"
               style={{
                 background: selected ? 'rgba(245,158,11,0.12)' : 'rgba(26,29,39,0.8)',
                 border: selected ? '2px solid #f59e0b' : isRecommended ? '2px solid rgba(245,158,11,0.3)' : '2px solid rgba(255,255,255,0.08)',
@@ -91,10 +91,10 @@ export function Step2Target() {
                 }
               }}
             >
-              <span className="text-4xl flex-shrink-0">{lang.flag}</span>
+              <span className="text-5xl flex-shrink-0">{lang.flag}</span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <div className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
+                  <div className="text-xl font-bold" style={{ color: '#f0ede8' }}>
                     {lang.native}
                   </div>
                   {isRecommended && (
@@ -102,7 +102,7 @@ export function Step2Target() {
                       className="text-xs px-2 py-0.5 rounded-full font-semibold"
                       style={{ background: 'rgba(245,158,11,0.2)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.4)' }}
                     >
-                      ★
+                      ★ Empfohlen
                     </span>
                   )}
                 </div>
@@ -112,15 +112,13 @@ export function Step2Target() {
                   </div>
                 )}
               </div>
-              <div
-                className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                style={{
-                  borderColor: selected ? '#f59e0b' : 'rgba(255,255,255,0.2)',
-                  background: selected ? '#f59e0b' : 'transparent',
-                }}
-              >
-                {selected && <span style={{ color: '#fff', fontSize: 12, fontWeight: 700 }}>✓</span>}
-              </div>
+              {selected ? (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#f59e0b', color: '#0f1117', fontSize: 16, fontWeight: 700 }}>
+                  ✓
+                </div>
+              ) : (
+                <span className="row-arrow text-2xl flex-shrink-0" style={{ color: 'rgba(245,158,11,0.6)' }}>→</span>
+              )}
             </button>
           );
         })}

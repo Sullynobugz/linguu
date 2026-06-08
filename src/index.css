@@ -73,3 +73,72 @@ h1, h2, h3 {
   background: #3a3f5c;
   border-radius: 3px;
 }
+
+/* ── Topic Cards ──────────────────────────────────────────────── */
+.topic-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.topic-card.unlocked {
+  cursor: pointer;
+}
+.topic-card.unlocked:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+}
+.topic-cta {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease, max-height 0.25s ease, margin-top 0.2s ease;
+  margin-top: 0;
+}
+.topic-card.unlocked:hover .topic-cta {
+  opacity: 1;
+  max-height: 48px;
+  margin-top: 12px;
+}
+
+/* ── Action Cards (Dashboard Widgets) ─────────────────────────── */
+.action-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.action-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+.action-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.action-card:hover .action-arrow {
+  transform: translateX(5px);
+}
+
+/* ── Onboarding Rows ──────────────────────────────────────────── */
+.onboarding-row {
+  transition: transform 0.18s ease !important;
+}
+.onboarding-row:hover {
+  transform: translateX(3px) !important;
+}
+.row-arrow {
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateX(-6px);
+}
+.onboarding-row:hover .row-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Lesson Navigations-Buttons ───────────────────────────────── */
+.lesson-nav-prev:hover:not(:disabled) {
+  box-shadow: 4px 0 30px rgba(245, 158, 11, 0.2) !important;
+}
+.lesson-nav-next:not(:disabled) {
+  transition: opacity 0.15s ease, box-shadow 0.15s ease !important;
+}
+.lesson-nav-next:hover:not(:disabled) {
+  box-shadow: -4px 0 30px rgba(245, 158, 11, 0.35) !important;
+  opacity: 0.92 !important;
+}

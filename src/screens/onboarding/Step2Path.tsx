@@ -150,17 +150,19 @@ export function Step2Path() {
         {paths.map(path => {
           const selected = progress.path === path.id;
           const isEinbuergerung = path.id === 'einbuergerung';
+          const accent = isEinbuergerung ? '#6366f1' : '#f59e0b';
+          const accentAlpha = isEinbuergerung ? 'rgba(99,102,241,0.35)' : 'rgba(245,158,11,0.35)';
           return (
             <button
               key={path.id}
               onClick={() => handleSelect(path.id)}
-              className="flex items-center gap-5 p-5 rounded-2xl text-left transition-all duration-200"
+              className="onboarding-row flex items-center gap-5 p-5 rounded-2xl text-left"
               style={{
                 background: selected
                   ? isEinbuergerung ? 'rgba(99,102,241,0.15)' : 'rgba(245,158,11,0.12)'
                   : 'rgba(26,29,39,0.8)',
                 border: selected
-                  ? `2px solid ${isEinbuergerung ? '#6366f1' : '#f59e0b'}`
+                  ? `2px solid ${accent}`
                   : isEinbuergerung
                   ? '2px solid rgba(99,102,241,0.25)'
                   : '2px solid rgba(255,255,255,0.08)',
@@ -168,29 +170,30 @@ export function Step2Path() {
               }}
               onMouseEnter={e => {
                 if (!selected) {
-                  const accent = isEinbuergerung ? 'rgba(99,102,241,0.35)' : 'rgba(245,158,11,0.35)';
-                  (e.currentTarget as HTMLElement).style.borderColor = accent;
+                  (e.currentTarget as HTMLElement).style.borderColor = accentAlpha;
                   (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,1)';
                 }
               }}
               onMouseLeave={e => {
                 if (!selected) {
-                  (e.currentTarget as HTMLElement).style.borderColor = isEinbuergerung
-                    ? 'rgba(99,102,241,0.25)'
-                    : 'rgba(255,255,255,0.08)';
+                  (e.currentTarget as HTMLElement).style.borderColor = isEinbuergerung ? 'rgba(99,102,241,0.25)' : 'rgba(255,255,255,0.08)';
                   (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,0.8)';
                 }
               }}
             >
-              <span className="text-4xl flex-shrink-0">{path.icon}</span>
+              {/* Icon */}
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+                style={{ background: selected ? `${accent}20` : 'rgba(255,255,255,0.05)' }}
+              >
+                {path.icon}
+              </div>
+
               <div className="flex-1" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                <div className="text-xl font-semibold" style={{ color: '#f0ede8' }}>
+                <div className="text-xl font-bold" style={{ color: '#f0ede8' }}>
                   {path.titles[lang]}
                 </div>
-                <div
-                  className="text-sm mt-0.5"
-                  style={{ color: isEinbuergerung ? '#818cf8' : '#f59e0b', opacity: 0.85 }}
-                >
+                <div className="text-sm mt-0.5" style={{ color: accent, opacity: 0.85 }}>
                   {path.titleDE}
                 </div>
                 <p className="text-sm mt-1" style={{ color: '#8b8fa8' }}>
@@ -205,21 +208,18 @@ export function Step2Path() {
                   </span>
                 )}
               </div>
-              <div
-                className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                style={{
-                  borderColor: selected
-                    ? isEinbuergerung ? '#6366f1' : '#f59e0b'
-                    : 'rgba(255,255,255,0.2)',
-                  background: selected
-                    ? isEinbuergerung ? '#6366f1' : '#f59e0b'
-                    : 'transparent',
-                }}
-              >
-                {selected && (
-                  <span style={{ color: '#fff', fontSize: 12, fontWeight: 700 }}>✓</span>
-                )}
-              </div>
+
+              {/* Status / Arrow */}
+              {selected ? (
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: accent, color: '#fff', fontSize: 16, fontWeight: 700 }}
+                >
+                  ✓
+                </div>
+              ) : (
+                <span className="row-arrow text-2xl flex-shrink-0" style={{ color: accent }}>→</span>
+              )}
             </button>
           );
         })}

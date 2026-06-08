@@ -3,6 +3,38 @@ import { useSpeak, useListen } from '../hooks/useSpeech';
 import { useProgress } from '../store/ProgressContext';
 import type { Language } from '../types';
 
+// ── Waveform — pure CSS, works in every browser ─────────────────
+const WAVE_SPEEDS = [0.28, 0.38, 0.50, 0.38, 0.28]; // seconds per bar
+const WAVE_DELAYS = [0, 70, 140, 70, 0];             // ms stagger
+
+function Waveform({ active }: { active: boolean }) {
+  return (
+    <>
+      <style>{`
+        @keyframes lbar {
+          0%   { transform: scaleY(0.12); }
+          100% { transform: scaleY(1); }
+        }
+      `}</style>
+      <span style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 22, flexShrink: 0 }}>
+        {WAVE_SPEEDS.map((spd, i) => (
+          <span key={i} style={{
+            display: 'inline-block',
+            width: 3,
+            height: 22,
+            borderRadius: 2,
+            background: 'currentColor',
+            transformOrigin: 'bottom center',
+            animation: active
+              ? `lbar ${spd}s ease-in-out ${WAVE_DELAYS[i]}ms infinite alternate`
+              : 'none',
+          }} />
+        ))}
+      </span>
+    </>
+  );
+}
+
 const nativeLangLabel: Record<Language, string> = {
   ar: 'بالعربية',
   uk: 'Українською',
@@ -45,7 +77,7 @@ interface AudioControlsProps {
 export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLang = 'de', compact = false, learnLangLabel }: AudioControlsProps) {
   const { addOpenAiCost } = useProgress();
   const { speak, stop: stopSpeak, speaking, loading: ttsLoading } = useSpeak();
-  const { listen, stop: stopListen, reset, listening, processing, result } = useListen();
+  const { listen, stop: stopListen, reset, listening, processing, result, analyserRef } = useListen();
   const [activeVoice, setActiveVoice] = useState<'de' | 'native' | null>(null);
 
   const isActive = speaking || ttsLoading;
@@ -191,13 +223,21 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-sm transition-all duration-200"
           style={{
             background: listening ? 'rgba(239,68,68,0.15)' : processing ? 'rgba(139,143,168,0.1)' : 'rgba(255,255,255,0.06)',
-            border: `1px solid ${listening ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
+            border: `1.5px solid ${listening ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
             color: listening ? '#ef4444' : processing ? '#8b8fa8' : '#8b8fa8',
           }}
         >
-          <span className="text-base">{processing ? '⏳' : listening ? '🔴' : '🎤'}</span>
+          {listening ? (
+            <Waveform active={listening} />
+          ) : (
+            <span className="text-base">{processing ? '⏳' : '🎤'}</span>
+          )}
           <span>
-            {processing ? labels.processing[lang] ?? labels.processing['en'] : listening ? labels.listening[lang] ?? labels.listening['en'] : labels.speak[lang] ?? labels.speak['en']}
+            {processing
+              ? labels.processing[lang] ?? labels.processing['en']
+              : listening
+              ? labels.listening[lang] ?? labels.listening['en']
+              : labels.speak[lang] ?? labels.speak['en']}
           </span>
         </button>
       </div>
