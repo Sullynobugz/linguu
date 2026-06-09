@@ -189,7 +189,7 @@ function Panel({ lang, onLangChange, side, toLang }: PanelProps) {
           <p
             style={{
               fontSize: 13,
-              color: '#c8c9d4',
+              color: "#0f172a",
               margin: '0 0 6px',
               direction: isRtlInput ? 'rtl' : 'ltr',
               lineHeight: 1.4,
@@ -286,7 +286,7 @@ export function FloatingTranslator() {
           right: 20,
           zIndex: 1000,
           width: 'min(360px, calc(100vw - 24px))',
-          background: '#12151f',
+          background: "#ffffff",
           border: '1px solid rgba(0,0,0,0.07)',
           borderRadius: 16,
           boxShadow: '0 8px 40px rgba(0,0,0,0.7)',

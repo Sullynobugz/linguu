@@ -260,7 +260,7 @@ export function AudioControls({ germanPhrase, nativeTranslation, lang, targetLan
             </span>
           </div>
           {result.transcript && (
-            <p className="text-xs mt-1 italic" style={{ color: 'rgba(240,237,232,0.4)' }}>
+            <p className="text-xs mt-1 italic" style={{ color: "rgba(15,23,42,0.4)" }}>
               „{result.transcript}"
             </p>
           )}

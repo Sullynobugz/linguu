@@ -346,7 +346,7 @@ export function VocabScreen() {
             }} />
             <div style={{
               position: 'absolute', inset: 0, borderRadius: 24,
-              background: 'rgba(26,29,39,0.65)', border: '1px solid rgba(0,0,0,0.05)',
+              background: "rgba(203,213,225,0.6)", border: "1px solid rgba(0,0,0,0.04)",
               transform: 'translateY(5px) translateX(4px) rotate(1.2deg)',
               zIndex: 1,
             }} />
@@ -421,7 +421,7 @@ export function VocabScreen() {
                       {mode === 'phrases' ? card?.german : wcard?.german}
                     </h2>
                     {mode === 'phrases' && card?.phonetics && (
-                      <p className="font-mono text-sm mb-3" style={{ color: 'rgba(240,237,232,0.4)' }}>
+                      <p className="font-mono text-sm mb-3" style={{ color: "rgba(15,23,42,0.4)" }}>
                         [{card.phonetics}]
                       </p>
                     )}
