@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'Linguu — Deutsch lernen',
-  description: 'Deutsch lernen für echte Alltagssituationen in Deutschland',
+  description: 'Deutsch lernen für echte Alltagssituationen in Deutschland — Jobcenter, Arzt, Behörden.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
