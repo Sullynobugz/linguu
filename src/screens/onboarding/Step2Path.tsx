@@ -171,7 +171,7 @@ export function Step2Path() {
               onMouseEnter={e => {
                 if (!selected) {
                   (e.currentTarget as HTMLElement).style.borderColor = accentAlpha;
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(26,29,39,1)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(79,70,229,0.06)';
                 }
               }}
               onMouseLeave={e => {
