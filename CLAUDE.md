@@ -40,6 +40,11 @@ Vollwertiges Produkt, live auf linguu.techstag.de. Auf Next.js migriert (API-Key
 ## ⚠️ Deployment-Notiz
 `vite.config.ts` und Vite-tsconfigs wurden entfernt (waren Überbleibsel). nixpacks erkennt das Projekt jetzt sauber als Next.js. API-Keys sind serverseitig (keine VITE_-Prefix-Keys mehr).
 
+**Coolify + Private Repo**: Coolify wurde mit einer public-Repo-URL eingerichtet. Bei privatem Repo schlägt der Deploy lautlos fehl (Webhook feuert, Clone scheitert ohne Fehlermeldung). Lösung: Deploy Key in Coolify hinterlegen oder Repo public lassen.
+
+## ⚠️ Dark Mode deaktiviert — NICHT wieder einbauen
+`app/globals.css` hat **keinen** `@media (prefers-color-scheme: dark)` Block mehr. Hintergrund: Die SPA-Komponenten (`src/`) nutzen hardcodierte Hex-Werte (z.B. `background: '#f8fafc'`) statt CSS-Variablen. Ein Dark-Mode-Block würde nur den Body-Hintergrund umschalten, alle Komponenten blieben hell — inkonsistentes Ergebnis. Erst wenn alle Inline-Styles auf CSS-Variablen umgestellt sind, kann Dark Mode wieder aktiviert werden.
+
 ## ⚠️ Waveform-Implementierung
 `src/components/AudioControls.tsx` — Waveform nutzt **reines CSS** (`@keyframes lbar`), kein JS/rAF/AudioContext. 5 Balken mit unterschiedlichen `animation-duration`-Werten (0.28s–0.50s) und gestaffelten Delays. Wird nur als Prop `active: boolean` gesteuert — `analyserRef` nicht mehr nötig. Falls jemand die Web-Audio-API wieder einbauen möchte: `useSpeech.ts` hat den Setup-Code noch drin (AudioContext + AnalyserNode), wird nur nicht mehr von Waveform gelesen.
 
@@ -60,3 +65,5 @@ Nicht Duolingo-Klon — fokussiert auf konkrete Behörden-/Alltagssituationen di
 | 2026-06-07 | Waveform auf pure CSS umgestellt — JS/rAF-Ansatz war unzuverlässig (AudioContext suspended state, barRefs-Timing). CSS-Animation ist browserübergreifend garantiert. |
 | 2026-06-07 | LessonScreen Nav-Buttons von absolute auf flex-row — docken jetzt direkt an die Content-Karte an statt am Screen-Rand zu floaten |
 | 2026-06-07 | UI-Overhaul: größere Icons (56×56px Bubbles), Hover-Animationen auf Topic/Action-Cards, Wegweiser-Pfeile, OnboardingLayout Step-Dots vergrößert |
+| 2026-06-08 | TechStag Light Theme Migration: alle SPA-Komponenten von Dark (amber/#0f1117) auf Light (indigo/#f8fafc) umgestellt. Dark Mode Override aus globals.css entfernt. |
+| 2026-06-09 | Verbleibende Dark-Mode-Reste behoben: FloatingTranslator (#12151f → weiß), VocabScreen Dekorations-Karte, AudioControls Transcript-Farbe, Step2Path Hover-Bug (rgba(26,29,39,1) → Indigo). |
