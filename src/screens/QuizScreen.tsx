@@ -118,7 +118,11 @@ export function QuizScreen() {
   const handleSelect = (option: string) => {
     if (selected !== null) return;
     setSelected(option);
-    if (option === question.correct) setCorrect(c => c + 1);
+    if (option === question.correct) {
+      setCorrect(c => c + 1);
+    } else {
+      speak(question.correct, 0.9, u => addOpenAiCost(u.costEur));
+    }
 
     setTimeout(() => {
       if (currentIdx < questions.length - 1) {
