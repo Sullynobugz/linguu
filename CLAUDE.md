@@ -68,3 +68,4 @@ Nicht Duolingo-Klon — fokussiert auf konkrete Behörden-/Alltagssituationen di
 | 2026-06-08 | TechStag Light Theme Migration: alle SPA-Komponenten von Dark (amber/#0f1117) auf Light (indigo/#f8fafc) umgestellt. Dark Mode Override aus globals.css entfernt. |
 | 2026-06-09 | Verbleibende Dark-Mode-Reste behoben: FloatingTranslator (#12151f → weiß), VocabScreen Dekorations-Karte, AudioControls Transcript-Farbe, Step2Path Hover-Bug (rgba(26,29,39,1) → Indigo). |
 | 2026-06-11 | Posthog Analytics eingebaut: `app/providers.tsx` (PHProvider Client Component), Layout gewrappt, Env Vars in Coolify gesetzt. Automatisches Page-View-Tracking aktiv. |
+| 2026-06-13 | `?wid=`-Empfang verifiziert/gehärtet: `WidCodeFromUrl` in `src/App.tsx` liest den Param beim Start aus, persistiert via `setWidCode` in `linguu_wid_code` (kein Onboarding-Schritt) und entfernt ihn aus der URL. Gleiche `length >= 4`-Guard wie im Dashboard-Handler ergänzt, damit beide Code-Pfade konsistent sind. |
