@@ -22,7 +22,7 @@ function WidCodeFromUrl() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const wid = params.get('wid');
-    if (!wid) return;
+    if (!wid || wid.length < 4) return;
 
     setWidCode(wid);
     const url = new URL(window.location.href);

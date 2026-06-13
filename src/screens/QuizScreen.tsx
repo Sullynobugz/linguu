@@ -5,7 +5,7 @@ import { topics } from '../data/content';
 import { getEncouragingMessage } from '../api/claude';
 import { t, getT, langNames } from '../i18n';
 import { BilingualText } from '../components/BilingualText';
-import { useSpeak } from '../hooks/useSpeech';
+import { useSpeak, useListen } from '../hooks/useSpeech';
 import { trackProgress } from '../lib/widTracking';
 import type { Language, Level } from '../types';
 
@@ -78,6 +78,7 @@ export function QuizScreen() {
   const [loadingMsg, setLoadingMsg] = useState(false);
 
   const { speak } = useSpeak();
+  const { listen, stop: stopListen, reset: resetMic, listening: micListening, processing: micProcessing, result: micResult } = useListen();
   const quizStartRef = useRef<number>(Date.now());
   const topic = topics.find(tt => tt.id === topicId);
   const question = questions[currentIdx];
@@ -113,6 +114,17 @@ export function QuizScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showResult]);
 
+  useEffect(() => { resetMic(); }, [currentIdx]);
+
+  const micStatusColor = { perfect: '#10b981', good: '#4f46e5', try_again: '#ef4444' };
+
+  const handleMic = () => {
+    if (micListening) { stopListen(); return; }
+    if (micProcessing) return;
+    resetMic();
+    listen(question.learnPhrase, u => addOpenAiCost(u.costEur), targetLang);
+  };
+
   if (!topic || !question) return null;
 
   const handleSelect = (option: string) => {
@@ -121,7 +133,9 @@ export function QuizScreen() {
     if (option === question.correct) {
       setCorrect(c => c + 1);
     } else {
-      speak(question.correct, 0.9, u => addOpenAiCost(u.costEur));
+      // Korrekte Übersetzung in Muttersprache vorlesen — `shimmer` für native,
+      // `nova` nur wenn die Muttersprache selbst Deutsch ist (Konvention aus AudioControls).
+      speak(question.correct, 0.9, u => addOpenAiCost(u.costEur), lang === 'de' ? 'nova' : 'shimmer');
     }
 
     setTimeout(() => {
@@ -282,19 +296,70 @@ export function QuizScreen() {
             <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#64748b' }}>
               {learnLangLabel}
             </p>
-            <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
+            <h2 className="text-3xl font-bold mb-5" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', color: '#0f172a' }}>
               {question.learnPhrase}
             </h2>
-            {/* Play button — hear the phrase */}
-            <button
-              onClick={() => speak(question.learnPhrase, 0.9, u => addOpenAiCost(u.costEur))}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all"
-              style={{ background: 'rgba(79,70,229,0.12)', border: '1px solid rgba(79,70,229,0.3)', color: '#4f46e5' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.2)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.12)')}
-            >
-              🔊 <BilingualText native={t('listen', lang)} de={t('listen', 'de')} lang={lang} />
-            </button>
+            {/* Audio-Buttons: Hören + Sprechen (Whisper) */}
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => speak(question.learnPhrase, 0.9, u => addOpenAiCost(u.costEur))}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all"
+                style={{ background: 'rgba(79,70,229,0.12)', border: '2px solid rgba(79,70,229,0.3)', color: '#4f46e5' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.22)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(79,70,229,0.12)')}
+              >
+                🔊 <BilingualText native={t('listen', lang)} de={t('listen', 'de')} lang={lang} />
+              </button>
+              <button
+                onClick={handleMic}
+                disabled={micProcessing}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all"
+                style={{
+                  background: micListening ? 'rgba(239,68,68,0.15)' : 'rgba(0,0,0,0.06)',
+                  border: `2px solid ${micListening ? '#ef4444' : 'rgba(0,0,0,0.12)'}`,
+                  color: micListening ? '#ef4444' : '#64748b',
+                  opacity: micProcessing ? 0.6 : 1,
+                }}
+              >
+                <span>{micProcessing ? '⏳' : micListening ? '⏹' : '🎤'}</span>
+                <span>
+                  {micProcessing ? '...' : micListening ? '● Aufnahme' : 'Sprechen'}
+                </span>
+              </button>
+            </div>
+
+            {/* Aussprache-Feedback */}
+            {micResult && (
+              <div
+                className="mt-4 rounded-xl px-4 py-3 text-sm text-left animate-fade-in-up"
+                style={{
+                  background: `${micStatusColor[micResult.status]}15`,
+                  border: `1px solid ${micStatusColor[micResult.status]}40`,
+                }}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span style={{ color: micStatusColor[micResult.status], fontWeight: 600 }}>
+                    {micResult.status === 'perfect' ? '🎉 Perfekte Aussprache!'
+                      : micResult.status === 'good' ? '👍 Gut! Weiter üben'
+                      : '🔄 Nochmal versuchen'}
+                  </span>
+                  <span className="font-bold text-sm" style={{ color: micStatusColor[micResult.status] }}>
+                    {micResult.score}%
+                  </span>
+                </div>
+                {micResult.transcript && (
+                  <p className="text-xs italic mt-1" style={{ color: 'rgba(15,23,42,0.45)' }}>
+                    „{micResult.transcript}"
+                  </p>
+                )}
+                <div className="mt-2 h-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${micResult.score}%`, background: micStatusColor[micResult.status] }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <p className="text-sm text-center mb-4" style={{ color: '#64748b' }}>

@@ -25,6 +25,7 @@ const paths: {
       pl: 'Droga do obywatelstwa',
       ro: 'Drumul spre cetățenie',
       ru: 'Путь к гражданству',
+      ku: 'Rêya bidestxistina hemwelatiyê',
     },
     subtitles: {
       de: 'Einbürgerungstest, B1-Niveau, Voraussetzungen für die deutsche Staatsbürgerschaft',
@@ -36,6 +37,7 @@ const paths: {
       pl: 'Test naturalizacyjny, poziom B1, wymagania obywatelstwa niemieckiego',
       ro: 'Test de naturalizare, nivel B1, cerințele cetățeniei germane',
       ru: 'Тест на натурализацию, уровень B1, требования к гражданству Германии',
+      ku: 'Testa hemwelatiyê, asta B1, mercên hemwelatiya Almanyayê',
     },
   },
   {
@@ -52,6 +54,7 @@ const paths: {
       pl: 'Nowy w Niemczech',
       ro: 'Nou în Germania',
       ru: 'Новый в Германии',
+      ku: 'Nû li Almanyayê',
     },
     subtitles: {
       de: 'Behörden, Wohnen, Gesundheit, Alltag',
@@ -63,6 +66,7 @@ const paths: {
       pl: 'Urzędy, mieszkanie, zdrowie, życie codzienne',
       ro: 'Instituții, locuință, sănătate, viața de zi cu zi',
       ru: 'Госорганы, жильё, здоровье, повседневная жизнь',
+      ku: 'Saziyên fermî, rûniştin, tenduristî, jiyana rojane',
     },
   },
   {
@@ -79,6 +83,7 @@ const paths: {
       pl: 'Praca i kariera',
       ro: 'Muncă și carieră',
       ru: 'Работа и карьера',
+      ku: 'Kar û pêşeyî',
     },
     subtitles: {
       de: 'Jobsuche, Kollegen, Bewerbungen',
@@ -90,6 +95,7 @@ const paths: {
       pl: 'Poszukiwanie pracy, współpracownicy, podania o pracę',
       ro: 'Căutarea unui loc de muncă, colegi, cereri de angajare',
       ru: 'Поиск работы, коллеги, заявления о приёме на работу',
+      ku: 'Lêgerîna kar, hevkar, serîlêdanên kar',
     },
   },
   {
@@ -106,6 +112,7 @@ const paths: {
       pl: 'Pogłębianie języka',
       ro: 'Aprofundarea limbii',
       ru: 'Углублённое изучение языка',
+      ku: 'Kûrkirina zimên',
     },
     subtitles: {
       de: 'Grammatik, Gespräch, deutsche Kultur',
@@ -117,6 +124,7 @@ const paths: {
       pl: 'Gramatyka, konwersacja, kultura niemiecka',
       ro: 'Gramatică, conversație, cultură germană',
       ru: 'Грамматика, разговор, немецкая культура',
+      ku: 'Rêziman, axaftin, çanda Almanî',
     },
   },
 ];

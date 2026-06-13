@@ -43,6 +43,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا سمعت؟', uk: 'Що ви почули?', es: '¿Qué escuchaste?', en: 'What did you hear?',
       de: 'Was haben Sie gehört?', tr: 'Ne duydunuz?', pl: 'Co usłyszałeś?', ro: 'Ce ai auzit?', ru: 'Что вы услышали?',
+      ku: 'Te çi bihîst?',
     },
     optionsByLang: {
       ar: ['صباح الخير، كيف حالك؟', 'مساء الخير، هل أنت بخير؟', 'إلى اللقاء، أراك غداً', 'شكراً جزيلاً'],
@@ -54,6 +55,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Dzień dobry, jak się pan/pani miewa?', 'Dobry wieczór, dobrze?', 'Do widzenia, do jutra', 'Bardzo dziękuję'],
       ro: ['Bună dimineața, cum vă simțiți?', 'Bună seara, ești bine?', 'La revedere, pe mâine', 'Mulțumesc mult'],
       ru: ['Доброе утро, как вы?', 'Добрый вечер, вы в порядке?', 'До свидания, до завтра', 'Большое спасибо'],
+      ku: ['Sibe baş, tu çawa yî?', 'Êvar baş, tu baş î?', 'Bi xatirê te, heta sibê', 'Gelek spas'],
     },
   },
   {
@@ -62,6 +64,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا طُلب منك؟', uk: 'Що від вас попросили?', es: '¿Qué te pidieron?', en: 'What were you asked to do?',
       de: 'Was wurde von Ihnen verlangt?', tr: 'Sizden ne istendi?', pl: 'O co poproszono?', ro: 'Ce ți s-a cerut?', ru: 'О чём вас попросили?',
+      ku: 'Ji te çi hat xwestin?',
     },
     optionsByLang: {
       ar: ['أرِ بطاقة هويتك من فضلك', 'اجلس من فضلك', 'انتظر هنا من فضلك', 'أملأ هذا النموذج من فضلك'],
@@ -73,6 +76,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Pokaż dowód tożsamości', 'Proszę usiąść', 'Proszę czekać tutaj', 'Proszę wypełnić formularz'],
       ro: ['Arătați-vă actul de identitate', 'Vă rog să stați jos', 'Așteptați aici, vă rog', 'Completați acest formular'],
       ru: ['Покажите ваше удостоверение', 'Пожалуйста, присядьте', 'Подождите здесь, пожалуйста', 'Заполните эту форму'],
+      ku: ['Ji kerema xwe nasnameya xwe nîşan bide', 'Ji kerema xwe rûne', 'Ji kerema xwe li vir bisekine', 'Ji kerema xwe vê formê tijî bike'],
     },
   },
   {
@@ -81,6 +85,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا سمعت عن المكتب؟', uk: 'Що ви почули про офіс?', es: '¿Qué escuchaste sobre la oficina?', en: 'What did you hear about the office?',
       de: 'Was haben Sie über das Büro gehört?', tr: 'Ofis hakkında ne duydunuz?', pl: 'Co usłyszałeś o biurze?', ro: 'Ce ai auzit despre birou?', ru: 'Что вы услышали об офисе?',
+      ku: 'Te derbarê nivîsgehê de çi bihîst?',
     },
     optionsByLang: {
       ar: ['المكتب مغلق اليوم', 'المكتب مفتوح غداً', 'المكتب مشغول جداً', 'المكتب في الطابق الثاني'],
@@ -92,6 +97,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Biuro jest dziś zamknięte', 'Biuro jutro otwarte', 'Biuro jest bardzo zajęte', 'Biuro jest na drugim piętrze'],
       ro: ['Biroul este închis azi', 'Biroul deschide mâine', 'Biroul este foarte ocupat', 'Biroul este la etajul doi'],
       ru: ['Офис сегодня закрыт', 'Офис открыт завтра', 'Офис очень занят', 'Офис на втором этаже'],
+      ku: ['Nivîsgeh îro girtî ye', 'Nivîsgeh sibê vedibe', 'Nivîsgeh pir mijûl e', 'Nivîsgeh li qata duyemîn e'],
     },
   },
   // A1 — Choice
@@ -101,6 +107,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'اختر الفعل الصحيح', uk: 'Обери правильне дієслово', es: 'Elige el verbo correcto', en: 'Choose the correct verb',
       de: 'Wähle das richtige Verb', tr: 'Doğru fiili seçin', pl: 'Wybierz właściwy czasownik', ro: 'Alege verbul corect', ru: 'Выберите правильный глагол',
+      ku: 'Lêkera rast hilbijêre',
     },
     options: ['habe', 'ist', 'bin', 'sind'],
     correct: 2,
@@ -111,6 +118,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'هذه كلمة مهمة جداً في المكاتب', uk: 'Це дуже важливе слово в установах', es: 'Es una palabra muy importante en oficinas', en: 'This is a very important word in offices',
       de: 'Das ist ein sehr wichtiges Wort', tr: 'Bu ofislerde çok önemli bir kelime', pl: 'To bardzo ważne słowo w urzędach', ro: 'Este un cuvânt foarte important în birouri', ru: 'Это очень важное слово в учреждениях',
+      ku: 'Ev di nivîsgehan de peyveke pir girîng e',
     },
     options: ['Danke', 'Tschüss', 'Entschuldigung / Excuse me', 'Bitte'],
     correct: 2,
@@ -122,6 +130,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا أراد الشخص؟', uk: 'Чого хотіла людина?', es: '¿Qué quería la persona?', en: 'What did the person want?',
       de: 'Was wollte die Person?', tr: 'Kişi ne istedi?', pl: 'Czego chciała osoba?', ro: 'Ce a vrut persoana?', ru: 'Чего хотел человек?',
+      ku: 'Kesê çi dixwest?',
     },
     optionsByLang: {
       ar: ['موعد عند الطبيب', 'وصفة طبية', 'المغادرة المبكرة', 'حجز غرفة في المستشفى'],
@@ -133,6 +142,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Wizyta u lekarza', 'Receptę', 'Wczesne wypisanie', 'Rezerwacja pokoju szpitalnego'],
       ro: ['O programare la medic', 'O rețetă', 'Externare timpurie', 'Rezervare cameră spital'],
       ru: ['Запись к врачу', 'Рецепт', 'Ранняя выписка', 'Бронирование палаты'],
+      ku: ['Randevûyek li cem bijîjk', 'Reçeteyek', 'Berdana zû', 'Vejandina odeya nexweşxaneyê'],
     },
   },
   {
@@ -141,6 +151,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا طلب الشخص؟', uk: 'Про що попросила людина?', es: '¿Qué pidió la persona?', en: 'What did the person ask for?',
       de: 'Worum bat die Person?', tr: 'Kişi ne istedi?', pl: 'O co poprosił?', ro: 'Ce a cerut persoana?', ru: 'О чём попросил человек?',
+      ku: 'Kesê tika çi kir?',
     },
     optionsByLang: {
       ar: ['تكرار الشيء بشكل أبطأ', 'الكتابة أكثر', 'التحدث بصوت أعلى', 'إيقاف الاجتماع'],
@@ -152,6 +163,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Powtórzyć wolniej', 'Więcej pisać', 'Mówić głośniej', 'Zatrzymać spotkanie'],
       ro: ['Repetați mai rar', 'Să scrie mai mult', 'Vorbiți mai tare', 'Opriți ședința'],
       ru: ['Повторить медленнее', 'Писать больше', 'Говорить громче', 'Остановить встречу'],
+      ku: ['Hêdîtir dubare bike', 'Bêtir binivîse', 'Bilindtir biaxive', 'Civînê rawestîne'],
     },
   },
   {
@@ -160,6 +172,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ما الموعد النهائي لتقديم الوثائق؟', uk: 'Коли потрібно подати документи?', es: '¿Cuál es el plazo para presentar los documentos?', en: 'What is the deadline for submitting documents?',
       de: 'Bis wann müssen die Unterlagen eingereicht werden?', tr: 'Belgeler ne zamana kadar teslim edilmeli?', pl: 'Kiedy należy złożyć dokumenty?', ro: 'Când trebuie depuse documentele?', ru: 'Когда нужно сдать документы?',
+      ku: 'Belge divê heta kengê werin radestkirin?',
     },
     optionsByLang: {
       ar: ['حتى يوم الجمعة', 'حتى يوم الاثنين', 'في أي وقت', 'في الأسبوع القادم'],
@@ -171,6 +184,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Do piątku', 'Do poniedziałku', 'W dowolnym czasie', 'W przyszłym tygodniu'],
       ro: ['Până vineri', 'Până luni', 'Oricând', 'Săptămâna viitoare'],
       ru: ['До пятницы', 'До понедельника', 'В любое время', 'На следующей неделе'],
+      ku: ['Heta Înê', 'Heta Duşemê', 'Her dem', 'Hefteya bê'],
     },
   },
   // A2 — Choice
@@ -180,6 +194,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'أي جملة مناسبة للمكاتب الرسمية؟', uk: 'Яка фраза підходить для офіційних установ?', es: '¿Qué frase es adecuada para organismos oficiales?', en: 'Which phrase is suitable for official agencies?',
       de: 'Welcher Satz ist für Ämter geeignet?', tr: 'Hangi cümle resmi kurumlar için uygundur?', pl: 'Które zdanie jest odpowiednie dla urzędów?', ro: 'Care frază este potrivită pentru instituții oficiale?', ru: 'Какая фраза подходит для официальных учреждений?',
+      ku: 'Kîjan hevok ji bo saziyên fermî guncan e?',
     },
     options: [
       'Ich würde gerne einen Termin vereinbaren.',
@@ -195,6 +210,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'تعبير شائع في المكاتب والإدارات', uk: 'Поширений вираз в установах', es: 'Expresión común en oficinas', en: 'A common phrase in offices and administrations',
       de: 'Ein häufiger Ausdruck in Ämtern', tr: 'Ofislerde yaygın bir ifade', pl: 'Popularne wyrażenie w urzędach', ro: 'Expresie comună în birouri', ru: 'Распространённое выражение в учреждениях',
+      ku: 'Gotineke berbelav di saziyan de',
     },
     options: [
       'Jemanden informieren',
@@ -211,6 +227,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ما المشكلة مع الطلب؟', uk: 'Яка проблема із заявою?', es: '¿Cuál es el problema con la solicitud?', en: 'What is the problem with the application?',
       de: 'Was ist das Problem mit dem Antrag?', tr: 'Başvuruyla ilgili sorun nedir?', pl: 'Jaki jest problem z wnioskiem?', ro: 'Care este problema cu cererea?', ru: 'В чём проблема с заявлением?',
+      ku: 'Pirsgirêka serîlêdanê çi ye?',
     },
     optionsByLang: {
       ar: ['التقديم لا يمكن معالجته بسبب نقص المستندات', 'تم قبول الطلب بنجاح', 'الطلب في المراجعة', 'الطلب مرفوض بسبب الخطأ'],
@@ -222,6 +239,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Wniosek nie może być przetworzony z powodu brakujących dokumentów', 'Wniosek został pomyślnie przyjęty', 'Wniosek jest w trakcie rozpatrywania', 'Wniosek odrzucony z powodu błędu'],
       ro: ['Cererea nu poate fi procesată din cauza documentelor lipsă', 'Cererea a fost acceptată cu succes', 'Cererea este în curs de analiză', 'Cererea a fost respinsă din cauza unei erori'],
       ru: ['Заявление не может быть обработано из-за отсутствия документов', 'Заявление успешно принято', 'Заявление на рассмотрении', 'Заявление отклонено из-за ошибки'],
+      ku: ['Serîlêdan ji ber kêmasiya belgeyan nayê pêvajokirin', 'Serîlêdan bi serkeftî hat qebûlkirin', 'Serîlêdan tê venihêrtin', 'Serîlêdan ji ber çewtiyekê hat redkirin'],
     },
   },
   {
@@ -230,6 +248,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ما الذي يمكن للشخص فعله؟', uk: 'Що може зробити людина?', es: '¿Qué puede hacer la persona?', en: 'What can the person do?',
       de: 'Was kann die Person tun?', tr: 'Kişi ne yapabilir?', pl: 'Co może zrobić ta osoba?', ro: 'Ce poate face persoana?', ru: 'Что может сделать человек?',
+      ku: 'Kes dikare çi bike?',
     },
     optionsByLang: {
       ar: ['تقديم اعتراض على القرار خلال أربعة أسابيع', 'دفع الغرامة فوراً', 'قبول القرار دون اعتراض', 'التقدم لإعادة التقييم في غضون سنة'],
@@ -241,6 +260,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Złożyć odwołanie od decyzji w ciągu czterech tygodni', 'Natychmiast zapłacić karę', 'Zaakceptować decyzję bez sprzeciwu', 'Złożyć wniosek o kontrolę w ciągu roku'],
       ro: ['Depune o contestație împotriva deciziei în patru săptămâni', 'Plătiți amenda imediat', 'Acceptați decizia fără contestație', 'Solicitați revizuire în decurs de un an'],
       ru: ['Подать возражение против решения в течение четырёх недель', 'Немедленно оплатить штраф', 'Принять решение без возражений', 'Подать на пересмотр в течение года'],
+      ku: ['Di nav çar hefteyan de li dijî biryarê îtiraz bike', 'Cezayê tavilê bide', 'Biryarê bê îtiraz qebûl bike', 'Di nav salekê de daxwaza venihêrtinê bike'],
     },
   },
   {
@@ -249,6 +269,7 @@ const QUESTIONS: RawQuestion[] = [
     questionByLang: {
       ar: 'ماذا تحتاج للحصول على تصريح الإقامة؟', uk: 'Що потрібно для отримання дозволу на проживання?', es: '¿Qué se necesita para el permiso de residencia?', en: 'What do you need for the residence permit?',
       de: 'Was braucht man für die Aufenthaltserlaubnis?', tr: 'Oturma izni için ne gerekli?', pl: 'Co potrzeba do pozwolenia na pobyt?', ro: 'Ce trebuie pentru permisul de ședere?', ru: 'Что нужно для разрешения на проживание?',
+      ku: 'Ji bo destûra mayînê çi pêwîst e?',
     },
     optionsByLang: {
       ar: ['جواز سفر ساري وشهادة تسجيل حديثة', 'عقد عمل وكشف حساب بنكي', 'شهادة ميلاد وشهادة مدرسية', 'تأمين صحي وعقد إيجار'],
@@ -260,6 +281,7 @@ const QUESTIONS: RawQuestion[] = [
       pl: ['Ważny paszport i aktualne zaświadczenie o zameldowaniu', 'Umowa o pracę i wyciąg bankowy', 'Akt urodzenia i świadectwo szkolne', 'Ubezpieczenie zdrowotne i umowa najmu'],
       ro: ['Pașaport valabil și adeverință de domiciliu actuală', 'Contract de muncă și extras de cont bancar', 'Certificat de naștere și diplomă școlară', 'Asigurare medicală și contract de închiriere'],
       ru: ['Действительный паспорт и актуальная справка о регистрации', 'Трудовой договор и банковская выписка', 'Свидетельство о рождении и школьный диплом', 'Медицинская страховка и договор аренды'],
+      ku: ['Pasaporteke derbasdar û belgeya tomarkirinê ya niha', 'Peymana kar û rûpela hesabê bankê', 'Belgeya jidayikbûnê û diplomaya dibistanê', 'Sîgorteya tenduristiyê û peymana kirêdarî'],
     },
   },
   // B1 — Choice
@@ -269,6 +291,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'اختر الجملة الصحيحة نحوياً', uk: 'Обери граматично правильне речення', es: 'Elige la oración gramaticalmente correcta', en: 'Choose the grammatically correct sentence',
       de: 'Wähle den grammatisch korrekten Satz', tr: 'Dilbilgisi açısından doğru cümleyi seçin', pl: 'Wybierz gramatycznie poprawne zdanie', ro: 'Alegeți propoziția corectă din punct de vedere gramatical', ru: 'Выберите грамматически правильное предложение',
+      ku: 'Hevoka ji aliyê rêzimanî ve rast hilbijêre',
     },
     options: [
       'Ich habe gestern beim Jobcenter angerufen.',
@@ -284,6 +307,7 @@ const QUESTIONS: RawQuestion[] = [
     hintByLang: {
       ar: 'مصطلح إداري مهم جداً', uk: 'Важливий адміністративний термін', es: 'Término administrativo muy importante', en: 'A very important administrative term',
       de: 'Ein sehr wichtiger Verwaltungsbegriff', tr: 'Çok önemli bir idari terim', pl: 'Bardzo ważny termin administracyjny', ro: 'Un termen administrativ foarte important', ru: 'Очень важный административный термин',
+      ku: 'Têgeheke îdarî ya pir girîng',
     },
     options: [
       'Offiziell um etwas bitten (z.B. Aufenthaltserlaubnis)',

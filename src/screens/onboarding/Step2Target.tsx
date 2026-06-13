@@ -5,15 +5,16 @@ import type { Language } from '../../types';
 
 // Name jeder Sprache in der jeweiligen UI-Sprache
 const nameInLang: Record<Language, Partial<Record<Language, string>>> = {
-  de: { de: 'Deutsch',    en: 'German',    ar: 'الألمانية',    uk: 'Німецька',    ru: 'Немецкий',    tr: 'Almanca',     pl: 'Niemiecki',  ro: 'Germană',  es: 'Alemán'   },
-  en: { de: 'Englisch',   en: 'English',   ar: 'الإنجليزية',   uk: 'Англійська',  ru: 'Английский',  tr: 'İngilizce',   pl: 'Angielski',  ro: 'Engleză',  es: 'Inglés'   },
-  tr: { de: 'Türkisch',   en: 'Turkish',   ar: 'التركية',      uk: 'Турецька',    ru: 'Турецкий',    tr: 'Türkçe',      pl: 'Turecki',    ro: 'Turcă',    es: 'Turco'    },
-  ar: { de: 'Arabisch',   en: 'Arabic',    ar: 'العربية',      uk: 'Арабська',    ru: 'Арабский',    tr: 'Arapça',      pl: 'Arabski',    ro: 'Arabă',    es: 'Árabe'    },
-  es: { de: 'Spanisch',   en: 'Spanish',   ar: 'الإسبانية',    uk: 'Іспанська',   ru: 'Испанский',   tr: 'İspanyolca',  pl: 'Hiszpański', ro: 'Spaniolă', es: 'Español'  },
-  uk: { de: 'Ukrainisch', en: 'Ukrainian', ar: 'الأوكرانية',   uk: 'Українська',  ru: 'Украинский',  tr: 'Ukraynaca',   pl: 'Ukraiński',  ro: 'Ucraineană', es: 'Ucraniano' },
-  ru: { de: 'Russisch',   en: 'Russian',   ar: 'الروسية',      uk: 'Російська',   ru: 'Русский',     tr: 'Rusça',       pl: 'Rosyjski',   ro: 'Rusă',     es: 'Ruso'     },
-  pl: { de: 'Polnisch',   en: 'Polish',    ar: 'البولندية',    uk: 'Польська',    ru: 'Польский',    tr: 'Lehçe',       pl: 'Polski',     ro: 'Poloneză', es: 'Polaco'   },
-  ro: { de: 'Rumänisch',  en: 'Romanian',  ar: 'الرومانية',    uk: 'Румунська',   ru: 'Румынский',   tr: 'Rumence',     pl: 'Rumuński',   ro: 'Română',   es: 'Rumano'   },
+  de: { de: 'Deutsch',    en: 'German',    ar: 'الألمانية',    uk: 'Німецька',    ru: 'Немецкий',    tr: 'Almanca',     pl: 'Niemiecki',  ro: 'Germană',  es: 'Alemán',   ku: 'Almanî'    },
+  en: { de: 'Englisch',   en: 'English',   ar: 'الإنجليزية',   uk: 'Англійська',  ru: 'Английский',  tr: 'İngilizce',   pl: 'Angielski',  ro: 'Engleză',  es: 'Inglés',   ku: 'Îngilîzî'  },
+  tr: { de: 'Türkisch',   en: 'Turkish',   ar: 'التركية',      uk: 'Турецька',    ru: 'Турецкий',    tr: 'Türkçe',      pl: 'Turecki',    ro: 'Turcă',    es: 'Turco',    ku: 'Tirkî'     },
+  ar: { de: 'Arabisch',   en: 'Arabic',    ar: 'العربية',      uk: 'Арабська',    ru: 'Арабский',    tr: 'Arapça',      pl: 'Arabski',    ro: 'Arabă',    es: 'Árabe',    ku: 'Erebî'     },
+  es: { de: 'Spanisch',   en: 'Spanish',   ar: 'الإسبانية',    uk: 'Іспанська',   ru: 'Испанский',   tr: 'İspanyolca',  pl: 'Hiszpański', ro: 'Spaniolă', es: 'Español',  ku: 'Spanî'     },
+  uk: { de: 'Ukrainisch', en: 'Ukrainian', ar: 'الأوكرانية',   uk: 'Українська',  ru: 'Украинский',  tr: 'Ukraynaca',   pl: 'Ukraiński',  ro: 'Ucraineană', es: 'Ucraniano', ku: 'Ukraynî'  },
+  ru: { de: 'Russisch',   en: 'Russian',   ar: 'الروسية',      uk: 'Російська',   ru: 'Русский',     tr: 'Rusça',       pl: 'Rosyjski',   ro: 'Rusă',     es: 'Ruso',     ku: 'Rûsî'      },
+  pl: { de: 'Polnisch',   en: 'Polish',    ar: 'البولندية',    uk: 'Польська',    ru: 'Польский',    tr: 'Lehçe',       pl: 'Polski',     ro: 'Poloneză', es: 'Polaco',   ku: 'Polonî'    },
+  ro: { de: 'Rumänisch',  en: 'Romanian',  ar: 'الرومانية',    uk: 'Румунська',   ru: 'Румынский',   tr: 'Rumence',     pl: 'Rumuński',   ro: 'Română',   es: 'Rumano',   ku: 'Romanî'    },
+  ku: { de: 'Kurdisch',   en: 'Kurdish',   ar: 'الكردية',      uk: 'Курдська',    ru: 'Курдский',    tr: 'Kürtçe',      pl: 'Kurdyjski',  ro: 'Kurdă',    es: 'Kurdo',    ku: 'Kurdî'     },
 };
 
 const targets: { code: Language; flag: string; native: string }[] = [
@@ -38,6 +39,7 @@ const label: Record<Language, string> = {
   pl: 'Jakiego języka chcesz się uczyć?',
   ro: 'Ce limbă vrei să înveți?',
   es: '¿Qué idioma quieres aprender?',
+  ku: 'Tu dixwazî kîjan zimanî hîn bibî?',
 };
 
 export function Step2Target() {
